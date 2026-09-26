@@ -249,5 +249,3 @@ export function useKeybindings() {
 
   return { filtered }
 }
-
-export { useKeybindings }

@@ -4,7 +4,7 @@ import { SOFTWARE_MAP } from "@/lib/software"
 import { Kbd } from "@/components/ui/kbd"
 
 export function StatusBar() {
-  const { view, selectedIndex, favorites, installed, sidebarOpen } =
+  const { view, selectedIndex, favorites, installed } =
     useAppState()
   const filtered = useFilteredSoftware()
 

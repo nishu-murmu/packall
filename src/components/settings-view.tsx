@@ -37,10 +37,11 @@ export function SettingsView() {
               Overview of the software catalog
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-4 sm:grid-cols-3">
+          <CardContent className="grid gap-4 sm:grid-cols-4">
             <Stat label="Total Apps" value={stats.totalApps} />
             <Stat label="Categories" value={stats.totalCategories} />
             <Stat label="Your Favorites" value={favorites.size} />
+            <Stat label="Installed" value={installed.size} />
           </CardContent>
         </Card>
 

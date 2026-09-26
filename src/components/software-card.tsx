@@ -1,7 +1,5 @@
-import * as React from "react"
 import type { SoftwareEntry } from "@/lib/types"
 import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
 import { METHOD_LABELS, METHOD_COLORS } from "@/lib/install-methods"
 import { Star, Check } from "lucide-react"
 

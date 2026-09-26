@@ -1,4 +1,3 @@
-import * as React from "react"
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE_MAP } from "@/lib/software"
 import { CATEGORY_MAP } from "@/lib/categories"

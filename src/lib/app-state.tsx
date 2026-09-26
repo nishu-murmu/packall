@@ -39,7 +39,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(true)
   const [helpOpen, setHelpOpen] = React.useState(false)
   const [searchFocused, setSearchFocused] = React.useState(false)
-  const [viewStack, setViewStack] = React.useState<View[]>([{ kind: "grid" }])
+  const [, setViewStack] = React.useState<View[]>([{ kind: "grid" }])
 
   const setViewWrapper = React.useCallback((v: View) => {
     setViewStack((prev) => [...prev, v])

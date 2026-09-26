@@ -1,4 +1,3 @@
-import * as React from "react"
 import { AppStateProvider, useAppState } from "@/lib/app-state"
 import { useKeybindings } from "@/lib/use-keybindings"
 import { AppSidebar } from "@/components/app-sidebar"

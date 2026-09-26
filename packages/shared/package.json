@@ -1,0 +1,21 @@
+{
+  "name": "@linuxdir/shared",
+  "version": "0.1.0",
+  "description": "Shared types, categories, software catalog, and installation methods for LinuxDir",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./categories": "./src/categories.ts",
+    "./software": "./src/software.ts",
+    "./install-methods": "./src/install-methods.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

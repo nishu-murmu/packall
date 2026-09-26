@@ -1,12 +1,17 @@
 {
-  "name": "shadcn-ui-template",
+  "name": "linuxdir",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:marketing": "npm --prefix apps/marketing run dev",
+    "dev:docs": "npm --prefix apps/docs run dev",
     "build": "tsc -b && vite build",
-    "typecheck": "tsc --noEmit",
+    "build:marketing": "npm --prefix apps/marketing run build",
+    "build:docs": "npm --prefix apps/docs run build",
+    "build:all": "npm run build && npm run build:marketing && npm run build:docs",
+    "typecheck": "tsc -b --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
