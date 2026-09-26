@@ -1,9 +1,11 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "identifier": "app.linuxdir.desktop",
-  "description": "LinuxDir Tauri application capabilities",
+  "identifier": "app.almanac.desktop",
+  "description": "Almanac Tauri application capabilities",
   "app": {
-    "windows": ["main"],
+    "windows": [
+      "main"
+    ],
     "security": {
       "csp": null
     }

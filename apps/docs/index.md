@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: "LinuxDir"
+  name: "Almanac"
   text: "Documentation & Developer Guide"
   tagline: "The definitive catalog of Linux software — categorized, searchable, and driven by Neovim keybindings."
   actions:
@@ -33,10 +33,10 @@ features:
 
 ## Quick Architecture Overview
 
-LinuxDir is architected as a modular monorepo:
+Almanac is architected as a modular monorepo:
 
 ```
-linuxdir/
+almanac/
 ├── src/              # Main Tauri desktop frontend (React + Tailwind + Lucide)
 ├── src-tauri/        # Rust backend (Tauri v2 commands, package manager detection)
 ├── apps/

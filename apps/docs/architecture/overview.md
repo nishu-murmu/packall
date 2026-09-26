@@ -1,6 +1,6 @@
 # Monorepo Architecture Overview
 
-LinuxDir is engineered as an integrated monorepo uniting a cross-platform desktop application, a public documentation portal, a marketing website, and a shared catalog package.
+Almanac is engineered as an integrated monorepo uniting a cross-platform desktop application, a public documentation portal, a marketing website, and a shared catalog package.
 
 ## Repository Layout
 

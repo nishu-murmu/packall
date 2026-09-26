@@ -1,6 +1,6 @@
 # Configuration & Local State
 
-LinuxDir preserves your favorites and installed software state across sessions, allowing you to maintain an inventory of software installed on your Linux workstations.
+Almanac preserves your favorites and installed software state across sessions, allowing you to maintain an inventory of software installed on your Linux workstations.
 
 ## State Management Architecture
 
@@ -32,7 +32,7 @@ State is managed reactively via `AppStateProvider` in `src/lib/app-state.tsx`.
 
 ## Native Package Manager Detection (Tauri Bridge)
 
-When running within the Tauri desktop application, LinuxDir invokes a Rust command to scan system binaries via `which`:
+When running within the Tauri desktop application, Almanac invokes a Rust command to scan system binaries via `which`:
 
 ```rust
 #[tauri::command]

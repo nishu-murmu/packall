@@ -1,14 +1,14 @@
-# LinuxDir
+# Almanac
 
 > **A graphical directory of essential Linux software — categorized, searchable, and fully navigable with Neovim-style keyboard shortcuts.**
 
-LinuxDir is an offline-first, keyboard-driven application catalog designed specifically for Linux desktop environments and sysadmins. It organizes software across **14 distinct categories**, supports **11 packaging formats**, and allows complete navigation from your home row without a mouse.
+Almanac is an offline-first, keyboard-driven application catalog designed specifically for Linux desktop environments and sysadmins. It organizes software across **14 distinct categories**, supports **11 packaging formats**, and allows complete navigation from your home row without a mouse.
 
 ---
 
 ## Monorepo Architecture
 
-LinuxDir is organized as a unified monorepo encompassing the native desktop application, technical documentation, marketing portal, and shared package definitions:
+Almanac is organized as a unified monorepo encompassing the native desktop application, technical documentation, marketing portal, and shared package definitions:
 
 ```
 almanac/
@@ -18,7 +18,7 @@ almanac/
 │   ├── marketing/        # Interactive marketing & download website (Vite + React)
 │   └── docs/             # Technical documentation & guide (VitePress)
 ├── packages/
-│   └── shared/           # @linuxdir/shared: catalog types, categories & software data
+│   └── shared/           # @almanac/shared: catalog types, categories & software data
 ├── index.html            # Desktop web entrypoint
 └── package.json          # Monorepo scripts & dependencies
 ```
@@ -43,7 +43,7 @@ almanac/
 - Includes getting started guides, installation walkthroughs, full keyboard shortcuts reference, and schema specifications for adding new apps.
 
 ### 4. Shared Package (`packages/shared/`)
-- Named package `@linuxdir/shared`.
+- Named package `@almanac/shared`.
 - Contains single source of truth for:
   - `types.ts` — TypeScript interfaces (`SoftwareEntry`, `Category`, `InstallOption`, `View`).
   - `categories.ts` — Definitions and icon mappings for all 14 categories.
@@ -51,8 +51,8 @@ almanac/
   - `install-methods.ts` — Metadata, styling badges, and descriptions for package managers.
 
 ```ts
-import { SOFTWARE, CATEGORIES } from "@linuxdir/shared"
-import type { SoftwareEntry, Category } from "@linuxdir/shared"
+import { SOFTWARE, CATEGORIES } from "@almanac/shared"
+import type { SoftwareEntry, Category } from "@almanac/shared"
 ```
 
 ---

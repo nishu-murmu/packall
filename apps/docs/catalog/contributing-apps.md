@@ -1,10 +1,10 @@
 # Contributing Software Entries
 
-We welcome contributions to the LinuxDir software catalog! If your favorite Linux app or tool is missing, adding it is straightforward.
+We welcome contributions to the Almanac software catalog! If your favorite Linux app or tool is missing, adding it is straightforward.
 
 ## Workflow
 
-1. Fork the [LinuxDir repository](https://github.com/nishu-murmu/almanac).
+1. Fork the [Almanac repository](https://github.com/nishu-murmu/almanac).
 2. Create a new branch: `git checkout -b add-myapp`.
 3. Open `packages/shared/src/software.ts` (and `src/lib/software.ts`).
 4. Append your new `SoftwareEntry` object to the `SOFTWARE` array.

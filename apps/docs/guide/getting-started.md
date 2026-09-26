@@ -1,10 +1,10 @@
 # Getting Started
 
-Welcome to the LinuxDir documentation! This guide will walk you through launching the LinuxDir application and setting up your local development environment.
+Welcome to the Almanac documentation! This guide will walk you through launching the Almanac application and setting up your local development environment.
 
-## What is LinuxDir?
+## What is Almanac?
 
-**LinuxDir** is a keyboard-driven, graphical software directory built specifically for Linux desktop users and sysadmins. Rather than searching scattered websites, package repositories, or forum threads, LinuxDir brings together the finest Linux applications in one place with:
+**Almanac** is a keyboard-driven, graphical software directory built specifically for Linux desktop users and sysadmins. Rather than searching scattered websites, package repositories, or forum threads, Almanac brings together the finest Linux applications in one place with:
 
 - **14 curated categories**: Browsers, Development, Gaming, Utilities, Multimedia, Self-Hosted, and more.
 - **Multiple install methods**: apt, dnf, pacman, zypper, flatpak, snap, AppImage, and AUR.
@@ -15,7 +15,7 @@ Welcome to the LinuxDir documentation! This guide will walk you through launchin
 
 ## Prerequisites
 
-Before building LinuxDir locally, ensure you have the following installed:
+Before building Almanac locally, ensure you have the following installed:
 
 - **Node.js**: v18+ (Node.js 20 or 22 LTS recommended)
 - **Rust Toolchain**: `rustc` and `cargo` (1.75+)
@@ -38,8 +38,8 @@ Before building LinuxDir locally, ensure you have the following installed:
 Clone the repository and install root dependencies:
 
 ```bash
-git clone https://github.com/nishu-murmu/almanac.git linuxdir
-cd linuxdir
+git clone https://github.com/nishu-murmu/almanac.git almanac
+cd almanac
 npm install
 ```
 
@@ -63,7 +63,7 @@ cargo tauri dev
 
 ## Monorepo Commands
 
-LinuxDir is structured as a monorepo containing the desktop client, docs, marketing site, and shared catalog:
+Almanac is structured as a monorepo containing the desktop client, docs, marketing site, and shared catalog:
 
 | Command | Description |
 |---|---|

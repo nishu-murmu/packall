@@ -1,6 +1,6 @@
 # 14 Core Software Categories
 
-LinuxDir organizes all software into 14 distinct categories covering everyday desktop needs, server stacks, development workflows, and system administration.
+Almanac organizes all software into 14 distinct categories covering everyday desktop needs, server stacks, development workflows, and system administration.
 
 ## Categorization Breakdown
 

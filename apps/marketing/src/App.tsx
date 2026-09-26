@@ -231,7 +231,7 @@ export default function App() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg tracking-tight text-white flex items-center gap-2">
-                LinuxDir
+                Almanac
                 <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   v0.1.0
                 </span>
@@ -271,7 +271,7 @@ export default function App() {
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]"
             >
               <Download className="w-4 h-4" />
-              Get LinuxDir
+              Get Almanac
             </a>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function App() {
               <div className="w-3 h-3 rounded-full bg-red-500/80" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
               <div className="w-3 h-3 rounded-full bg-green-500/80" />
-              <span className="text-xs text-slate-400 font-mono ml-2">linuxdir — tauriapp</span>
+              <span className="text-xs text-slate-400 font-mono ml-2">almanac — tauriapp</span>
             </div>
 
             {/* Quick keys simulation toolbar */}
@@ -427,11 +427,10 @@ export default function App() {
                     setSelectedCategory(cat)
                     setActiveSimulatorIndex(0)
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between ${
-                    selectedCategory === cat
-                      ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold'
-                      : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
-                  }`}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between ${selectedCategory === cat
+                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold'
+                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
+                    }`}
                 >
                   <span>{cat}</span>
                   <ChevronRight className="w-3 h-3 opacity-50" />
@@ -466,17 +465,15 @@ export default function App() {
                     <div
                       key={app.id}
                       onClick={() => setActiveSimulatorIndex(index)}
-                      className={`p-3 rounded-lg border transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-emerald-950/30 border-emerald-500/50 ring-1 ring-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
-                          : 'bg-slate-900/50 border-white/[0.06] hover:border-white/20'
-                      }`}
+                      className={`p-3 rounded-lg border transition-all cursor-pointer ${isSelected
+                        ? 'bg-emerald-950/30 border-emerald-500/50 ring-1 ring-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+                        : 'bg-slate-900/50 border-white/[0.06] hover:border-white/20'
+                        }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2.5">
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
-                            isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'
-                          }`}>
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+                            }`}>
                             {app.name.charAt(0)}
                           </div>
                           <div>
@@ -508,11 +505,10 @@ export default function App() {
                   </div>
                   <button
                     onClick={() => handleKeySimulator('f')}
-                    className={`p-2 rounded-lg border transition-all ${
-                      favorites.has(selectedApp.id)
-                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-400'
-                        : 'border-white/10 text-slate-400 hover:text-white'
-                    }`}
+                    className={`p-2 rounded-lg border transition-all ${favorites.has(selectedApp.id)
+                      ? 'bg-amber-500/20 border-amber-500/40 text-amber-400'
+                      : 'border-white/10 text-slate-400 hover:text-white'
+                      }`}
                   >
                     <Star className={`w-4 h-4 ${favorites.has(selectedApp.id) ? 'fill-current' : ''}`} />
                   </button>
@@ -611,7 +607,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Why LinuxDir Feature Pillars */}
+      {/* Why Almanac Feature Pillars */}
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
@@ -639,7 +635,7 @@ export default function App() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Tauri v2 & Rust Core</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              No bloated Chromium runtimes. LinuxDir starts in under 10 milliseconds, uses less than 40MB of system memory, and makes zero network calls without your explicit instruction.
+              No bloated Chromium runtimes. Almanac starts in under 10 milliseconds, uses less than 40MB of system memory, and makes zero network calls without your explicit instruction.
             </p>
           </div>
 
@@ -649,7 +645,7 @@ export default function App() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Distribution Agnostic</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Never struggle finding the right package format again. LinuxDir queries your system package managers (apt, dnf, pacman, flatpak, snap) and gives you clean, verified install commands.
+              Never struggle finding the right package format again. Almanac queries your system package managers (apt, dnf, pacman, flatpak, snap) and gives you clean, verified install commands.
             </p>
           </div>
         </div>
@@ -659,7 +655,7 @@ export default function App() {
       <section id="downloads" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
-            <Download className="w-4 h-4" /> Download LinuxDir
+            <Download className="w-4 h-4" /> Download Almanac
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
             Install on Your Linux Machine
@@ -746,11 +742,11 @@ export default function App() {
               </p>
             </div>
             <button
-              onClick={() => copyToClipboard('paru -S linuxdir-bin', 'paru')}
+              onClick={() => copyToClipboard('paru -S almanac-bin', 'paru')}
               className="w-full py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors font-mono"
             >
               {copiedId === 'paru' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              paru -S linuxdir-bin
+              paru -S almanac-bin
             </button>
           </div>
         </div>
@@ -760,11 +756,11 @@ export default function App() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Terminal className="w-5 h-5 text-emerald-400 shrink-0" />
             <code className="text-xs font-mono text-emerald-300 truncate">
-              curl -fsSL https://linuxdir.app/install.sh | bash
+              curl -fsSL https://almanac.app/install.sh | bash
             </code>
           </div>
           <button
-            onClick={() => copyToClipboard('curl -fsSL https://linuxdir.app/install.sh | bash', 'curl-install')}
+            onClick={() => copyToClipboard('curl -fsSL https://almanac.app/install.sh | bash', 'curl-install')}
             className="w-full sm:w-auto px-4 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-medium flex items-center justify-center gap-1.5 transition-all"
           >
             {copiedId === 'curl-install' ? (
@@ -787,7 +783,7 @@ export default function App() {
             <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
               <Terminal className="w-4 h-4" />
             </div>
-            <span className="font-bold text-white tracking-tight">LinuxDir</span>
+            <span className="font-bold text-white tracking-tight">Almanac</span>
             <span className="text-xs text-slate-500">
               MIT License • Built for the Linux Community
             </span>

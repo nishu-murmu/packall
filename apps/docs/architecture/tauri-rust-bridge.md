@@ -1,6 +1,6 @@
 # Tauri & Rust Native Layer
 
-LinuxDir uses Tauri v2 to achieve native desktop speed, minimal RAM usage (< 40MB idle), and small package footprints compared to traditional Chromium/Electron wrappers.
+Almanac uses Tauri v2 to achieve native desktop speed, minimal RAM usage (< 40MB idle), and small package footprints compared to traditional Chromium/Electron wrappers.
 
 ## Tauri Commands
 

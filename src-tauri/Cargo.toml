@@ -1,12 +1,12 @@
 [package]
-name = "linuxdir"
+name = "almanac"
 version = "0.1.0"
 description = "A graphical directory of essential Linux software"
 edition = "2021"
 
 [lib]
-name = "linuxdir_lib"
-crate-type = ["staticlib", "cdylib"]
+name = "almanac_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

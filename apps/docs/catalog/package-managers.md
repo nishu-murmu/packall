@@ -1,6 +1,6 @@
 # Supported Package Managers
 
-LinuxDir supports multiple package formats and package managers for each software entry so that instructions work seamlessly regardless of whether you run Ubuntu, Arch Linux, Fedora, Debian, NixOS, or openSUSE.
+Almanac supports multiple package formats and package managers for each software entry so that instructions work seamlessly regardless of whether you run Ubuntu, Arch Linux, Fedora, Debian, NixOS, or openSUSE.
 
 ## Supported Formats
 

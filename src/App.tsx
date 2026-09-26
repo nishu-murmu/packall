@@ -37,7 +37,7 @@ function AppContent() {
                 <div className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
                   <Package className="size-3.5" />
                 </div>
-                <span className="text-sm font-semibold">LinuxDir</span>
+                <span className="text-sm font-semibold">Almanac</span>
               </div>
             )}
           </div>

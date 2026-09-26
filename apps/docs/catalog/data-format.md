@@ -1,6 +1,6 @@
 # Data Schema Reference
 
-Software entries in LinuxDir adhere to the `SoftwareEntry` TypeScript interface defined in `@linuxdir/shared`.
+Software entries in Almanac adhere to the `SoftwareEntry` TypeScript interface defined in `@almanac/shared`.
 
 ## SoftwareEntry Schema
 

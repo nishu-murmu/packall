@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'LinuxDir',
+  title: 'Almanac',
   description: 'The Ultimate Directory & Launcher for Essential Linux Software',
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
@@ -9,7 +9,7 @@ export default defineConfig({
   ],
   themeConfig: {
     logo: '/logo.svg',
-    siteTitle: 'LinuxDir Docs',
+    siteTitle: 'Almanac Docs',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Shortcuts', link: '/guide/keyboard-shortcuts' },
@@ -56,7 +56,7 @@ export default defineConfig({
     ],
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 LinuxDir Contributors',
+      copyright: 'Copyright © 2026 Almanac Contributors',
     },
     search: {
       provider: 'local',

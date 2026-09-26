@@ -1,6 +1,6 @@
 # Neovim Keyboard Navigation
 
-LinuxDir is designed with a **keyboard-first philosophy**. Every element, modal, view, and action can be controlled without leaving your home row.
+Almanac is designed with a **keyboard-first philosophy**. Every element, modal, view, and action can be controlled without leaving your home row.
 
 ## Core Navigation
 
@@ -19,7 +19,7 @@ LinuxDir is designed with a **keyboard-first philosophy**. Every element, modal,
 
 ## Number Multipliers
 
-Just like Neovim, LinuxDir supports number prefixes before movement keys:
+Just like Neovim, Almanac supports number prefixes before movement keys:
 
 - `5j`: Move down 5 software cards immediately
 - `10k`: Move up 10 software cards immediately
@@ -55,4 +55,4 @@ Switch between views quickly with top-row numbers or Tab:
 
 ## Customizing Keybindings
 
-Keybindings are managed centrally in `src/lib/use-keybindings.ts`. If you are customizing LinuxDir for personal workflows or Emacs/Helix bindings, see the architecture guide.
+Keybindings are managed centrally in `src/lib/use-keybindings.ts`. If you are customizing Almanac for personal workflows or Emacs/Helix bindings, see the architecture guide.

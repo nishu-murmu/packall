@@ -1,0 +1,1 @@
+{"app.almanac.desktop":{"identifier":"app.almanac.desktop","description":"Almanac Tauri application capabilities","local":true,"permissions":["core:default","shell:allow-open"]}}

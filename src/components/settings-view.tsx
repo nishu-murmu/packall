@@ -68,14 +68,14 @@ export function SettingsView() {
 
         <Card>
           <CardHeader>
-            <CardTitle>About LinuxDir</CardTitle>
+            <CardTitle>About Almanac</CardTitle>
             <CardDescription>
               A graphical directory of essential Linux software
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
             <p>
-              LinuxDir catalogs the best software available on Linux, organized
+              Almanac catalogs the best software available on Linux, organized
               into categories and searchable by name, tag, or category. Every
               entry includes multiple installation methods so it works regardless
               of your distribution.

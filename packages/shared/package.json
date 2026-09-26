@@ -1,7 +1,7 @@
 {
-  "name": "@linuxdir/shared",
+  "name": "@almanac/shared",
   "version": "0.1.0",
-  "description": "Shared types, categories, software catalog, and installation methods for LinuxDir",
+  "description": "Shared types, categories, software catalog, and installation methods for Almanac",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

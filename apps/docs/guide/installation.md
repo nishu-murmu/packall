@@ -1,6 +1,6 @@
 # Installation Guide
 
-LinuxDir can be installed on any modern Linux distribution using multiple standard formats, or compiled directly from source.
+Almanac can be installed on any modern Linux distribution using multiple standard formats, or compiled directly from source.
 
 ## Prebuilt Binaries
 
@@ -12,13 +12,13 @@ AppImage works out-of-the-box on almost all Linux distributions:
 
 ```bash
 # Download the latest AppImage
-wget https://github.com/nishu-murmu/almanac/releases/latest/download/LinuxDir.AppImage
+wget https://github.com/nishu-murmu/almanac/releases/latest/download/Almanac.AppImage
 
 # Make it executable
-chmod +x LinuxDir.AppImage
+chmod +x Almanac.AppImage
 
 # Run directly
-./LinuxDir.AppImage
+./Almanac.AppImage
 ```
 
 ::: tip Integrating AppImages
@@ -38,7 +38,7 @@ sudo apt install ./linuxdir_amd64.deb
 
 To uninstall:
 ```bash
-sudo apt remove linuxdir
+sudo apt remove almanac
 ```
 
 ---
@@ -46,8 +46,8 @@ sudo apt remove linuxdir
 ### 3. Fedora / RHEL / openSUSE (.rpm)
 
 ```bash
-wget https://github.com/nishu-murmu/almanac/releases/latest/download/linuxdir.x86_64.rpm
-sudo dnf install ./linuxdir.x86_64.rpm
+wget https://github.com/nishu-murmu/almanac/releases/latest/download/almanac.x86_64.rpm
+sudo dnf install ./almanac.x86_64.rpm
 ```
 
 ---
@@ -57,9 +57,9 @@ sudo dnf install ./linuxdir.x86_64.rpm
 Using your favorite AUR helper (e.g. `paru` or `yay`):
 
 ```bash
-paru -S linuxdir-bin
+paru -S almanac-bin
 # or
-yay -S linuxdir-bin
+yay -S almanac-bin
 ```
 
 ---
@@ -67,8 +67,8 @@ yay -S linuxdir-bin
 ### 5. Flatpak
 
 ```bash
-flatpak install flathub org.linuxdir.LinuxDir
-flatpak run org.linuxdir.LinuxDir
+flatpak install flathub org.almanac.Almanac
+flatpak run org.almanac.Almanac
 ```
 
 ---

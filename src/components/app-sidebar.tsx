@@ -53,7 +53,7 @@ export function AppSidebar() {
             <Package className="size-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold leading-tight">LinuxDir</span>
+            <span className="text-sm font-semibold leading-tight">Almanac</span>
             <span className="text-[10px] text-muted-foreground leading-tight">
               Software Directory
             </span>
