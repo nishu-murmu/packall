@@ -930,6 +930,168 @@ export const SOFTWARE: SoftwareEntry[] = [
       { method: "snap", command: "sudo snap install krita" },
     ],
   },
+  {
+    id: "gimp",
+    name: "GIMP",
+    tagline: "GNU Image Manipulation Program",
+    description:
+      "GIMP is an extensible cross-platform image editor used for photo retouching, image composition, and free-form drawing.",
+    category: "graphics",
+    homepage: "https://www.gimp.org/",
+    license: "GPL-3.0",
+    tags: ["photo", "image", "editing", "raster"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S gimp" },
+      { method: "flatpak", command: "flatpak install flathub org.gimp.GIMP" },
+      { method: "apt", command: "sudo apt install gimp" },
+    ],
+  },
+  {
+    id: "ghostty",
+    name: "Ghostty",
+    tagline: "Fast, native, feature-rich GPU terminal in Zig",
+    description:
+      "Ghostty is a modern terminal emulator built in Zig with native platform rendering (GTK on Linux), tabs, and instant performance.",
+    category: "terminal",
+    homepage: "https://ghostty.org/",
+    license: "MIT",
+    tags: ["terminal", "zig", "gpu", "fast"],
+    featured: true,
+    install: [
+      { method: "aur", command: "paru -S ghostty" },
+      { method: "paru", command: "paru -S ghostty-bin" },
+    ],
+  },
+  {
+    id: "vesktop",
+    name: "Vesktop",
+    tagline: "Vencord-powered Discord desktop with Wayland screensharing",
+    description:
+      "Vesktop is a lightweight Discord desktop client giving you Vencord plugin integration, crisp audio, and full Wayland screensharing with system audio.",
+    category: "communications",
+    homepage: "https://github.com/Vencord/Vesktop",
+    license: "GPL-3.0",
+    tags: ["discord", "chat", "wayland", "vencord"],
+    featured: true,
+    install: [
+      { method: "aur", command: "paru -S vesktop-bin" },
+      { method: "flatpak", command: "flatpak install flathub dev.vencord.Vesktop" },
+    ],
+  },
+  {
+    id: "btop",
+    name: "btop",
+    tagline: "Resource monitor that shows usage and stats",
+    description:
+      "btop is a modern, responsive TUI monitor for CPU, memory, disks, network, and processes with beautiful visual graphs.",
+    category: "system",
+    homepage: "https://github.com/aristocratos/btop",
+    license: "Apache-2.0",
+    tags: ["monitor", "tui", "cpu", "stats"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S btop" },
+      { method: "apt", command: "sudo apt install btop" },
+    ],
+  },
+  {
+    id: "fastfetch",
+    name: "fastfetch",
+    tagline: "Lightning-fast neofetch-like system info tool",
+    description:
+      "Fastfetch is a neofetch-like tool for fetching system information and displaying it prettily, written in C for instant execution.",
+    category: "system",
+    homepage: "https://github.com/fastfetch-cli/fastfetch",
+    license: "MIT",
+    tags: ["sysinfo", "cli", "fast", "c"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S fastfetch" },
+      { method: "apt", command: "sudo apt install fastfetch" },
+    ],
+  },
+  {
+    id: "flameshot",
+    name: "Flameshot",
+    tagline: "Powerful yet simple to use screenshot software",
+    description:
+      "Flameshot is a feature-packed screenshot utility with built-in annotations, blur, arrows, pins, and direct cloud uploads.",
+    category: "utilities",
+    homepage: "https://flameshot.org/",
+    license: "GPL-3.0",
+    tags: ["screenshot", "capture", "annotations"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S flameshot" },
+      { method: "flatpak", command: "flatpak install flathub org.flameshot.Flameshot" },
+      { method: "apt", command: "sudo apt install flameshot" },
+    ],
+  },
+  {
+    id: "heroic-games-launcher",
+    name: "Heroic Games Launcher",
+    tagline: "Native GOG, Epic Games, and Amazon Prime launcher",
+    description:
+      "Heroic is an open-source gaming launcher for Epic Games, GOG, and Amazon Games using Wine, Proton, and DXVK.",
+    category: "games",
+    homepage: "https://heroicgameslauncher.com/",
+    license: "GPL-3.0",
+    tags: ["gaming", "epic", "gog", "proton"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S heroic-games-launcher-bin" },
+      { method: "aur", command: "paru -S heroic-games-launcher-bin" },
+      { method: "flatpak", command: "flatpak install flathub com.heroicgameslauncher.hgl" },
+    ],
+  },
+  {
+    id: "protonup-qt",
+    name: "ProtonUp-Qt",
+    tagline: "Install and manage GE-Proton and Wine runners",
+    description:
+      "ProtonUp-Qt makes it easy to install and update GE-Proton, Luxtorpeda, and custom Wine versions for Steam and Lutris.",
+    category: "games",
+    homepage: "https://davidotek.github.io/protonup-qt/",
+    license: "GPL-3.0",
+    tags: ["gaming", "proton", "wine", "steam"],
+    featured: false,
+    install: [
+      { method: "aur", command: "paru -S protonup-qt" },
+      { method: "flatpak", command: "flatpak install flathub net.davidotek.pupgui2" },
+    ],
+  },
+  {
+    id: "calibre",
+    name: "Calibre",
+    tagline: "Comprehensive e-book manager and reader",
+    description:
+      "Calibre is the one stop solution to all your e-book needs. Organize books into libraries, convert between formats, and sync to e-readers.",
+    category: "education",
+    homepage: "https://calibre-ebook.com/",
+    license: "GPL-3.0",
+    tags: ["ebook", "reader", "library"],
+    featured: true,
+    install: [
+      { method: "pacman", command: "sudo pacman -S calibre" },
+      { method: "flatpak", command: "flatpak install flathub com.calibre_ebook.calibre" },
+    ],
+  },
+  {
+    id: "vaultwarden",
+    name: "Vaultwarden",
+    tagline: "Lightweight Bitwarden server written in Rust",
+    description:
+      "Vaultwarden is an alternative implementation of the Bitwarden server API written in Rust, ideal for self-hosting on low-power devices.",
+    category: "self-hosted",
+    homepage: "https://github.com/dani-garcia/vaultwarden",
+    license: "AGPL-3.0",
+    tags: ["passwords", "security", "rust", "server"],
+    featured: true,
+    install: [
+      { method: "aur", command: "paru -S vaultwarden" },
+    ],
+  },
 ]
 
 export const SOFTWARE_MAP: Record<string, SoftwareEntry> = SOFTWARE.reduce(

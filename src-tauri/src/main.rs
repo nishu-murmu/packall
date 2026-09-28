@@ -1,6 +1,12 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
 fn main() {
-    almanac_lib::run()
+    let args: Vec<String> = std::env::args().skip(1).collect();
+
+    // If CLI arguments are provided and user didn't request GUI mode, run CLI directly
+    if !args.is_empty() && args[0] != "gui" && args[0] != "--gui" {
+        almanac_lib::cli::handle_cli(&args);
+        return;
+    }
+
+    // Otherwise launch the full desktop GUI
+    almanac_lib::run();
 }

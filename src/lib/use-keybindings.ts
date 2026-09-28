@@ -195,6 +195,14 @@ export function useKeybindings() {
           }
           flushBuffer()
           break
+        case "x":
+        case " ":
+          e.preventDefault()
+          if (filtered[selectedIndex]) {
+            state.toggleQueueItem(filtered[selectedIndex].id)
+          }
+          flushBuffer()
+          break
         case "1":
           e.preventDefault()
           setView({ kind: "grid" })
@@ -211,6 +219,11 @@ export function useKeybindings() {
           flushBuffer()
           break
         case "4":
+          e.preventDefault()
+          setView({ kind: "system" })
+          flushBuffer()
+          break
+        case "5":
           e.preventDefault()
           setView({ kind: "settings" })
           flushBuffer()

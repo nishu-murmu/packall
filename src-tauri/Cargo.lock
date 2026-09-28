@@ -36,6 +36,8 @@ dependencies = [
 name = "almanac"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
+ "open",
  "serde",
  "serde_json",
  "tauri",

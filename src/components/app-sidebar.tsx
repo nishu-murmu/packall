@@ -11,6 +11,8 @@ import {
   HelpCircle,
   PanelLeftClose,
   Package,
+  Cpu,
+  CheckSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -24,12 +26,16 @@ export function AppSidebar() {
     setSidebarOpen,
     favorites,
     installed,
+    selectedQueue,
+    systemPackages,
+    openBatchAction,
     setHelpOpen,
   } = useAppState()
 
   const isGrid = view.kind === "grid"
   const isFav = view.kind === "favorites"
   const isInst = view.kind === "installed"
+  const isSystem = view.kind === "system"
   const isSettings = view.kind === "settings"
 
   const categoryCounts = React.useMemo(() => {
@@ -43,19 +49,19 @@ export function AppSidebar() {
   return (
     <aside
       className={cn(
-        "flex h-svh flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-200",
+        "flex h-svh flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-200 select-none",
         sidebarOpen ? "w-64" : "w-0 overflow-hidden"
       )}
     >
       <div className="flex items-center justify-between gap-2 p-4 pb-3">
         <div className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
             <Package className="size-4" />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold leading-tight">Almanac</span>
             <span className="text-[10px] text-muted-foreground leading-tight">
-              Software Directory
+              Linux Software & CLI
             </span>
           </div>
         </div>
@@ -63,7 +69,7 @@ export function AppSidebar() {
           variant="ghost"
           size="icon-xs"
           onClick={() => setSidebarOpen(false)}
-          className="text-muted-foreground"
+          className="text-muted-foreground hover:text-foreground"
         >
           <PanelLeftClose className="size-4" />
         </Button>
@@ -71,19 +77,20 @@ export function AppSidebar() {
 
       <div className="flex-1 overflow-y-auto px-2">
         <div className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Views
+          Core Views
         </div>
         <SidebarLink
           active={isGrid}
           onClick={() => setView({ kind: "grid" })}
           icon={<Package className="size-4" />}
           label="All Software"
+          badge={SOFTWARE.length}
           shortcut="1"
         />
         <SidebarLink
           active={isFav}
           onClick={() => setView({ kind: "favorites" })}
-          icon={<Star className="size-4" />}
+          icon={<Star className="size-4 text-amber-400" />}
           label="Favorites"
           badge={favorites.size > 0 ? favorites.size : undefined}
           shortcut="2"
@@ -91,21 +98,47 @@ export function AppSidebar() {
         <SidebarLink
           active={isInst}
           onClick={() => setView({ kind: "installed" })}
-          icon={<Download className="size-4" />}
-          label="Installed"
+          icon={<Download className="size-4 text-green-500" />}
+          label="Installed (Curated)"
           badge={installed.size > 0 ? installed.size : undefined}
           shortcut="3"
         />
+        <SidebarLink
+          active={isSystem}
+          onClick={() => setView({ kind: "system" })}
+          icon={<Cpu className="size-4 text-purple-400" />}
+          label="System Packages"
+          badge={systemPackages.length > 0 ? systemPackages.length : undefined}
+          shortcut="4"
+        />
+
+        {selectedQueue.size > 0 && (
+          <div className="my-2 px-1">
+            <button
+              onClick={() => openBatchAction("install")}
+              className="flex w-full items-center justify-between rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
+            >
+              <span className="flex items-center gap-1.5">
+                <CheckSquare className="size-3.5" />
+                Queue Selected
+              </span>
+              <span className="rounded-full bg-primary px-1.5 py-0.2 text-[10px] text-primary-foreground font-mono">
+                {selectedQueue.size}
+              </span>
+            </button>
+          </div>
+        )}
+
         <SidebarLink
           active={isSettings}
           onClick={() => setView({ kind: "settings" })}
           icon={<Settings className="size-4" />}
           label="Settings"
-          shortcut="4"
+          shortcut="5"
         />
 
         <div className="mt-4 mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Categories
+          Categories ({CATEGORIES.length})
         </div>
         {CATEGORIES.map((cat) => {
           const active = isGrid && selectedCategoryId === cat.id
@@ -126,7 +159,7 @@ export function AppSidebar() {
         <SidebarLink
           onClick={() => setHelpOpen(true)}
           icon={<HelpCircle className="size-4" />}
-          label="Keyboard Shortcuts"
+          label="CLI & Keybindings"
           shortcut="?"
         />
       </div>
@@ -162,7 +195,7 @@ function SidebarLink({
       <span className="shrink-0">{icon}</span>
       <span className="flex-1 truncate text-left">{label}</span>
       {badge !== undefined && (
-        <span className="text-[10px] tabular-nums text-muted-foreground">
+        <span className="text-[10px] tabular-nums text-muted-foreground font-mono">
           {badge}
         </span>
       )}

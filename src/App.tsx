@@ -3,6 +3,9 @@ import { useKeybindings } from "@/lib/use-keybindings"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SoftwareGrid } from "@/components/software-grid"
 import { SoftwareDetail } from "@/components/software-detail"
+import { SystemPackagesView } from "@/components/system-packages-view"
+import { BatchActionBar } from "@/components/batch-action-bar"
+import { BatchExecutionModal } from "@/components/batch-execution-modal"
 import { SearchBar } from "@/components/search-bar"
 import { HelpOverlay } from "@/components/help-overlay"
 import { SettingsView } from "@/components/settings-view"
@@ -20,7 +23,7 @@ function AppContent() {
     <div className="flex h-svh w-full overflow-hidden bg-background">
       <AppSidebar />
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden relative">
         <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b px-4">
           <div className="flex items-center gap-2">
             {!sidebarOpen && (
@@ -48,18 +51,26 @@ function AppContent() {
           </div>
         </header>
 
-        <div className="flex flex-1 overflow-hidden">
+        <main className="flex flex-1 overflow-hidden relative">
           {view.kind === "detail" ? (
             <SoftwareDetail />
           ) : view.kind === "settings" ? (
             <SettingsView />
+          ) : view.kind === "system" ? (
+            <SystemPackagesView />
           ) : (
             <SoftwareGrid />
           )}
-        </div>
+
+          {/* Floating Batch Action Bar */}
+          <BatchActionBar />
+        </main>
 
         <StatusBar />
       </div>
+
+      {/* Batch Execution Dialog */}
+      <BatchExecutionModal />
 
       <HelpOverlay />
       <Toaster />

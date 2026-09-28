@@ -18,9 +18,11 @@ export const KEYBINDINGS: {
   { key: "?", action: "toggleHelp", description: "Toggle this help overlay" },
   { key: "s", action: "toggleSidebar", description: "Toggle sidebar collapse" },
   { key: "n", action: "countPrefix", description: "Number prefix (e.g. 5j = down 5)", mode: "count" },
+  { key: "x / Space", action: "toggleQueue", description: "Toggle package in selection queue" },
   { key: "Tab", action: "nextView", description: "Cycle to next view" },
   { key: "1", action: "gotoGrid", description: "Go to category grid" },
   { key: "2", action: "gotoFavorites", description: "Go to favorites" },
   { key: "3", action: "gotoInstalled", description: "Go to installed" },
-  { key: "4", action: "gotoSettings", description: "Go to settings" },
+  { key: "4", action: "gotoSystem", description: "Go to system package manager" },
+  { key: "5", action: "gotoSettings", description: "Go to settings" },
 ]
