@@ -17,7 +17,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { PanelLeft, Package } from "lucide-react"
 
 function AppContent() {
-  const { view, sidebarOpen, setSidebarOpen } = useAppState()
+  const { view, sidebarOpen, setSidebarOpen, inspectSoftwareId } = useAppState()
   useKeybindings()
 
   return (
@@ -48,7 +48,7 @@ function AppContent() {
           </div>
 
           <div className="flex items-center gap-2">
-            {view.kind !== "detail" && <SearchBar />}
+            {view.kind !== "detail" && !inspectSoftwareId && <SearchBar />}
             <ModeToggle />
           </div>
         </header>

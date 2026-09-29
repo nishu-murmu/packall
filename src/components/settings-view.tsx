@@ -4,7 +4,7 @@ import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Sliders, Sparkles, Terminal, Layers } from "lucide-react"
+import { Sliders, Sparkles, Terminal, Layers, Info, Code, Box, Zap } from "lucide-react"
 
 export function SettingsView() {
   const { favorites, installed } = useAppState()
@@ -96,6 +96,82 @@ export function SettingsView() {
             <p>
               Press <kbd className="rounded-md border border-border/80 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-foreground font-semibold">Enter</kbd> to inspect the selected app for direct installation or queue actions, <kbd className="rounded-md border border-border/80 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-foreground font-semibold">/</kbd> to search globally, and <kbd className="rounded-md border border-border/80 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-foreground font-semibold">?</kbd> to view the full cheat sheet.
             </p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-sm shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Info className="size-4 text-primary" /> What is Almanac?
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-xs text-muted-foreground leading-relaxed">
+            Almanac is a high-performance desktop software manager built with Tauri (Rust + React). It acts
+            as your central hub for exploring and managing Linux software across {CATEGORIES.length} categories.
+            Instead of memorizing commands across apt, pacman, yay, flatpak, snap, or dnf, Almanac provides
+            an interactive, keyboard-friendly visual interface to browse, inspect, and trigger package operations
+            under the hood.
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-sm shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Zap className="size-4 text-primary" /> Key Capabilities
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-2 sm:grid-cols-2 text-xs text-muted-foreground">
+            <div className="p-3 rounded-xl border border-border/40 bg-muted/20 flex items-start gap-2.5">
+              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+              <span><strong>Interactive Cards</strong> with instant hover metadata & keyboard navigation.</span>
+            </div>
+            <div className="p-3 rounded-xl border border-border/40 bg-muted/20 flex items-start gap-2.5">
+              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+              <span><strong>Batch Queue</strong> to install, update, or remove multiple packages simultaneously.</span>
+            </div>
+            <div className="p-3 rounded-xl border border-border/40 bg-muted/20 flex items-start gap-2.5">
+              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+              <span><strong>Global Search</strong> spanning all apps, package names, descriptions, and tags.</span>
+            </div>
+            <div className="p-3 rounded-xl border border-border/40 bg-muted/20 flex items-start gap-2.5">
+              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
+              <span><strong>Multi-Manager Support</strong> for apt, pacman, yay, paru, flatpak, snap, dnf, zypper, brew.</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-sm shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Code className="size-4 text-primary" /> CLI Commands Under the Hood
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-xl bg-muted/40 border border-border/50 p-4 space-y-1.5 font-mono text-xs">
+              <div><span className="text-muted-foreground"># List all installed packages</span></div>
+              <div className="text-primary">almanac ls --installed</div>
+              <div className="pt-1.5"><span className="text-muted-foreground"># Search for a package across repos</span></div>
+              <div className="text-primary">almanac search firefox</div>
+              <div className="pt-1.5"><span className="text-muted-foreground"># Show detailed package metadata</span></div>
+              <div className="text-primary">almanac info neovim</div>
+              <div className="pt-1.5"><span className="text-muted-foreground"># Scan system packages</span></div>
+              <div className="text-primary">almanac scan</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-sm shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Box className="size-4 text-primary" /> Built With
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            {["Tauri 2", "Rust", "React 19", "TypeScript", "Tailwind CSS v4", "Lucide Icons", "Radix UI"].map((tech) => (
+              <span key={tech} className="rounded-lg bg-muted/40 border border-border/60 px-3 py-1 text-xs font-medium text-foreground/80">
+                {tech}
+              </span>
+            ))}
           </CardContent>
         </Card>
       </div>

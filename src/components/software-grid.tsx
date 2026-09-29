@@ -22,7 +22,6 @@ export function SoftwareGrid() {
     toggleFavorite,
     selectAllVisible,
     view,
-    setView,
     searchQuery,
     setSearchQuery,
     selectedIndex,

@@ -45,9 +45,10 @@ export function AboutView() {
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text">
             Almanac
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground max-w-lg leading-relaxed">
+          <p className="mt-2 text-sm text-muted-foreground max-w-lg leading-relaxed mx-auto">
             A fast, beautiful graphical directory and package manager for Linux software.
-            Browse, inspect, batch-queue, and install software seamlessly without CLI bottlenecks.
+            <br />
+            Created by <strong className="text-foreground">Nishu Murmu</strong>.
           </p>
         </div>
         <div className="relative flex flex-wrap items-center justify-center gap-2 mt-2">
@@ -72,88 +73,8 @@ export function AboutView() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-3.5 p-6 sm:grid-cols-3 lg:grid-cols-5">
-        {stats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm p-4 flex flex-col gap-2.5 transition-all hover:border-border hover:shadow-md"
-            >
-              <div className={`size-8 rounded-lg flex items-center justify-center border ${stat.bg}`}>
-                <Icon className={`size-4.5 ${stat.color}`} />
-              </div>
-              <div>
-                <div className="text-2xl font-bold tabular-nums tracking-tight">{stat.value}</div>
-                <div className="text-xs text-muted-foreground font-medium mt-0.5">{stat.label}</div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* What is Almanac */}
-      <div className="px-6 pb-10 space-y-7 max-w-3xl">
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">What is Almanac?</h2>
-          <p className="text-sm text-foreground/80 leading-relaxed">
-            Almanac is a high-performance desktop software manager built with Tauri (Rust + React). It acts
-            as your central hub for exploring and managing Linux software across {CATEGORIES.length} categories.
-            Instead of memorizing commands across apt, pacman, yay, flatpak, snap, or dnf, Almanac provides
-            an interactive, keyboard-friendly visual interface to browse, inspect, and trigger package operations
-            under the hood.
-          </p>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Key Capabilities</h2>
-          <div className="grid gap-2 sm:grid-cols-2 text-sm text-foreground/80">
-            <div className="p-3 rounded-xl border border-border/40 bg-card/40 flex items-start gap-2.5">
-              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
-              <span><strong>Interactive Cards</strong> with instant hover metadata & keyboard navigation (Enter to select).</span>
-            </div>
-            <div className="p-3 rounded-xl border border-border/40 bg-card/40 flex items-start gap-2.5">
-              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
-              <span><strong>Batch Queue</strong> to install, update, or remove multiple packages simultaneously.</span>
-            </div>
-            <div className="p-3 rounded-xl border border-border/40 bg-card/40 flex items-start gap-2.5">
-              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
-              <span><strong>Global Search</strong> spanning all apps, package names, descriptions, and tags.</span>
-            </div>
-            <div className="p-3 rounded-xl border border-border/40 bg-card/40 flex items-start gap-2.5">
-              <span className="size-2 rounded-full bg-primary mt-1.5 shrink-0" />
-              <span><strong>Multi-Manager Support</strong> for apt, pacman, yay, paru, flatpak, snap, dnf, zypper, brew.</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">CLI Commands Under the Hood</h2>
-          <div className="rounded-xl bg-muted/40 border border-border/50 p-4 space-y-1.5 font-mono text-xs">
-            <div><span className="text-muted-foreground"># List all installed packages</span></div>
-            <div className="text-primary">almanac ls --installed</div>
-            <div className="pt-1.5"><span className="text-muted-foreground"># Search for a package across repos</span></div>
-            <div className="text-primary">almanac search firefox</div>
-            <div className="pt-1.5"><span className="text-muted-foreground"># Show detailed package metadata</span></div>
-            <div className="text-primary">almanac info neovim</div>
-            <div className="pt-1.5"><span className="text-muted-foreground"># Scan system packages</span></div>
-            <div className="text-primary">almanac scan</div>
-          </div>
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Built With</h2>
-          <div className="flex flex-wrap gap-2">
-            {["Tauri 2", "Rust", "React 19", "TypeScript", "Tailwind CSS v4", "Lucide Icons", "Radix UI"].map((tech) => (
-              <span key={tech} className="rounded-lg bg-card/70 border border-border/60 px-3 py-1 text-xs font-medium text-foreground/80">
-                {tech}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        <section className="space-y-3 pt-2">
+      <div className="px-6 pb-10 space-y-7 max-w-3xl mx-auto pt-8">
+        <section className="space-y-3">
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Support & Sponsorship</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
