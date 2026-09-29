@@ -121,7 +121,6 @@ export type BatchAction = "install" | "update" | "remove"
 export type View =
   | { kind: "grid" }
   | { kind: "detail"; id: string }
-  | { kind: "favorites" }
   | { kind: "installed" }
   | { kind: "system" }
   | { kind: "settings" }

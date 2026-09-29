@@ -15,11 +15,9 @@ import { cn } from "@/lib/utils"
 
 export function SoftwareGrid() {
   const {
-    favorites,
     installed,
     selectedQueue,
     toggleQueueItem,
-    toggleFavorite,
     selectAllVisible,
     view,
     searchQuery,
@@ -61,7 +59,6 @@ export function SoftwareGrid() {
 
   const title = React.useMemo(() => {
     if (isGlobalSearch) return `Results for "${searchQuery}"`
-    if (view.kind === "favorites") return "Favorites"
     if (view.kind === "installed") return "Installed Software"
     if (activeCategory) {
       const cat = CATEGORIES.find((c) => c.id === activeCategory)
@@ -74,7 +71,6 @@ export function SoftwareGrid() {
     if (isGlobalSearch) {
       return `Searching across all ${SOFTWARE.length} apps (${filtered.length} found)`
     }
-    if (view.kind === "favorites") return "Applications you've starred for quick access"
     if (view.kind === "installed") return "Applications detected or marked as installed on this system"
     if (activeCategory) {
       const cat = CATEGORIES.find((c) => c.id === activeCategory)
@@ -97,9 +93,7 @@ export function SoftwareGrid() {
 
   if (filtered.length === 0 && !isGlobalSearch && availableCategories.length === 0) {
     const emptyMsg =
-      view.kind === "favorites"
-        ? "Press the star icon on any app to add it to your favorites."
-        : view.kind === "installed"
+        view.kind === "installed"
         ? "No installed software detected or marked yet."
         : "No packages available."
     return (
@@ -206,7 +200,7 @@ export function SoftwareGrid() {
       </div>
 
       {/* Category filter chips — only when not searching and in grid view */}
-      {!isGlobalSearch && view.kind !== "favorites" && view.kind !== "installed" && availableCategories.length > 1 && (
+      {!isGlobalSearch && view.kind !== "installed" && availableCategories.length > 1 && (
         <div className="flex items-center gap-1.5 px-6 py-2.5 border-b border-border/50 overflow-x-auto scrollbar-thin shrink-0">
           <button
             onClick={() => {
@@ -256,13 +250,11 @@ export function SoftwareGrid() {
             <SoftwareCard
               key={sw.id}
               software={sw}
-              isFavorite={favorites.has(sw.id)}
               isInstalled={installed.has(sw.id)}
               isQueued={selectedQueue.has(sw.id)}
               isHighlighted={selectedIndex === index}
               onSelect={() => handleSelectCard(sw.id)}
               onToggleQueue={() => toggleQueueItem(sw.id)}
-              onToggleFavorite={() => toggleFavorite(sw.id)}
             />
           ))}
         </div>

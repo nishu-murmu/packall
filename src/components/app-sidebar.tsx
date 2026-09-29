@@ -25,7 +25,6 @@ export function AppSidebar() {
     setView,
     sidebarOpen,
     setSidebarOpen,
-    favorites,
     installed,
     selectedQueue,
     openBatchAction,
@@ -37,7 +36,6 @@ export function AppSidebar() {
   } = useAppState()
 
   const isGrid = view.kind === "grid" || view.kind === "detail"
-  const isFav = view.kind === "favorites"
   const isInst = view.kind === "installed"
   const isSystem = view.kind === "system"
   const isSettings = view.kind === "settings"
@@ -82,14 +80,7 @@ export function AppSidebar() {
           badge={SOFTWARE.length}
           shortcut="1"
         />
-        <SidebarLink
-          active={isFav}
-          onClick={() => setView({ kind: "favorites" })}
-          icon={<Star className="size-4 text-amber-400" />}
-          label="Favorites"
-          badge={favorites.size > 0 ? favorites.size : undefined}
-          shortcut="2"
-        />
+
         <SidebarLink
           active={isInst}
           onClick={() => setView({ kind: "installed" })}

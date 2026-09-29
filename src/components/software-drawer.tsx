@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { InstallMethod, InstallOption, StepExecutionResult } from "@/lib/types"
 import {
-  Star,
   Check,
   ExternalLink,
   X,
@@ -34,10 +33,8 @@ export function SoftwareDrawer() {
   const {
     inspectSoftwareId,
     setInspectSoftwareId,
-    favorites,
     installed,
     selectedQueue,
-    toggleFavorite,
     toggleQueueItem,
     runPackageAction,
     runMultiStepAction,
@@ -115,7 +112,6 @@ export function SoftwareDrawer() {
   if (!software) return null
 
   const category = CATEGORY_MAP[software.category]
-  const isFav = favorites.has(software.id)
   const isInst = installed.has(software.id)
   const isQueued = selectedQueue.has(software.id)
 
@@ -207,18 +203,7 @@ export function SoftwareDrawer() {
               </kbd>
             </Button>
           </div>
-
           <div className="flex items-center gap-2">
-            <Button
-              variant={isFav ? "default" : "outline"}
-              size="icon-sm"
-              title={isFav ? "Remove from favorites" : "Add to favorites"}
-              onClick={() => toggleFavorite(software.id)}
-              className="rounded-xl cursor-pointer"
-            >
-              <Star className={cn("size-4", isFav && "fill-current text-amber-400")} />
-            </Button>
-
             <Button
               variant={isQueued ? "secondary" : "outline"}
               size="sm"
@@ -329,62 +314,7 @@ export function SoftwareDrawer() {
             </div>
           </div>
 
-          <Separator className="bg-border/40" />
 
-          {/* Distro & Package Manager Intelligence Banner */}
-          {distroInfo && (
-            <div className="rounded-xl border border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-3.5 space-y-2">
-              <div className="flex items-center justify-between gap-2 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <div className="flex size-7 items-center justify-center rounded-lg bg-primary/20 text-primary">
-                    <Cpu className="size-3.5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-semibold text-foreground">
-                        {distroInfo.pretty_name || distroInfo.name}
-                      </span>
-                      <Badge className="bg-primary/20 text-primary border-primary/30 text-[10px] px-1.5 py-0 h-4">
-                        Auto-detected
-                      </Badge>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground">
-                      Distro family: <span className="capitalize font-medium">{distroInfo.id}</span>
-                      {" · "}
-                      Recommended tool:{" "}
-                      <span className="font-semibold text-primary uppercase">
-                        {distroInfo.preferred_manager}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <span className="text-[10px] text-muted-foreground block">
-                    {availableSystemManagers.length} package manager(s) detected
-                  </span>
-                  <div className="flex items-center gap-1 justify-end mt-0.5">
-                    {availableSystemManagers.map((m) => (
-                      <span
-                        key={m.id}
-                        className={cn(
-                          "text-[9px] px-1.5 py-0.5 rounded font-mono border",
-                          m.id === distroInfo.preferred_manager
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-muted/50 text-muted-foreground border-border/50"
-                        )}
-                        title={`${m.name} (${m.available ? "Installed" : "Missing"})`}
-                      >
-                        {m.id}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Package Manager Selector */}
           <div>
             <div className="flex items-center justify-between mb-2.5">
               <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
@@ -684,9 +614,6 @@ export function SoftwareDrawer() {
         <div className="flex h-11 shrink-0 items-center justify-between border-t border-border/50 px-5 text-[11px] text-muted-foreground/60 bg-background/50">
           <span>
             Press <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd> to close drawer
-          </span>
-          <span>
-            Press <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">f</kbd> to favorite
           </span>
         </div>
       </aside>

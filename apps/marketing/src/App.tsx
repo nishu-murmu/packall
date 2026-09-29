@@ -607,50 +607,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Why Almanac Feature Pillars */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-2">
-            <Zap className="w-4 h-4" /> Built For Enthusiasts
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Engineered for Pure Speed and Comfort
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="glass-panel p-8">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mb-6">
-              <Keyboard className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">100% Home Row Navigation</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Designed for terminal enthusiasts. Move with <kbd className="kbd-key">j</kbd>/<kbd className="kbd-key">k</kbd>, switch categories with <kbd className="kbd-key">h</kbd>/<kbd className="kbd-key">l</kbd>, jump with <kbd className="kbd-key">gg</kbd>/<kbd className="kbd-key">G</kbd>, and search instantly with <kbd className="kbd-key">/</kbd>.
-            </p>
-          </div>
-
-          <div className="glass-panel p-8">
-            <div className="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400 mb-6">
-              <Cpu className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Tauri v2 & Rust Core</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              No bloated Chromium runtimes. Almanac starts in under 10 milliseconds, uses less than 40MB of system memory, and makes zero network calls without your explicit instruction.
-            </p>
-          </div>
-
-          <div className="glass-panel p-8">
-            <div className="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center text-violet-400 mb-6">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">Distribution Agnostic</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Never struggle finding the right package format again. Almanac queries your system package managers (apt, dnf, pacman, flatpak, snap) and gives you clean, verified install commands.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Download Center Section */}
       <section id="downloads" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
         <div className="text-center mb-12">

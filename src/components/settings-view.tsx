@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Sliders, Sparkles, Terminal, Layers, Info, Code, Box, Zap } from "lucide-react"
 
 export function SettingsView() {
-  const { favorites, installed } = useAppState()
+  const { installed } = useAppState()
 
   const stats = React.useMemo(() => {
     const totalApps = SOFTWARE.length
@@ -43,10 +43,9 @@ export function SettingsView() {
               Overview of the curated software catalog
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-4">
+          <CardContent className="grid gap-3 sm:grid-cols-3">
             <Stat label="Total Apps" value={stats.totalApps} />
             <Stat label="Categories" value={stats.totalCategories} />
-            <Stat label="Your Favorites" value={favorites.size} />
             <Stat label="Installed" value={installed.size} />
           </CardContent>
         </Card>

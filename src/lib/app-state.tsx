@@ -20,7 +20,6 @@ interface AppState {
   selectedCategoryId: CategoryId
   searchQuery: string
   selectedIndex: number
-  favorites: Set<string>
   installed: Set<string>
   selectedQueue: Set<string>
   sidebarOpen: boolean
@@ -39,7 +38,6 @@ interface AppState {
   setSearchQuery: (q: string) => void
   setSelectedIndex: (i: number) => void
   setInspectSoftwareId: (id: string | null) => void
-  toggleFavorite: (id: string) => void
   toggleInstalled: (id: string) => void
   toggleQueueItem: (id: string) => void
   clearQueue: () => void
@@ -68,14 +66,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     React.useState<CategoryId>("browsers")
   const [searchQuery, setSearchQuery] = React.useState("")
   const [selectedIndex, setSelectedIndex] = React.useState(0)
-  const [favorites, setFavorites] = React.useState<Set<string>>(() => {
-    try {
-      const saved = localStorage.getItem("almanac_favorites")
-      return saved ? new Set(JSON.parse(saved)) : new Set()
-    } catch {
-      return new Set()
-    }
-  })
   const [installed, setInstalled] = React.useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem("almanac_installed")
@@ -95,15 +85,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [distroInfo, setDistroInfo] = React.useState<DistroInfo | null>(null)
   const [isLoadingSystem, setIsLoadingSystem] = React.useState(false)
   const [, setViewStack] = React.useState<View[]>([{ kind: "grid" }])
-
-  // Sync favorites & installed to localStorage
-  React.useEffect(() => {
-    try {
-      localStorage.setItem("almanac_favorites", JSON.stringify(Array.from(favorites)))
-    } catch {
-      // ignore
-    }
-  }, [favorites])
 
   React.useEffect(() => {
     try {
@@ -219,15 +200,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       return newStack
     })
   }, [inspectSoftwareId])
-
-  const toggleFavorite = React.useCallback((id: string) => {
-    setFavorites((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
 
   const toggleInstalled = React.useCallback((id: string) => {
     setInstalled((prev) => {
@@ -373,7 +345,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     selectedCategoryId,
     searchQuery,
     selectedIndex,
-    favorites,
     installed,
     selectedQueue,
     sidebarOpen,
@@ -391,7 +362,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setSearchQuery,
     setSelectedIndex,
     setInspectSoftwareId,
-    toggleFavorite,
     toggleInstalled,
     toggleQueueItem,
     clearQueue,
@@ -424,7 +394,7 @@ export function useAppState() {
  * of which category is currently selected!
  */
 export function useFilteredSoftware() {
-  const { view, searchQuery, favorites, installed } =
+  const { view, searchQuery, installed } =
     useAppState()
 
   return React.useMemo(() => {
@@ -435,10 +405,7 @@ export function useFilteredSoftware() {
       const q = searchQuery.toLowerCase()
       let searchList = SOFTWARE
 
-      // If user was viewing favorites or installed, respect that sub-filter
-      if (view.kind === "favorites") {
-        searchList = searchList.filter((s) => favorites.has(s.id))
-      } else if (view.kind === "installed") {
+      if (view.kind === "installed") {
         searchList = searchList.filter((s) => installed.has(s.id))
       }
 
@@ -452,16 +419,13 @@ export function useFilteredSoftware() {
       )
     }
 
-    // Standard view filtering (no search query active)
-    if (view.kind === "favorites") {
-      list = list.filter((s) => favorites.has(s.id))
-    } else if (view.kind === "installed") {
+    if (view.kind === "installed") {
       list = list.filter((s) => installed.has(s.id))
     }
     // For "grid" and all other views: show all software
 
     return list
-  }, [view, searchQuery, favorites, installed])
+  }, [view, searchQuery, installed])
 }
 
 

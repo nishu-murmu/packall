@@ -21,12 +21,11 @@ function GithubIcon({ className = "size-4" }: { className?: string }) {
 }
 
 export function AboutView() {
-  const { favorites, installed, systemPackages } = useAppState()
+  const { installed, systemPackages } = useAppState()
 
   const stats = [
     { label: "Apps in Catalog", value: SOFTWARE.length, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10 border-blue-500/20" },
     { label: "Categories", value: CATEGORIES.length, icon: Terminal, color: "text-violet-500", bg: "bg-violet-500/10 border-violet-500/20" },
-    { label: "Your Favorites", value: favorites.size, icon: Star, color: "text-amber-500", bg: "bg-amber-500/10 border-amber-500/20" },
     { label: "Installed (Curated)", value: installed.size, icon: Cpu, color: "text-emerald-500", bg: "bg-emerald-500/10 border-emerald-500/20" },
     { label: "System Packages", value: systemPackages.length, icon: Search, color: "text-purple-500", bg: "bg-purple-500/10 border-purple-500/20" },
   ]
