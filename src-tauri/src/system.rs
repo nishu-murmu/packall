@@ -1,7 +1,20 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::path::Path;
+#[cfg(unix)]
+use std::path::PathBuf;
 use std::process::Command;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
+
+static PACKAGES_CACHE: Mutex<Option<(Instant, Vec<SystemPackage>)>> = Mutex::new(None);
+static DISTRO_CACHE: Mutex<Option<DistroInfo>> = Mutex::new(None);
+
+pub fn invalidate_system_cache() {
+    if let Ok(mut lock) = PACKAGES_CACHE.lock() {
+        *lock = None;
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SystemPackage {
@@ -29,6 +42,41 @@ pub struct ActionExecutionResult {
     pub success: bool,
     pub command: String,
     pub output: String,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct DistroInfo {
+    pub id: String,
+    pub name: String,
+    pub pretty_name: String,
+    pub preferred_manager: String,
+    pub managers: Vec<PackageManagerInfo>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MultiStepCommand {
+    pub title: String,
+    pub command: String,
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct StepExecutionResult {
+    pub step_index: usize,
+    pub title: String,
+    pub command: String,
+    pub success: bool,
+    pub stdout: String,
+    pub stderr: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MultiStepActionResult {
+    pub success: bool,
+    pub completed_steps: usize,
+    pub total_steps: usize,
+    pub step_results: Vec<StepExecutionResult>,
     pub error: Option<String>,
 }
 
@@ -84,12 +132,8 @@ fn is_executable_in_path(cmd: &str) -> bool {
     }
 }
 
-/// Query installed packages across all available managers on the host system
-pub fn scan_system_packages() -> Vec<SystemPackage> {
-    let mut packages = Vec::new();
-    let mut seen = HashSet::new();
-
-    // 1. Check Pacman (Arch Linux explicit packages)
+fn scan_pacman() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     if is_executable_in_path("pacman") {
         if let Ok(output) = Command::new("pacman").args(["-Qe"]).output() {
             if output.status.success() {
@@ -97,24 +141,24 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
                 for line in stdout.lines() {
                     let mut parts = line.split_whitespace();
                     if let (Some(name), Some(version)) = (parts.next(), parts.next()) {
-                        let key = format!("pacman:{}", name);
-                        if seen.insert(key) {
-                            packages.push(SystemPackage {
-                                name: name.to_string(),
-                                version: version.to_string(),
-                                manager: "pacman".to_string(),
-                                description: None,
-                                installed: true,
-                                icon: resolve_linux_icon_path(name),
-                            });
-                        }
+                        pkgs.push(SystemPackage {
+                            name: name.to_string(),
+                            version: version.to_string(),
+                            manager: "pacman".to_string(),
+                            description: None,
+                            installed: true,
+                            icon: resolve_linux_icon_path(name),
+                        });
                     }
                 }
             }
         }
     }
+    pkgs
+}
 
-    // 2. Check Paru or Yay (AUR foreign packages)
+fn scan_aur() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     for aur_tool in ["paru", "yay"] {
         if is_executable_in_path(aur_tool) {
             if let Ok(output) = Command::new(aur_tool).args(["-Qm"]).output() {
@@ -123,17 +167,14 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
                     for line in stdout.lines() {
                         let mut parts = line.split_whitespace();
                         if let (Some(name), Some(version)) = (parts.next(), parts.next()) {
-                            let key = format!("aur:{}", name);
-                            if seen.insert(key) {
-                                packages.push(SystemPackage {
-                                    name: name.to_string(),
-                                    version: version.to_string(),
-                                    manager: "aur".to_string(),
-                                    description: None,
-                                    installed: true,
-                                    icon: resolve_linux_icon_path(name),
-                                });
-                            }
+                            pkgs.push(SystemPackage {
+                                name: name.to_string(),
+                                version: version.to_string(),
+                                manager: "aur".to_string(),
+                                description: None,
+                                installed: true,
+                                icon: resolve_linux_icon_path(name),
+                            });
                         }
                     }
                 }
@@ -141,8 +182,11 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
             break;
         }
     }
+    pkgs
+}
 
-    // 3. Check Flatpak
+fn scan_flatpak() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     if is_executable_in_path("flatpak") {
         if let Ok(output) = Command::new("flatpak")
             .args(["list", "--app", "--columns=application,name,version"])
@@ -156,50 +200,50 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
                         let app_id = parts[0].trim();
                         let app_name = parts.get(1).unwrap_or(&app_id).trim();
                         let version = parts.get(2).unwrap_or(&"latest").trim();
-                        let key = format!("flatpak:{}", app_id);
-                        if seen.insert(key) {
-                            packages.push(SystemPackage {
-                                name: if !app_name.is_empty() { app_name.to_string() } else { app_id.to_string() },
-                                version: version.to_string(),
-                                manager: "flatpak".to_string(),
-                                description: Some(app_id.to_string()),
-                                installed: true,
-                                icon: resolve_linux_icon_path(app_id),
-                            });
-                        }
+                        pkgs.push(SystemPackage {
+                            name: if !app_name.is_empty() { app_name.to_string() } else { app_id.to_string() },
+                            version: version.to_string(),
+                            manager: "flatpak".to_string(),
+                            description: Some(app_id.to_string()),
+                            installed: true,
+                            icon: resolve_linux_icon_path(app_id),
+                        });
                     }
                 }
             }
         }
     }
+    pkgs
+}
 
-    // 4. Check Snap
+fn scan_snap() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     if is_executable_in_path("snap") {
         if let Ok(output) = Command::new("snap").args(["list"]).output() {
             if output.status.success() {
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 for (idx, line) in stdout.lines().enumerate() {
-                    if idx == 0 { continue; } // skip header
+                    if idx == 0 { continue; }
                     let mut parts = line.split_whitespace();
                     if let (Some(name), Some(version)) = (parts.next(), parts.next()) {
-                        let key = format!("snap:{}", name);
-                        if seen.insert(key) {
-                            packages.push(SystemPackage {
-                                name: name.to_string(),
-                                version: version.to_string(),
-                                manager: "snap".to_string(),
-                                description: None,
-                                installed: true,
-                                icon: resolve_linux_icon_path(name),
-                            });
-                        }
+                        pkgs.push(SystemPackage {
+                            name: name.to_string(),
+                            version: version.to_string(),
+                            manager: "snap".to_string(),
+                            description: None,
+                            installed: true,
+                            icon: resolve_linux_icon_path(name),
+                        });
                     }
                 }
             }
         }
     }
+    pkgs
+}
 
-    // 5. Check APT (Debian/Ubuntu)
+fn scan_apt() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     if is_executable_in_path("dpkg-query") {
         if let Ok(output) = Command::new("dpkg-query")
             .args(["-W", "-f=${Package}\t${Version}\t${Status}\n"])
@@ -212,24 +256,24 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
                     if parts.len() >= 3 && parts[2].contains("installed") {
                         let name = parts[0].trim();
                         let version = parts[1].trim();
-                        let key = format!("apt:{}", name);
-                        if seen.insert(key) {
-                            packages.push(SystemPackage {
-                                name: name.to_string(),
-                                version: version.to_string(),
-                                manager: "apt".to_string(),
-                                description: None,
-                                installed: true,
-                                icon: resolve_linux_icon_path(name),
-                            });
-                        }
+                        pkgs.push(SystemPackage {
+                            name: name.to_string(),
+                            version: version.to_string(),
+                            manager: "apt".to_string(),
+                            description: None,
+                            installed: true,
+                            icon: resolve_linux_icon_path(name),
+                        });
                     }
                 }
             }
         }
     }
+    pkgs
+}
 
-    // 6. Check Homebrew
+fn scan_brew() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
     if is_executable_in_path("brew") {
         if let Ok(output) = Command::new("brew").args(["list", "--versions"]).output() {
             if output.status.success() {
@@ -237,25 +281,70 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
                 for line in stdout.lines() {
                     let mut parts = line.split_whitespace();
                     if let (Some(name), Some(version)) = (parts.next(), parts.next()) {
-                        let key = format!("brew:{}", name);
-                        if seen.insert(key) {
-                            packages.push(SystemPackage {
-                                name: name.to_string(),
-                                version: version.to_string(),
-                                manager: "brew".to_string(),
-                                description: None,
-                                installed: true,
-                                icon: None,
-                            });
-                        }
+                        pkgs.push(SystemPackage {
+                            name: name.to_string(),
+                            version: version.to_string(),
+                            manager: "brew".to_string(),
+                            description: None,
+                            installed: true,
+                            icon: None,
+                        });
                     }
                 }
             }
         }
     }
+    pkgs
+}
+
+/// Query installed packages across all available managers on the host system in parallel
+pub fn scan_system_packages() -> Vec<SystemPackage> {
+    // 1. Check in-memory TTL cache (returns in < 0.1ms for near-instant desktop response)
+    if let Ok(lock) = PACKAGES_CACHE.lock() {
+        if let Some((instant, ref pkgs)) = *lock {
+            if instant.elapsed() < Duration::from_secs(30) {
+                return pkgs.clone();
+            }
+        }
+    }
+
+    // 2. Parallel thread-scoped scan: Run all package manager queries concurrently
+    let raw_packages = std::thread::scope(|s| {
+        let h_pacman = s.spawn(scan_pacman);
+        let h_aur = s.spawn(scan_aur);
+        let h_flatpak = s.spawn(scan_flatpak);
+        let h_snap = s.spawn(scan_snap);
+        let h_apt = s.spawn(scan_apt);
+        let h_brew = s.spawn(scan_brew);
+
+        let mut gathered = Vec::new();
+        gathered.extend(h_pacman.join().unwrap_or_default());
+        gathered.extend(h_aur.join().unwrap_or_default());
+        gathered.extend(h_flatpak.join().unwrap_or_default());
+        gathered.extend(h_snap.join().unwrap_or_default());
+        gathered.extend(h_apt.join().unwrap_or_default());
+        gathered.extend(h_brew.join().unwrap_or_default());
+        gathered
+    });
+
+    let mut packages = Vec::with_capacity(raw_packages.len());
+    let mut seen = HashSet::new();
+
+    for pkg in raw_packages {
+        let key = format!("{}:{}", pkg.manager, pkg.name);
+        if seen.insert(key) {
+            packages.push(pkg);
+        }
+    }
 
     // Sort alphabetically by package name
     packages.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+
+    // Store in cache
+    if let Ok(mut lock) = PACKAGES_CACHE.lock() {
+        *lock = Some((Instant::now(), packages.clone()));
+    }
+
     packages
 }
 
@@ -407,3 +496,208 @@ pub fn build_action_command(action: &str, packages: &[String], manager: Option<&
         _ => ("echo".to_string(), vec!["unknown action".to_string()]),
     }
 }
+
+/// Detect the Linux distribution and its available package managers
+pub fn detect_distro_info() -> DistroInfo {
+    if let Ok(lock) = DISTRO_CACHE.lock() {
+        if let Some(ref d) = *lock {
+            return d.clone();
+        }
+    }
+
+    let managers = detect_available_managers();
+    #[cfg(unix)]
+    let (distro_id, distro_name, pretty_name) = {
+        let mut d_id = "linux".to_string();
+        let mut d_name = "Linux".to_string();
+        let mut p_name = "Linux".to_string();
+        let os_release_paths = ["/etc/os-release", "/usr/lib/os-release"];
+        for path in os_release_paths {
+            if let Ok(content) = std::fs::read_to_string(path) {
+                for line in content.lines() {
+                    if let Some(val) = line.strip_prefix("ID=") {
+                        d_id = val.trim_matches('"').trim().to_lowercase();
+                    } else if let Some(val) = line.strip_prefix("NAME=") {
+                        d_name = val.trim_matches('"').trim().to_string();
+                    } else if let Some(val) = line.strip_prefix("PRETTY_NAME=") {
+                        p_name = val.trim_matches('"').trim().to_string();
+                    }
+                }
+                break;
+            }
+        }
+        (d_id, d_name, p_name)
+    };
+
+    #[cfg(not(unix))]
+    let (distro_id, distro_name, pretty_name) = (
+        "windows".to_string(),
+        "Windows (Dev Mode)".to_string(),
+        "Windows Dev Environment".to_string(),
+    );
+
+    let is_arch_like = distro_id == "arch" 
+        || distro_id == "manjaro" 
+        || distro_id == "endeavouros" 
+        || distro_id == "garuda" 
+        || distro_id == "artix";
+
+    let is_debian_like = distro_id == "debian" 
+        || distro_id == "ubuntu" 
+        || distro_id == "linuxmint" 
+        || distro_id == "pop" 
+        || distro_id == "elementary" 
+        || distro_id == "zorin";
+
+    let is_fedora_like = distro_id == "fedora" 
+        || distro_id == "rhel" 
+        || distro_id == "centos" 
+        || distro_id == "almalinux" 
+        || distro_id == "rocky";
+
+    let is_suse_like = distro_id == "opensuse" 
+        || distro_id.contains("suse");
+
+    let is_available = |id: &str| -> bool {
+        managers.iter().any(|m| m.id == id && m.available)
+    };
+
+    let preferred_manager = if is_arch_like {
+        if is_available("paru") {
+            "paru"
+        } else if is_available("yay") {
+            "yay"
+        } else if is_available("pacman") {
+            "pacman"
+        } else if is_available("flatpak") {
+            "flatpak"
+        } else {
+            "paru"
+        }
+    } else if is_debian_like {
+        if is_available("apt") {
+            "apt"
+        } else if is_available("flatpak") {
+            "flatpak"
+        } else if is_available("snap") {
+            "snap"
+        } else {
+            "apt"
+        }
+    } else if is_fedora_like {
+        if is_available("dnf") {
+            "dnf"
+        } else if is_available("flatpak") {
+            "flatpak"
+        } else {
+            "dnf"
+        }
+    } else if is_suse_like {
+        if is_available("zypper") {
+            "zypper"
+        } else if is_available("flatpak") {
+            "flatpak"
+        } else {
+            "zypper"
+        }
+    } else {
+        managers
+            .iter()
+            .find(|m| m.available)
+            .map(|m| m.id.as_str())
+            .unwrap_or("paru")
+    };
+
+    let distro_info = DistroInfo {
+        id: distro_id,
+        name: distro_name,
+        pretty_name,
+        preferred_manager: preferred_manager.to_string(),
+        managers,
+    };
+
+    if let Ok(mut lock) = DISTRO_CACHE.lock() {
+        *lock = Some(distro_info.clone());
+    }
+
+    distro_info
+}
+
+/// Execute a multi-step installation workflow sequentially
+pub fn execute_multi_step_commands(steps: Vec<MultiStepCommand>) -> MultiStepActionResult {
+    let total_steps = steps.len();
+    let mut step_results = Vec::new();
+
+    for (index, step) in steps.into_iter().enumerate() {
+        #[cfg(unix)]
+        let output_res = Command::new("sh").args(["-c", &step.command]).output();
+
+        #[cfg(windows)]
+        let output_res = Command::new("powershell").args(["-Command", &step.command]).output();
+
+        match output_res {
+            Ok(output) => {
+                let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+                let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+                let success = output.status.success();
+
+                let step_res = StepExecutionResult {
+                    step_index: index + 1,
+                    title: step.title.clone(),
+                    command: step.command.clone(),
+                    success,
+                    stdout: stdout.clone(),
+                    stderr: stderr.clone(),
+                };
+                step_results.push(step_res);
+
+                if !success {
+                    let err_msg = if !stderr.trim().is_empty() {
+                        stderr
+                    } else if !stdout.trim().is_empty() {
+                        stdout
+                    } else {
+                        format!("Step {} ('{}') exited with error code", index + 1, step.title)
+                    };
+
+                    return MultiStepActionResult {
+                        success: false,
+                        completed_steps: index,
+                        total_steps,
+                        step_results,
+                        error: Some(err_msg),
+                    };
+                }
+            }
+            Err(e) => {
+                step_results.push(StepExecutionResult {
+                    step_index: index + 1,
+                    title: step.title.clone(),
+                    command: step.command.clone(),
+                    success: false,
+                    stdout: String::new(),
+                    stderr: format!("Failed to spawn process: {}", e),
+                });
+
+                return MultiStepActionResult {
+                    success: false,
+                    completed_steps: index,
+                    total_steps,
+                    step_results,
+                    error: Some(format!("Failed to execute step {}: {}", index + 1, e)),
+                };
+            }
+        }
+    }
+
+    invalidate_system_cache();
+
+    MultiStepActionResult {
+        success: true,
+        completed_steps: total_steps,
+        total_steps,
+        step_results,
+        error: None,
+    }
+}
+

@@ -1,8 +1,5 @@
-import * as React from "react"
 import { useAppState } from "@/lib/app-state"
-import { CATEGORIES } from "@/lib/categories"
 import { SOFTWARE } from "@/lib/software"
-import { CategoryIcon } from "@/components/category-icon"
 import { cn } from "@/lib/utils"
 import {
   Star,
@@ -13,13 +10,17 @@ import {
   Package,
   Cpu,
   CheckSquare,
+  Heart,
+  Info,
+  ExternalLink,
+  RefreshCw,
+  Trash2,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function AppSidebar() {
   const {
-    selectedCategoryId,
-    setSelectedCategory,
     view,
     setView,
     sidebarOpen,
@@ -27,62 +28,56 @@ export function AppSidebar() {
     favorites,
     installed,
     selectedQueue,
-    systemPackages,
     openBatchAction,
     setHelpOpen,
+    clearQueue,
+    isLoadingSystem,
+    refreshSystemPackages,
+    systemPackages,
   } = useAppState()
 
-  const isGrid = view.kind === "grid"
+  const isGrid = view.kind === "grid" || view.kind === "detail"
   const isFav = view.kind === "favorites"
   const isInst = view.kind === "installed"
   const isSystem = view.kind === "system"
   const isSettings = view.kind === "settings"
-
-  const categoryCounts = React.useMemo(() => {
-    const counts: Record<string, number> = {}
-    for (const s of SOFTWARE) {
-      counts[s.category] = (counts[s.category] ?? 0) + 1
-    }
-    return counts
-  }, [])
+  const isAbout = view.kind === "about"
 
   return (
     <aside
       className={cn(
-        "flex h-svh flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-200 select-none",
-        sidebarOpen ? "w-64" : "w-0 overflow-hidden"
+        "flex h-svh flex-col border-r border-border/50 bg-sidebar/80 backdrop-blur-xl text-sidebar-foreground transition-all duration-300 select-none",
+        sidebarOpen ? "w-60" : "w-0 overflow-hidden"
       )}
     >
-      <div className="flex items-center justify-between gap-2 p-4 pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+      {/* Logo */}
+      <div className="flex items-center justify-between gap-2 p-4 pb-3 border-b border-border/50">
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-lg shadow-primary/20">
             <Package className="size-4" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold leading-tight">Almanac</span>
-            <span className="text-[10px] text-muted-foreground leading-tight">
-              Linux Software & CLI
-            </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-sm font-bold tracking-tight gradient-text">Almanac</span>
+            <span className="text-[10px] text-muted-foreground">Software Manager</span>
           </div>
         </div>
         <Button
           variant="ghost"
           size="icon-xs"
           onClick={() => setSidebarOpen(false)}
-          className="text-muted-foreground hover:text-foreground"
+          className="cursor-pointer text-muted-foreground hover:text-foreground"
         >
           <PanelLeftClose className="size-4" />
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-2">
-        <div className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Core Views
-        </div>
+      {/* Main navigation */}
+      <div className="flex-1 overflow-y-auto px-2 py-3 space-y-0.5">
+        <NavLabel>Browse</NavLabel>
         <SidebarLink
           active={isGrid}
           onClick={() => setView({ kind: "grid" })}
-          icon={<Package className="size-4" />}
+          icon={<Sparkles className="size-4" />}
           label="All Software"
           badge={SOFTWARE.length}
           shortcut="1"
@@ -98,8 +93,8 @@ export function AppSidebar() {
         <SidebarLink
           active={isInst}
           onClick={() => setView({ kind: "installed" })}
-          icon={<Download className="size-4 text-green-500" />}
-          label="Installed (Curated)"
+          icon={<Download className="size-4 text-emerald-400" />}
+          label="Installed"
           badge={installed.size > 0 ? installed.size : undefined}
           shortcut="3"
         />
@@ -112,23 +107,64 @@ export function AppSidebar() {
           shortcut="4"
         />
 
+        {/* Selected queue section */}
         {selectedQueue.size > 0 && (
-          <div className="my-2 px-1">
-            <button
-              onClick={() => openBatchAction("install")}
-              className="flex w-full items-center justify-between rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
-            >
-              <span className="flex items-center gap-1.5">
-                <CheckSquare className="size-3.5" />
-                Queue Selected
-              </span>
-              <span className="rounded-full bg-primary px-1.5 py-0.2 text-[10px] text-primary-foreground font-mono">
-                {selectedQueue.size}
-              </span>
-            </button>
-          </div>
+          <>
+            <NavLabel className="mt-4">Selection Queue</NavLabel>
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-2.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                  <CheckSquare className="size-3.5" />
+                  {selectedQueue.size} selected
+                </span>
+                <button
+                  onClick={clearQueue}
+                  className="cursor-pointer text-[10px] text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="grid grid-cols-3 gap-1">
+                <QueueBtn
+                  onClick={() => openBatchAction("install")}
+                  icon={<Download className="size-3" />}
+                  label="Install"
+                  color="primary"
+                />
+                <QueueBtn
+                  onClick={() => openBatchAction("update")}
+                  icon={<RefreshCw className="size-3" />}
+                  label="Update"
+                  color="secondary"
+                />
+                <QueueBtn
+                  onClick={() => openBatchAction("remove")}
+                  icon={<Trash2 className="size-3" />}
+                  label="Remove"
+                  color="danger"
+                />
+              </div>
+            </div>
+          </>
         )}
 
+        {/* System actions */}
+        <NavLabel className="mt-4">Actions</NavLabel>
+        <button
+          onClick={refreshSystemPackages}
+          disabled={isLoadingSystem}
+          className={cn(
+            "cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition-all duration-200 text-sidebar-foreground/70 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+          )}
+        >
+          <RefreshCw className={cn("size-4", isLoadingSystem && "animate-spin")} />
+          <span className="flex-1 text-left">
+            {isLoadingSystem ? "Scanning..." : "Scan System"}
+          </span>
+        </button>
+
+        {/* Settings & About */}
+        <NavLabel className="mt-4">App</NavLabel>
         <SidebarLink
           active={isSettings}
           onClick={() => setView({ kind: "settings" })}
@@ -136,26 +172,12 @@ export function AppSidebar() {
           label="Settings"
           shortcut="5"
         />
-
-        <div className="mt-4 mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-          Categories ({CATEGORIES.length})
-        </div>
-        {CATEGORIES.map((cat) => {
-          const active = isGrid && selectedCategoryId === cat.id
-          return (
-            <SidebarLink
-              key={cat.id}
-              active={active}
-              onClick={() => setSelectedCategory(cat.id)}
-              icon={<CategoryIcon name={cat.icon} className="size-4" />}
-              label={cat.name}
-              badge={categoryCounts[cat.id]}
-            />
-          )
-        })}
-      </div>
-
-      <div className="border-t p-2">
+        <SidebarLink
+          active={isAbout}
+          onClick={() => setView({ kind: "about" })}
+          icon={<Info className="size-4" />}
+          label="About & Donate"
+        />
         <SidebarLink
           onClick={() => setHelpOpen(true)}
           icon={<HelpCircle className="size-4" />}
@@ -163,7 +185,36 @@ export function AppSidebar() {
           shortcut="?"
         />
       </div>
+
+      {/* Footer */}
+      <div className="border-t border-border/50 p-3 space-y-1">
+        <a
+          href="https://github.com/nishu-murmu/almanac"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground transition-all duration-200"
+        >
+          <ExternalLink className="size-3.5" />
+          <span className="flex-1 text-left">Star on GitHub</span>
+          <Star className="size-3 text-amber-400" />
+        </a>
+        <button
+          onClick={() => setView({ kind: "about" })}
+          className="cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:bg-sidebar-accent/40 hover:text-rose-400 transition-all duration-200"
+        >
+          <Heart className="size-3.5 text-rose-400" />
+          <span className="flex-1 text-left">Sponsor / Donate</span>
+        </button>
+      </div>
     </aside>
+  )
+}
+
+function NavLabel({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn("px-2 pt-2 pb-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50", className)}>
+      {children}
+    </div>
   )
 }
 
@@ -186,24 +237,62 @@ function SidebarLink({
     <button
       onClick={onClick}
       className={cn(
-        "group/sidebar-link flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
+        "cursor-pointer group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-semibold transition-all duration-200",
         active
-          ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+          ? "bg-primary/10 text-primary shadow-xs"
+          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground"
       )}
     >
-      <span className="shrink-0">{icon}</span>
+      <span className={cn("shrink-0 transition-transform duration-200 group-hover:scale-110", active ? "text-primary" : "text-muted-foreground")}>
+        {icon}
+      </span>
       <span className="flex-1 truncate text-left">{label}</span>
       {badge !== undefined && (
-        <span className="text-[10px] tabular-nums text-muted-foreground font-mono">
+        <span
+          className={cn(
+            "rounded-md px-1.5 py-0.5 text-[10px] font-mono tabular-nums",
+            active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+          )}
+        >
           {badge}
         </span>
       )}
       {shortcut && (
-        <kbd className="hidden text-[9px] text-muted-foreground/60 group-hover/sidebar-link:inline">
+        <kbd className="hidden sm:inline-block rounded border border-border/40 bg-muted/60 px-1 text-[10px] font-mono text-muted-foreground/60 group-hover:text-muted-foreground">
           {shortcut}
         </kbd>
       )}
+    </button>
+  )
+}
+
+function QueueBtn({
+  onClick,
+  icon,
+  label,
+  color,
+}: {
+  onClick: () => void
+  icon: React.ReactNode
+  label: string
+  color: "primary" | "secondary" | "danger"
+}) {
+  const colorClasses = {
+    primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+    secondary: "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+    danger: "bg-destructive/15 text-destructive hover:bg-destructive/25",
+  }
+
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "cursor-pointer flex items-center justify-center gap-1 rounded-lg py-1 px-1.5 text-[10px] font-semibold transition-all",
+        colorClasses[color]
+      )}
+    >
+      {icon}
+      <span>{label}</span>
     </button>
   )
 }

@@ -1,6 +1,5 @@
 import * as React from "react"
 import { useAppState, useFilteredSoftware } from "./app-state"
-import { CATEGORIES } from "./categories"
 import type { View } from "./types"
 
 export function useKeybindings() {
@@ -9,12 +8,12 @@ export function useKeybindings() {
 
   const {
     view,
-    selectedCategoryId,
     selectedIndex,
     searchFocused,
     helpOpen,
+    inspectSoftwareId,
+    setInspectSoftwareId,
     setView,
-    setSelectedCategory,
     setSelectedIndex,
     setSidebarOpen,
     setHelpOpen,
@@ -45,14 +44,7 @@ export function useKeybindings() {
     [filtered.length, selectedIndex, setSelectedIndex]
   )
 
-  const changeCategory = React.useCallback(
-    (direction: 1 | -1) => {
-      const idx = CATEGORIES.findIndex((c) => c.id === selectedCategoryId)
-      const nextIdx = (idx + direction + CATEGORIES.length) % CATEGORIES.length
-      setSelectedCategory(CATEGORIES[nextIdx].id)
-    },
-    [selectedCategoryId, setSelectedCategory]
-  )
+
 
   const handleKey = React.useCallback(
     (e: KeyboardEvent) => {
@@ -72,21 +64,7 @@ export function useKeybindings() {
         return
       }
 
-      if (view.kind === "detail") {
-        if (e.key === "Escape" || e.key === "Backspace") {
-          e.preventDefault()
-          goBack()
-        }
-        if (e.key === "f") {
-          e.preventDefault()
-          toggleFavorite(view.id)
-        }
-        if (e.key === "i") {
-          e.preventDefault()
-          toggleInstalled(view.id)
-        }
-        return
-      }
+
 
       const key = e.key
 
@@ -115,16 +93,7 @@ export function useKeybindings() {
           moveSelection(-count)
           flushBuffer()
           break
-        case "h":
-          e.preventDefault()
-          changeCategory(-1)
-          flushBuffer()
-          break
-        case "l":
-          e.preventDefault()
-          changeCategory(1)
-          flushBuffer()
-          break
+
         case "g":
           if (keyBuffer.current.endsWith("gg")) {
             e.preventDefault()
@@ -140,13 +109,21 @@ export function useKeybindings() {
         case "Enter":
           e.preventDefault()
           if (filtered[selectedIndex]) {
-            setView({ kind: "detail", id: filtered[selectedIndex].id })
+            // Enter opens the slide-over drawer for the highlighted app
+            setInspectSoftwareId(filtered[selectedIndex].id)
           }
           flushBuffer()
           break
         case "Escape":
+        case "Backspace":
           e.preventDefault()
-          setSearchQuery("")
+          if (inspectSoftwareId) {
+            setInspectSoftwareId(null)
+          } else if (view.kind === "detail") {
+            goBack()
+          } else {
+            setSearchQuery("")
+          }
           flushBuffer()
           break
         case "/":
@@ -241,7 +218,6 @@ export function useKeybindings() {
       selectedIndex,
       state.sidebarOpen,
       moveSelection,
-      changeCategory,
       setSelectedIndex,
       setView,
       setSearchQuery,

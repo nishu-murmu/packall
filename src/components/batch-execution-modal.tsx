@@ -162,36 +162,36 @@ export function BatchExecutionModal() {
     )
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs animate-in fade-in duration-150">
-      <div className="relative flex max-h-[90vh] w-full max-w-2xl flex-col rounded-xl border bg-card shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative flex max-h-[90vh] w-full max-w-2xl flex-col rounded-2xl border border-border/50 bg-card/95 backdrop-blur-xl shadow-2xl overflow-hidden ring-1 ring-white/10">
         {/* Header */}
-        <div className="flex items-center justify-between border-b px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
+        <div className="flex items-center justify-between border-b border-border/50 px-6 py-4 bg-muted/20">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary shadow-sm">
               {actionIcon}
             </div>
             <div>
-              <h2 className="text-base font-semibold leading-tight">{actionTitle}</h2>
-              <p className="text-xs text-muted-foreground">
-                Executing across {queuedItems.length} selected packages
+              <h2 className="text-base font-bold tracking-tight leading-tight">{actionTitle}</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Targeting {queuedItems.length} selected package{queuedItems.length === 1 ? "" : "s"} under the hood
               </p>
             </div>
           </div>
           <Button
             variant="ghost"
-            size="icon-xs"
+            size="icon"
             onClick={() => setBatchModalOpen(false)}
-            className="size-8 rounded-full"
+            className="size-8 rounded-full text-muted-foreground hover:text-foreground"
           >
             <X className="size-4" />
           </Button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
           {/* Target Package Manager Selection */}
           <div>
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2.5">
               Select Package Manager
             </label>
             <div className="flex flex-wrap gap-2">
@@ -211,15 +211,15 @@ export function BatchExecutionModal() {
                   <button
                     key={m.id}
                     onClick={() => setSelectedManager(m.id)}
-                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
+                    className={`cursor-pointer flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
                       isSelected
-                        ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/40 font-semibold"
-                        : "border-border hover:border-border/80 bg-background text-muted-foreground"
+                        ? "border-primary bg-primary/15 text-primary ring-1 ring-primary/40 shadow-sm"
+                        : "border-border/60 hover:border-border bg-background/60 text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <span>{m.label}</span>
                     {isDetected && (
-                      <span className="size-1.5 rounded-full bg-green-500" title="Detected on host" />
+                      <span className="size-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" title="Detected on host" />
                     )}
                   </button>
                 )
@@ -229,31 +229,31 @@ export function BatchExecutionModal() {
 
           {/* Queued Packages Preview */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Packages in Queue ({queuedItems.length})
               </label>
               <button
                 onClick={clearQueue}
-                className="text-[11px] text-muted-foreground hover:text-destructive underline"
+                className="cursor-pointer text-[11px] text-muted-foreground hover:text-destructive underline font-medium"
               >
                 Clear all
               </button>
             </div>
-            <ScrollArea className="h-32 rounded-lg border bg-muted/30 p-2">
+            <ScrollArea className="h-36 rounded-xl border border-border/50 bg-muted/20 p-2.5">
               <div className="space-y-1.5">
                 {queuedItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between rounded-md bg-background/80 px-2.5 py-1.5 text-xs border border-border/50"
+                    className="flex items-center justify-between rounded-lg bg-card/80 px-3 py-2 text-xs border border-border/40 shadow-2xs"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-foreground">{item.name}</span>
-                      <span className="text-[10px] text-muted-foreground truncate max-w-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-semibold text-foreground shrink-0">{item.name}</span>
+                      <span className="text-[11px] text-muted-foreground truncate">
                         {item.tagline}
                       </span>
                     </div>
-                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 rounded-md shrink-0 border-border/60">
                       {item.category}
                     </Badge>
                   </div>
@@ -264,40 +264,40 @@ export function BatchExecutionModal() {
 
           {/* Generated Shell Command */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-2">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-                <Terminal className="size-3.5" /> Generated Terminal Command
+                <Terminal className="size-3.5 text-primary" /> Generated Terminal Command
               </label>
               <Button
                 variant="ghost"
-                size="xs"
+                size="sm"
                 onClick={handleCopy}
-                className="h-6 gap-1 text-[11px]"
+                className="h-7 gap-1.5 text-xs rounded-lg"
               >
-                {copied ? <Check className="size-3 text-green-500" /> : <Copy className="size-3" />}
+                {copied ? <Check className="size-3 text-emerald-500" /> : <Copy className="size-3" />}
                 {copied ? "Copied" : "Copy"}
               </Button>
             </div>
-            <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-3 text-xs font-mono text-zinc-100 border border-zinc-800 selection:bg-primary selection:text-primary-foreground">
-              {fullCmd}
-            </pre>
+            <div className="relative overflow-hidden rounded-xl bg-zinc-950 p-3.5 text-xs font-mono text-zinc-100 border border-zinc-800/80 shadow-inner">
+              <pre className="overflow-x-auto whitespace-pre-wrap break-all">{fullCmd}</pre>
+            </div>
           </div>
 
           {/* Execution Log / Status */}
           {outputLog && (
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <div className="flex items-center gap-1.5 text-xs font-semibold">
                 {executionSuccess ? (
-                  <span className="flex items-center gap-1 text-green-600 dark:text-green-400">
-                    <Check className="size-3.5" /> Execution Successful
+                  <span className="flex items-center gap-1 text-emerald-500">
+                    <Check className="size-4" /> Execution Successful
                   </span>
                 ) : (
                   <span className="flex items-center gap-1 text-destructive">
-                    <ShieldAlert className="size-3.5" /> Execution Error
+                    <ShieldAlert className="size-4" /> Execution Error
                   </span>
                 )}
               </div>
-              <pre className="max-h-36 overflow-y-auto rounded-lg bg-zinc-900 p-2.5 text-[11px] font-mono text-zinc-300 border border-zinc-800 whitespace-pre-wrap">
+              <pre className="max-h-40 overflow-y-auto rounded-xl bg-zinc-950/90 p-3 text-[11px] font-mono text-zinc-300 border border-zinc-800 whitespace-pre-wrap">
                 {outputLog}
               </pre>
             </div>
@@ -305,21 +305,22 @@ export function BatchExecutionModal() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t bg-muted/20 px-6 py-3.5">
+        <div className="flex items-center justify-between border-t border-border/50 bg-muted/20 px-6 py-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setBatchModalOpen(false)}
+            className="rounded-xl text-xs"
           >
             Cancel
           </Button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopy}
-              className="gap-1.5"
+              className="gap-1.5 rounded-xl text-xs"
             >
               <Copy className="size-3.5" />
               Copy Command
@@ -330,7 +331,7 @@ export function BatchExecutionModal() {
               size="sm"
               onClick={handleExecute}
               disabled={isExecuting || queuedItems.length === 0}
-              className="gap-1.5 min-w-[120px]"
+              className="gap-1.5 min-w-[130px] rounded-xl text-xs font-semibold shadow-md shadow-primary/25"
             >
               {isExecuting ? (
                 <>

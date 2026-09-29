@@ -29,9 +29,16 @@ export type InstallMethod =
   | "zypper"
   | "brew"
 
+export interface InstallStep {
+  title: string
+  command: string
+  description?: string
+}
+
 export interface InstallOption {
   method: InstallMethod
   command: string
+  steps?: InstallStep[]
   notes?: string
 }
 
@@ -77,6 +84,31 @@ export interface PackageManagerInfo {
   remove_cmd: string
 }
 
+export interface DistroInfo {
+  id: string
+  name: string
+  pretty_name: string
+  preferred_manager: string
+  managers: PackageManagerInfo[]
+}
+
+export interface StepExecutionResult {
+  step_index: number
+  title: string
+  command: string
+  success: boolean
+  stdout: string
+  stderr: string
+}
+
+export interface MultiStepActionResult {
+  success: boolean
+  completed_steps: number
+  total_steps: number
+  step_results: StepExecutionResult[]
+  error?: string
+}
+
 export interface ActionExecutionResult {
   success: boolean
   command: string
@@ -93,4 +125,5 @@ export type View =
   | { kind: "installed" }
   | { kind: "system" }
   | { kind: "settings" }
+  | { kind: "about" }
   | { kind: "help" }

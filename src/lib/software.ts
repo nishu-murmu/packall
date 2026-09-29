@@ -47,7 +47,18 @@ export const SOFTWARE: SoftwareEntry[] = [
     tags: ["browser", "privacy", "adblock", "chromium"],
     install: [
       { method: "flatpak", command: "flatpak install flathub com.brave.Browser" },
-      { method: "apt", command: "sudo snap install brave", notes: "Via snap on most distros" },
+      {
+        method: "apt",
+        command: "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list && sudo apt update && sudo apt install -y brave-browser",
+        steps: [
+          { title: "Download Brave GPG Keyring", command: "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg", description: "Imports the official cryptographic signing key" },
+          { title: "Add Brave Apt Repository", command: "echo \"deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list", description: "Configures package list source for Debian/Ubuntu" },
+          { title: "Refresh Package Index", command: "sudo apt update", description: "Syncs package lists from Brave's server" },
+          { title: "Install Brave Browser", command: "sudo apt install -y brave-browser", description: "Downloads and configures the latest stable binary" },
+        ],
+        notes: "Official repository installation with automatic background updates",
+      },
+      { method: "snap", command: "sudo snap install brave" },
     ],
   },
   {
@@ -207,10 +218,21 @@ export const SOFTWARE: SoftwareEntry[] = [
     tags: ["editor", "ide", "microsoft", "extensions"],
     featured: true,
     install: [
+      {
+        method: "apt",
+        command: "wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && echo \"deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main\" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null && rm -f packages.microsoft.gpg && sudo apt update && sudo apt install -y code",
+        steps: [
+          { title: "Download Microsoft Key", command: "wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg", description: "Retrieves Microsoft repository signing key" },
+          { title: "Install Keyring to Apt", command: "sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && rm -f packages.microsoft.gpg", description: "Configures trusted key location" },
+          { title: "Add VS Code Repository", command: "echo \"deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main\" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null", description: "Creates apt sources list entry" },
+          { title: "Update & Install VS Code", command: "sudo apt update && sudo apt install -y code", description: "Fetches metadata and installs editor binary" },
+        ],
+        notes: "Official Microsoft apt repository",
+      },
       { method: "flatpak", command: "flatpak install flathub com.visualstudio.code" },
       { method: "deb", command: "Download .deb from code.visualstudio.com" },
-      { method: "apt", command: "Follow Microsoft's apt repo setup guide" },
       { method: "snap", command: "sudo snap install code --classic" },
+      { method: "aur", command: "yay -S visual-studio-code-bin" },
     ],
   },
   {
@@ -225,10 +247,10 @@ export const SOFTWARE: SoftwareEntry[] = [
     tags: ["editor", "vim", "terminal", "lsp", "lua"],
     featured: true,
     install: [
+      { method: "pacman", command: "sudo pacman -S neovim" },
+      { method: "aur", command: "paru -S neovim" },
       { method: "apt", command: "sudo apt install neovim" },
       { method: "flatpak", command: "flatpak install flathub io.neovim.nvim" },
-      { method: "aur", command: "yay -S neovim" },
-      { method: "pacman", command: "sudo pacman -S neovim" },
     ],
   },
   {
@@ -257,8 +279,19 @@ export const SOFTWARE: SoftwareEntry[] = [
     license: "Apache-2.0",
     tags: ["containers", "devops", "deployment"],
     install: [
-      { method: "apt", command: "Follow docs.docker.com engine install guide for your distro" },
-      { method: "deb", command: "Download .deb from docker.com" },
+      {
+        method: "apt",
+        command: "sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg && sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io && sudo usermod -aG docker $USER",
+        steps: [
+          { title: "Install Prerequisites", command: "sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg", description: "Installs SSL certificates and curl" },
+          { title: "Download Docker GPG Key", command: "sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg", description: "Imports official Docker signing key" },
+          { title: "Configure Apt Repository", command: "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null", description: "Adds repository for your Ubuntu/Debian release" },
+          { title: "Install Docker Engine & Compose", command: "sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin", description: "Installs core daemon, CLI, and plugins" },
+          { title: "Configure User Permissions", command: "sudo usermod -aG docker $USER", description: "Allows executing docker commands without sudo" },
+        ],
+        notes: "Full official Docker CE installation with Compose and non-root setup",
+      },
+      { method: "pacman", command: "sudo pacman -S docker docker-compose && sudo systemctl enable --now docker" },
       { method: "aur", command: "yay -S docker" },
     ],
   },
@@ -506,19 +539,19 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
   },
   {
-    id: "gimp",
-    name: "GIMP",
-    tagline: "Free image editor and graphics tool",
+    id: "handbrake",
+    name: "HandBrake",
+    tagline: "Open-source video transcoder",
     description:
-      "GIMP is a free and open-source image editor. Supports raster editing, photo retouching, image composition, and graphic design. Extensible via plugins and scripts. The most popular open-source alternative to Photoshop.",
+      "HandBrake is a tool for converting video from nearly any format to a selection of modern, widely supported codecs. Features hardware acceleration, batch encoding, chapter markers, and subtitles.",
     category: "multimedia",
-    homepage: "https://www.gimp.org/",
-    license: "GPL-3.0",
-    tags: ["image", "editor", "graphics", "photo"],
+    homepage: "https://handbrake.fr/",
+    license: "GPL-2.0",
+    tags: ["video", "transcoder", "converter", "encoder"],
     install: [
-      { method: "apt", command: "sudo apt install gimp" },
-      { method: "flatpak", command: "flatpak install flathub org.gimp.GIMP" },
-      { method: "snap", command: "sudo snap install gimp" },
+      { method: "flatpak", command: "flatpak install flathub fr.handbrake.ghb" },
+      { method: "apt", command: "sudo apt install handbrake" },
+      { method: "aur", command: "yay -S handbrake" },
     ],
   },
 
@@ -979,22 +1012,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       { method: "flatpak", command: "flatpak install flathub dev.vencord.Vesktop" },
     ],
   },
-  {
-    id: "btop",
-    name: "btop",
-    tagline: "Resource monitor that shows usage and stats",
-    description:
-      "btop is a modern, responsive TUI monitor for CPU, memory, disks, network, and processes with beautiful visual graphs.",
-    category: "system",
-    homepage: "https://github.com/aristocratos/btop",
-    license: "Apache-2.0",
-    tags: ["monitor", "tui", "cpu", "stats"],
-    featured: true,
-    install: [
-      { method: "pacman", command: "sudo pacman -S btop" },
-      { method: "apt", command: "sudo apt install btop" },
-    ],
-  },
+
   {
     id: "fastfetch",
     name: "fastfetch",
@@ -1077,21 +1095,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       { method: "flatpak", command: "flatpak install flathub com.calibre_ebook.calibre" },
     ],
   },
-  {
-    id: "vaultwarden",
-    name: "Vaultwarden",
-    tagline: "Lightweight Bitwarden server written in Rust",
-    description:
-      "Vaultwarden is an alternative implementation of the Bitwarden server API written in Rust, ideal for self-hosting on low-power devices.",
-    category: "self-hosted",
-    homepage: "https://github.com/dani-garcia/vaultwarden",
-    license: "AGPL-3.0",
-    tags: ["passwords", "security", "rust", "server"],
-    featured: true,
-    install: [
-      { method: "aur", command: "paru -S vaultwarden" },
-    ],
-  },
+
 ]
 
 export const SOFTWARE_MAP: Record<string, SoftwareEntry> = SOFTWARE.reduce(

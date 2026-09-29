@@ -8,6 +8,9 @@ import type {
   PackageManagerInfo,
   ActionExecutionResult,
   BatchAction,
+  DistroInfo,
+  InstallStep,
+  MultiStepActionResult,
 } from "@/lib/types"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
@@ -25,6 +28,8 @@ interface AppState {
   searchFocused: boolean
   systemPackages: SystemPackage[]
   packageManagers: PackageManagerInfo[]
+  distroInfo: DistroInfo | null
+  inspectSoftwareId: string | null
   isLoadingSystem: boolean
   batchModalOpen: boolean
   batchAction: BatchAction
@@ -33,6 +38,7 @@ interface AppState {
   setSelectedCategory: (id: CategoryId) => void
   setSearchQuery: (q: string) => void
   setSelectedIndex: (i: number) => void
+  setInspectSoftwareId: (id: string | null) => void
   toggleFavorite: (id: string) => void
   toggleInstalled: (id: string) => void
   toggleQueueItem: (id: string) => void
@@ -49,6 +55,7 @@ interface AppState {
     pkgNames: string[],
     manager?: string
   ) => Promise<ActionExecutionResult>
+  runMultiStepAction: (steps: InstallStep[]) => Promise<MultiStepActionResult>
   goBack: () => void
 }
 
@@ -56,6 +63,7 @@ const AppStateContext = React.createContext<AppState | null>(null)
 
 export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [view, setView] = React.useState<View>({ kind: "grid" })
+  const [inspectSoftwareId, setInspectSoftwareId] = React.useState<string | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] =
     React.useState<CategoryId>("browsers")
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -84,6 +92,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [batchAction, setBatchAction] = React.useState<BatchAction>("install")
   const [systemPackages, setSystemPackages] = React.useState<SystemPackage[]>([])
   const [packageManagers, setPackageManagers] = React.useState<PackageManagerInfo[]>([])
+  const [distroInfo, setDistroInfo] = React.useState<DistroInfo | null>(null)
   const [isLoadingSystem, setIsLoadingSystem] = React.useState(false)
   const [, setViewStack] = React.useState<View[]>([{ kind: "grid" }])
 
@@ -104,17 +113,62 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     }
   }, [installed])
 
-  // Refresh system packages from Tauri backend
+  // Refresh system packages and distro info from Tauri backend
   const refreshSystemPackages = React.useCallback(async () => {
     setIsLoadingSystem(true)
     try {
-      const [sysPkgs, managers] = await Promise.all([
+      const [sysPkgs, managers, distro] = await Promise.all([
         invoke<SystemPackage[]>("get_system_packages").catch(() => []),
         invoke<PackageManagerInfo[]>("detect_package_managers").catch(() => []),
+        invoke<DistroInfo>("get_distro_info").catch(() => ({
+          id: "arch",
+          name: "Arch Linux",
+          pretty_name: "Arch Linux (Rolling)",
+          preferred_manager: "paru",
+          managers: [
+            {
+              id: "paru",
+              name: "Paru (AUR)",
+              available: true,
+              is_aur: true,
+              install_cmd: "paru -S --noconfirm",
+              update_cmd: "paru -Syu --noconfirm",
+              remove_cmd: "paru -Rns --noconfirm",
+            },
+            {
+              id: "yay",
+              name: "Yay (AUR)",
+              available: true,
+              is_aur: true,
+              install_cmd: "yay -S --noconfirm",
+              update_cmd: "yay -Syu --noconfirm",
+              remove_cmd: "yay -Rns --noconfirm",
+            },
+            {
+              id: "pacman",
+              name: "Pacman",
+              available: true,
+              is_aur: false,
+              install_cmd: "sudo pacman -S --noconfirm",
+              update_cmd: "sudo pacman -Syu --noconfirm",
+              remove_cmd: "sudo pacman -Rns --noconfirm",
+            },
+            {
+              id: "flatpak",
+              name: "Flatpak",
+              available: true,
+              is_aur: false,
+              install_cmd: "flatpak install -y flathub",
+              update_cmd: "flatpak update -y",
+              remove_cmd: "flatpak uninstall -y",
+            },
+          ],
+        })),
       ])
 
       setSystemPackages(sysPkgs)
       setPackageManagers(managers)
+      setDistroInfo(distro)
 
       // Auto-mark packages as installed in Almanac if detected on host system
       if (sysPkgs && sysPkgs.length > 0) {
@@ -151,6 +205,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const goBack = React.useCallback(() => {
+    if (inspectSoftwareId) {
+      setInspectSoftwareId(null)
+      return
+    }
     setViewStack((prev) => {
       if (prev.length <= 1) {
         setView({ kind: "grid" })
@@ -160,7 +218,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       setView(newStack[newStack.length - 1])
       return newStack
     })
-  }, [])
+  }, [inspectSoftwareId])
 
   const toggleFavorite = React.useCallback((id: string) => {
     setFavorites((prev) => {
@@ -265,6 +323,43 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     [refreshSystemPackages]
   )
 
+  const runMultiStepAction = React.useCallback(
+    async (steps: InstallStep[]): Promise<MultiStepActionResult> => {
+      try {
+        const result = await invoke<MultiStepActionResult>("execute_multi_step_action", {
+          steps: steps.map((s) => ({
+            title: s.title,
+            command: s.command,
+            description: s.description || null,
+          })),
+        })
+
+        if (result.success) {
+          toast.success(
+            `Multi-step installation completed successfully (${result.completed_steps}/${result.total_steps} steps)`
+          )
+          refreshSystemPackages()
+        } else {
+          toast.error(
+            `Multi-step execution halted at step ${result.completed_steps + 1}: ${result.error || "Command error"}`
+          )
+        }
+        return result
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err)
+        toast.error(`Execution error: ${message}`)
+        return {
+          success: false,
+          completed_steps: 0,
+          total_steps: steps.length,
+          step_results: [],
+          error: message,
+        }
+      }
+    },
+    [refreshSystemPackages]
+  )
+
   const setSelectedCategory = React.useCallback(
     (id: CategoryId) => {
       setSelectedCategoryId(id)
@@ -286,6 +381,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     searchFocused,
     systemPackages,
     packageManagers,
+    distroInfo,
+    inspectSoftwareId,
     isLoadingSystem,
     batchModalOpen,
     batchAction,
@@ -293,6 +390,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setSelectedCategory,
     setSearchQuery,
     setSelectedIndex,
+    setInspectSoftwareId,
     toggleFavorite,
     toggleInstalled,
     toggleQueueItem,
@@ -305,6 +403,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     openBatchAction,
     refreshSystemPackages,
     runPackageAction,
+    runMultiStepAction,
     goBack,
   }
 
@@ -325,7 +424,7 @@ export function useAppState() {
  * of which category is currently selected!
  */
 export function useFilteredSoftware() {
-  const { view, selectedCategoryId, searchQuery, favorites, installed } =
+  const { view, searchQuery, favorites, installed } =
     useAppState()
 
   return React.useMemo(() => {
@@ -358,13 +457,13 @@ export function useFilteredSoftware() {
       list = list.filter((s) => favorites.has(s.id))
     } else if (view.kind === "installed") {
       list = list.filter((s) => installed.has(s.id))
-    } else {
-      list = list.filter((s) => s.category === selectedCategoryId)
     }
+    // For "grid" and all other views: show all software
 
     return list
-  }, [view, selectedCategoryId, searchQuery, favorites, installed])
+  }, [view, searchQuery, favorites, installed])
 }
+
 
 export function useCategoryCount(id: CategoryId) {
   return React.useMemo(

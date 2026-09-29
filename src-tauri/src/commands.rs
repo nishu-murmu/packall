@@ -1,8 +1,9 @@
 use crate::data::{get_categories, get_software_catalogue, Category, SoftwareEntry};
 use crate::system::{
-    build_action_command, detect_available_managers, read_icon_as_data_url,
-    resolve_linux_icon_path, scan_system_packages, ActionExecutionResult, PackageManagerInfo,
-    SystemPackage,
+    build_action_command, detect_available_managers, detect_distro_info,
+    execute_multi_step_commands, invalidate_system_cache, read_icon_as_data_url,
+    resolve_linux_icon_path, scan_system_packages, ActionExecutionResult, DistroInfo,
+    MultiStepActionResult, MultiStepCommand, PackageManagerInfo, SystemPackage,
 };
 use std::process::Command;
 
@@ -24,6 +25,11 @@ pub fn get_system_packages() -> Vec<SystemPackage> {
 #[tauri::command]
 pub fn detect_package_managers() -> Vec<PackageManagerInfo> {
     detect_available_managers()
+}
+
+#[tauri::command]
+pub fn get_distro_info() -> DistroInfo {
+    detect_distro_info()
 }
 
 #[tauri::command]
@@ -54,6 +60,10 @@ pub fn execute_package_action(
             let stderr = String::from_utf8_lossy(&output.stderr).to_string();
             let success = output.status.success();
 
+            if success {
+                invalidate_system_cache();
+            }
+
             Ok(ActionExecutionResult {
                 success,
                 command: full_command,
@@ -68,4 +78,11 @@ pub fn execute_package_action(
             error: Some(format!("Failed to execute command: {}", e)),
         }),
     }
+}
+
+#[tauri::command]
+pub fn execute_multi_step_action(
+    steps: Vec<MultiStepCommand>,
+) -> Result<MultiStepActionResult, String> {
+    Ok(execute_multi_step_commands(steps))
 }
