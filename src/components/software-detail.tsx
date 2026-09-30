@@ -8,11 +8,9 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
-  Star,
   Check,
   ExternalLink,
   ArrowLeft,
-  Heart,
   Download,
   Plus,
   Trash2,
@@ -28,10 +26,8 @@ export function SoftwareDetail() {
   const {
     view,
     goBack,
-    favorites,
     installed,
     selectedQueue,
-    toggleFavorite,
     toggleInstalled,
     toggleQueueItem,
     runPackageAction,
@@ -49,7 +45,6 @@ export function SoftwareDetail() {
   }
 
   const category = CATEGORY_MAP[software.category]
-  const isFav = favorites.has(software.id)
   const isInst = installed.has(software.id)
   const isQueued = selectedQueue.has(software.id)
 
@@ -178,17 +173,6 @@ export function SoftwareDetail() {
           </div>
           <div className="flex gap-2">
             <Button
-              variant={isFav ? "default" : "outline"}
-              size="icon"
-              title={isFav ? "Remove from favorites" : "Add to favorites"}
-              onClick={() => toggleFavorite(software.id)}
-              className="rounded-xl"
-            >
-              <Star
-                className={cn("size-4", isFav && "fill-current text-amber-400")}
-              />
-            </Button>
-            <Button
               variant={isInst ? "default" : "outline"}
               size="icon"
               title={isInst ? "Mark as not installed" : "Mark as installed"}
@@ -280,11 +264,9 @@ export function SoftwareDetail() {
 
         {/* Keyboard hints */}
         <div className="flex items-center gap-3 text-xs text-muted-foreground/50 pb-4">
-          <Heart className="size-3.5" />
+          <Terminal className="size-3.5" />
           <span>
-            Press <kbd className="rounded-md bg-muted/50 px-1.5 py-0.5 font-mono text-[10px]">f</kbd> to{" "}
-            {isFav ? "remove from" : "add to"} favorites ·{" "}
-            <kbd className="rounded-md bg-muted/50 px-1.5 py-0.5 font-mono text-[10px]">i</kbd> to toggle installed ·{" "}
+            Press <kbd className="rounded-md bg-muted/50 px-1.5 py-0.5 font-mono text-[10px]">i</kbd> to toggle installed ·{" "}
             <kbd className="rounded-md bg-muted/50 px-1.5 py-0.5 font-mono text-[10px]">Esc</kbd> to go back
           </span>
         </div>

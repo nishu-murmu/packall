@@ -7,7 +7,6 @@ import { openExternalUrl } from "@/lib/open-url"
 import { AppIcon } from "@/components/software-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import type { InstallMethod, InstallOption, StepExecutionResult } from "@/lib/types"
 import {
   Check,
@@ -20,7 +19,6 @@ import {
   Terminal,
   Globe,
   Loader2,
-  Cpu,
   Layers,
   Sparkles,
   ChevronDown,
@@ -166,8 +164,6 @@ export function SoftwareDrawer() {
     }
   }
 
-  // Count available managers on user's system
-  const availableSystemManagers = packageManagers.filter((m) => m.available)
 
   return (
     <>

@@ -72,19 +72,6 @@ export function SoftwareGrid() {
     return groups
   }, [filtered])
 
-  // Build flat index mapping: flat index → { categoryIdx, itemIdx }
-  const flatItems = React.useMemo(() => {
-    const items: { software: typeof filtered[number]; categoryId: string; flatIdx: number }[] = []
-    let idx = 0
-    for (const group of groupedByCategory) {
-      if (collapsedCategories.has(group.category.id)) continue
-      for (const sw of group.items) {
-        items.push({ software: sw, categoryId: group.category.id, flatIdx: idx })
-        idx++
-      }
-    }
-    return items
-  }, [groupedByCategory, collapsedCategories])
 
   const isGlobalSearch = Boolean(searchQuery.trim())
 

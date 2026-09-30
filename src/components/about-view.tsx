@@ -1,7 +1,7 @@
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
-import { Star, Terminal, Package, Cpu, Search, ExternalLink, Code, Zap } from "lucide-react"
+import { Star, Terminal, Package, Cpu, Search, ExternalLink } from "lucide-react"
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
   return (

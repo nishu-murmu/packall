@@ -1,6 +1,5 @@
 import * as React from "react"
 import { useAppState, useFilteredSoftware } from "./app-state"
-import type { View } from "./types"
 
 /**
  * Grid-aware keybindings for Almanac.

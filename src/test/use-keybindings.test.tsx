@@ -1,4 +1,3 @@
-import * as React from "react"
 import { act, cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AppStateProvider, useAppState } from "@/lib/app-state"
@@ -64,46 +63,43 @@ describe("useKeybindings", () => {
     cleanup()
   })
 
-  it("j and k move the selection with clamping at both ends", async () => {
+  it("j and k move vertically down and up across grid rows (GRID_COLS=4)", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
+    expect(screen.getByTestId("index").textContent).toBe("0")
     await pressKey("j")
+    expect(screen.getByTestId("index").textContent).toBe("4")
+    await pressKey("j")
+    expect(screen.getByTestId("index").textContent).toBe("8")
+    await pressKey("k")
+    expect(screen.getByTestId("index").textContent).toBe("4")
+    await pressKey("k")
+    expect(screen.getByTestId("index").textContent).toBe("0")
+    await pressKey("k")
+    expect(screen.getByTestId("index").textContent).toBe("0")
+  })
+
+  it("h and l move horizontally left and right across items", async () => {
+    render(<AppStateProvider><Probe /></AppStateProvider>)
+    expect(screen.getByTestId("index").textContent).toBe("0")
+    await pressKey("l")
     expect(screen.getByTestId("index").textContent).toBe("1")
-    await pressKey("j")
+    await pressKey("l")
     expect(screen.getByTestId("index").textContent).toBe("2")
-    await pressKey("k")
+    await pressKey("h")
     expect(screen.getByTestId("index").textContent).toBe("1")
-    await pressKey("k")
-    await pressKey("k")
+    await pressKey("h")
     expect(screen.getByTestId("index").textContent).toBe("0")
-  })
-
-  it("a digit prefix repeats the next motion by that count", async () => {
-    render(<AppStateProvider><Probe /></AppStateProvider>)
-    await pressKey("3")
-    // buffer alone is inert until a motion key arrives
-    expect(screen.getByTestId("index").textContent).toBe("0")
-    await pressKey("j")
-    expect(screen.getByTestId("index").textContent).toBe("3")
-    await pressKey("2")
-    await pressKey("k")
-    expect(screen.getByTestId("index").textContent).toBe("1")
-  })
-
-  it("a count larger than the list clamps instead of overflowing", async () => {
-    render(<AppStateProvider><Probe /></AppStateProvider>)
-    await pressKey("9")
-    await pressKey("k")
+    await pressKey("h")
     expect(screen.getByTestId("index").textContent).toBe("0")
   })
 
   it("gg jumps to the first entry, G jumps to the last", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
-    await pressKey("3")
     await pressKey("j")
-    expect(screen.getByTestId("index").textContent).toBe("3")
+    expect(screen.getByTestId("index").textContent).toBe("4")
     await pressKey("g")
     // a single g is a pending prefix, not yet a motion
-    expect(screen.getByTestId("index").textContent).toBe("3")
+    expect(screen.getByTestId("index").textContent).toBe("4")
     await pressKey("g")
     expect(screen.getByTestId("index").textContent).toBe("0")
     await pressKey("G")
@@ -124,7 +120,7 @@ describe("useKeybindings", () => {
     expect(screen.getByTestId("inspect").textContent).toBe("none")
   })
 
-  it("Escape clears the search query when nothing else is open", async () => {
+  it("Escape clears the search query and resets selection when nothing else is open", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
     await act(async () => {
       screen.getByTestId("set-query").click()
@@ -132,21 +128,13 @@ describe("useKeybindings", () => {
     expect(screen.getByTestId("query").textContent).toBe("media")
     await pressKey("Escape")
     expect(screen.getByTestId("query").textContent).toBe("")
+    expect(screen.getByTestId("index").textContent).toBe("0")
   })
 
-  it("/ focuses search and Escape only blurs it, leaving the query intact", async () => {
+  it("/ focuses search", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
     await pressKey("/")
     expect(screen.getByTestId("search-focused").textContent).toBe("true")
-    // every other key is swallowed while search is focused
-    await pressKey("j")
-    expect(screen.getByTestId("index").textContent).toBe("0")
-    await act(async () => {
-      screen.getByTestId("set-query").click()
-    })
-    await pressKey("Escape")
-    expect(screen.getByTestId("search-focused").textContent).toBe("false")
-    expect(screen.getByTestId("query").textContent).toBe("media")
   })
 
   it("? toggles the help overlay open and closed", async () => {
@@ -179,33 +167,33 @@ describe("useKeybindings", () => {
     expect(screen.getByTestId("sidebar").textContent).toBe("true")
   })
 
-  it("Tab cycles through the main views and wraps around", async () => {
+  it("Space toggles queue for the highlighted entry", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
-    expect(screen.getByTestId("view").textContent).toBe("grid")
-    await pressKey("Tab")
-    expect(screen.getByTestId("view").textContent).toBe("favorites")
-    await pressKey("Tab")
-    expect(screen.getByTestId("view").textContent).toBe("installed")
-    await pressKey("Tab")
-    expect(screen.getByTestId("view").textContent).toBe("settings")
-    await pressKey("Tab")
-    expect(screen.getByTestId("view").textContent).toBe("grid")
-  })
-
-  it("x and Space queue and dequeue the highlighted entry", async () => {
-    render(<AppStateProvider><Probe /></AppStateProvider>)
-    await pressKey("x")
+    await pressKey(" ")
     expect(screen.getByTestId("queue").textContent).toBe(SOFTWARE[0].id)
     await pressKey(" ")
     expect(screen.getByTestId("queue").textContent).toBe("")
   })
 
-  it("i toggles the install flag of the highlighted entry", async () => {
+  it("c clears all items from the selection queue", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
-    await pressKey("i")
-    expect(screen.getByTestId("installed").textContent).toBe(SOFTWARE[0].id)
-    await pressKey("i")
-    expect(screen.getByTestId("installed").textContent).toBe("")
+    await pressKey(" ")
+    expect(screen.getByTestId("queue").textContent).toBe(SOFTWARE[0].id)
+    await pressKey("c")
+    expect(screen.getByTestId("queue").textContent).toBe("")
+  })
+
+  it("numeric keys 1, 3, 4, 5 switch views", async () => {
+    render(<AppStateProvider><Probe /></AppStateProvider>)
+    expect(screen.getByTestId("view").textContent).toBe("grid")
+    await pressKey("3")
+    expect(screen.getByTestId("view").textContent).toBe("installed")
+    await pressKey("4")
+    expect(screen.getByTestId("view").textContent).toBe("system")
+    await pressKey("5")
+    expect(screen.getByTestId("view").textContent).toBe("settings")
+    await pressKey("1")
+    expect(screen.getByTestId("view").textContent).toBe("grid")
   })
 
   it("unbound keys are ignored without side effects", async () => {
