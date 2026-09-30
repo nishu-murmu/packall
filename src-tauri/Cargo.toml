@@ -1,11 +1,11 @@
 [package]
-name = "almanac"
+name = "packall"
 version = "0.1.0"
 description = "A graphical directory of essential Linux software"
 edition = "2021"
 
 [lib]
-name = "almanac_lib"
+name = "packall_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

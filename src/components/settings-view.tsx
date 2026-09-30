@@ -101,13 +101,13 @@ export function SettingsView() {
         <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Info className="size-4 text-primary" /> What is Almanac?
+              <Info className="size-4 text-primary" /> What is Packall?
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground leading-relaxed">
-            Almanac is a high-performance desktop software manager built with Tauri (Rust + React). It acts
+            Packall is a high-performance desktop software manager built with Tauri (Rust + React). It acts
             as your central hub for exploring and managing Linux software across {CATEGORIES.length} categories.
-            Instead of memorizing commands across apt, pacman, yay, flatpak, snap, or dnf, Almanac provides
+            Instead of memorizing commands across apt, pacman, yay, flatpak, snap, or dnf, Packall provides
             an interactive, keyboard-friendly visual interface to browse, inspect, and trigger package operations
             under the hood.
           </CardContent>
@@ -148,13 +148,13 @@ export function SettingsView() {
           <CardContent>
             <div className="rounded-xl bg-muted/40 border border-border/50 p-4 space-y-1.5 font-mono text-xs">
               <div><span className="text-muted-foreground"># List all installed packages</span></div>
-              <div className="text-primary">almanac ls --installed</div>
+              <div className="text-primary">packall ls --installed</div>
               <div className="pt-1.5"><span className="text-muted-foreground"># Search for a package across repos</span></div>
-              <div className="text-primary">almanac search firefox</div>
+              <div className="text-primary">packall search firefox</div>
               <div className="pt-1.5"><span className="text-muted-foreground"># Show detailed package metadata</span></div>
-              <div className="text-primary">almanac info neovim</div>
+              <div className="text-primary">packall info neovim</div>
               <div className="pt-1.5"><span className="text-muted-foreground"># Scan system packages</span></div>
-              <div className="text-primary">almanac scan</div>
+              <div className="text-primary">packall scan</div>
             </div>
           </CardContent>
         </Card>

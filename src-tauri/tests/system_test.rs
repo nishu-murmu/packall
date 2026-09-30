@@ -20,7 +20,7 @@ fn resolve_preferred(requested: Option<&str>) -> String {
         .unwrap_or_else(|| "paru".to_string())
 }
 
-use almanac_lib::system::{
+use packall_lib::system::{
     build_action_command, detect_available_managers, detect_distro_info, execute_multi_step_commands,
     invalidate_system_cache, read_icon_as_data_url, resolve_linux_icon_path, scan_system_packages,
     DistroInfo, MultiStepCommand, PackageManagerInfo, SystemPackage,
@@ -390,7 +390,7 @@ fn cache_invalidation_never_panics_and_scan_recovers() {
 
 fn temp_file(ext: &str, contents: &[u8]) -> PathBuf {
     let unique = format!(
-        "almanac-test-{}-{}-{}.{}",
+        "packall-test-{}-{}-{}.{}",
         std::process::id(),
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -406,7 +406,7 @@ fn temp_file(ext: &str, contents: &[u8]) -> PathBuf {
 
 #[test]
 fn data_url_for_missing_file_is_none() {
-    let path = std::env::temp_dir().join(format!("almanac-test-definitely-missing-{}.png", std::process::id()));
+    let path = std::env::temp_dir().join(format!("packall-test-definitely-missing-{}.png", std::process::id()));
     let _ = fs::remove_file(&path);
     assert!(read_icon_as_data_url(path.to_str().unwrap()).is_none());
 }
@@ -446,7 +446,7 @@ fn raster_icons_get_matching_mime_types() {
 
 #[test]
 fn file_without_extension_cannot_be_encoded() {
-    let path = std::env::temp_dir().join(format!("almanac-test-noext-{}", std::process::id()));
+    let path = std::env::temp_dir().join(format!("packall-test-noext-{}", std::process::id()));
     fs::write(&path, b"bytes").unwrap();
     assert!(read_icon_as_data_url(path.to_str().unwrap()).is_none());
     fs::remove_file(&path).ok();
@@ -463,7 +463,7 @@ fn base64_decode(input: &str) -> Vec<u8> {
 
 #[test]
 fn nonsense_icon_name_resolves_to_nothing_and_never_panics() {
-    let result = resolve_linux_icon_path("almanac-definitely-not-a-real-application-xyz-123");
+    let result = resolve_linux_icon_path("packall-definitely-not-a-real-application-xyz-123");
     #[cfg(not(unix))]
     assert!(result.is_none(), "non-unix hosts have no Freedesktop icon lookup");
     #[cfg(unix)]

@@ -5,7 +5,7 @@
 //! suite never mutates a developer's machine. Unknown subcommands terminate
 //! the process via `exit(1)` and are likewise untestable here.
 
-use almanac_lib::cli::handle_cli;
+use packall_lib::cli::handle_cli;
 
 fn args(items: &[&str]) -> Vec<String> {
     items.iter().map(|s| (*s).to_string()).collect()
@@ -71,7 +71,7 @@ fn search_requires_and_accepts_query() {
 fn info_handles_missing_known_and_system_packages() {
     handle_cli(&args(&["info"])); // usage error path
     handle_cli(&args(&["info", "neovim"])); // catalogue hit
-    handle_cli(&args(&["show", "almanac-no-such-package-xyz"])); // miss path
+    handle_cli(&args(&["show", "packall-no-such-package-xyz"])); // miss path
 }
 
 #[test]

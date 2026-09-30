@@ -169,7 +169,7 @@ export function AppSidebar() {
       {/* Footer */}
       <div className="border-t border-border/50 p-3 space-y-1">
         <a
-          href="https://github.com/nishu-murmu/almanac"
+          href="https://github.com/nishu-murmu/packall"
           target="_blank"
           rel="noopener noreferrer"
           className="cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground transition-all duration-200"

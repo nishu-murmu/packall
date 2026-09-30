@@ -42,7 +42,7 @@ export function AboutView() {
         </div>
         <div className="relative">
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text">
-            Almanac
+            Packall
           </h1>
           <p className="mt-2 text-sm text-muted-foreground max-w-lg leading-relaxed mx-auto">
             A fast, beautiful graphical directory and package manager for Linux software.
@@ -52,7 +52,7 @@ export function AboutView() {
         </div>
         <div className="relative flex flex-wrap items-center justify-center gap-2 mt-2">
           <a
-            href="https://github.com/nishu-murmu/almanac"
+            href="https://github.com/nishu-murmu/packall"
             target="_blank"
             rel="noopener noreferrer"
             className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/60 backdrop-blur-md px-4 py-2 text-xs font-semibold shadow-sm transition-all hover:bg-accent hover:border-primary/40 hover:text-foreground"
@@ -61,7 +61,7 @@ export function AboutView() {
             GitHub
           </a>
           <a
-            href="https://github.com/nishu-murmu/almanac/stargazers"
+            href="https://github.com/nishu-murmu/packall/stargazers"
             target="_blank"
             rel="noopener noreferrer"
             className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 px-4 py-2 text-xs font-semibold transition-all hover:bg-amber-500/20"
@@ -92,11 +92,11 @@ export function AboutView() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Open Source</h2>
           <div className="rounded-xl border border-border/60 bg-card/70 p-4 space-y-2">
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Almanac is free, open-source software licensed under GPLv3. Built for the Linux community with ❤️.
+              Packall is free, open-source software licensed under AGPL-3.0. Built for the Linux community with ❤️.
               Contributions, bug reports, and feature requests are welcome on GitHub.
             </p>
             <a
-              href="https://github.com/nishu-murmu/almanac"
+              href="https://github.com/nishu-murmu/packall"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-pointer inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline"

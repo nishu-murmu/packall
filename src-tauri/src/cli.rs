@@ -22,10 +22,10 @@ pub fn handle_cli(args: &[String]) {
         "scan" | "detect" => handle_scan(),
         "categories" | "cat" => handle_categories(),
         "version" | "-v" | "--version" => {
-            println!("Almanac v0.1.0 - Linux Software Directory & Package Manager");
+            println!("Packall v0.1.0 - Linux Software Directory & Package Manager");
         }
         _ => {
-            eprintln!("Unknown command: '{}'. Run 'almanac help' for usage.", subcmd);
+            eprintln!("Unknown command: '{}'. Run 'packall help' for usage.", subcmd);
             std::process::exit(1);
         }
     }
@@ -34,11 +34,11 @@ pub fn handle_cli(args: &[String]) {
 fn print_help() {
     println!(
         r#"
-Almanac - Essential Linux Software Directory & System Package Manager
+Packall - Essential Linux Software Directory & System Package Manager
 
 USAGE:
-    almanac [COMMAND] [OPTIONS]
-    almanac                      Launch graphical user interface (GUI)
+    packall [COMMAND] [OPTIONS]
+    packall                      Launch graphical user interface (GUI)
 
 COMMANDS:
     ls, list                     List software packages
@@ -61,11 +61,11 @@ COMMANDS:
     help, --help, -h             Print this help message
 
 EXAMPLES:
-    almanac ls --installed
-    almanac ls -c development
-    almanac search neovim
-    almanac install neovim discord zen-browser
-    almanac update
+    packall ls --installed
+    packall ls -c development
+    packall search neovim
+    packall install neovim discord zen-browser
+    packall update
 "#
     );
 }
@@ -182,7 +182,7 @@ fn handle_list(args: &[String]) {
 
 fn handle_search(args: &[String]) {
     if args.is_empty() {
-        eprintln!("Usage: almanac search <query>");
+        eprintln!("Usage: packall search <query>");
         return;
     }
 
@@ -234,7 +234,7 @@ fn handle_search(args: &[String]) {
 
 fn handle_info(args: &[String]) {
     if args.is_empty() {
-        eprintln!("Usage: almanac info <package>");
+        eprintln!("Usage: packall info <package>");
         return;
     }
 
@@ -283,12 +283,12 @@ fn handle_info(args: &[String]) {
         return;
     }
 
-    eprintln!("Package '{}' not found in Almanac catalogue or system packages.", target);
+    eprintln!("Package '{}' not found in Packall catalogue or system packages.", target);
 }
 
 fn handle_install(args: &[String]) {
     if args.is_empty() {
-        eprintln!("Usage: almanac install <package1> [package2...] [--manager <mgr>]");
+        eprintln!("Usage: packall install <package1> [package2...] [--manager <mgr>]");
         return;
     }
 
@@ -333,7 +333,7 @@ fn handle_install(args: &[String]) {
 
 fn handle_remove(args: &[String]) {
     if args.is_empty() {
-        eprintln!("Usage: almanac remove <package1> [package2...]");
+        eprintln!("Usage: packall remove <package1> [package2...]");
         return;
     }
 
@@ -386,7 +386,7 @@ fn handle_categories() {
     let categories = get_categories();
     let catalogue = get_software_catalogue();
 
-    println!("\n📂 ALMANAC CATEGORIES:");
+    println!("\n📂 PACKALL CATEGORIES:");
     println!("{:<20} {:<8} {}", "CATEGORY ID", "COUNT", "DESCRIPTION");
     println!("{}", "-".repeat(70));
 

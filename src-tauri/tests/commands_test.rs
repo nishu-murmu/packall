@@ -6,7 +6,7 @@
 //! return shapes match the TypeScript DTOs, and failure paths surface as
 //! structured results instead of panics.
 
-use almanac_lib::commands::{
+use packall_lib::commands::{
     detect_package_managers, execute_multi_step_action, execute_package_action, get_all_categories,
     get_catalogue_software, get_distro_info, get_system_packages, open_external_url, resolve_app_icon,
 };
@@ -15,7 +15,7 @@ use almanac_lib::commands::{
 fn get_all_categories_matches_data_module() {
     assert_eq!(
         get_all_categories().len(),
-        almanac_lib::data::get_categories().len(),
+        packall_lib::data::get_categories().len(),
         "command must expose the full category list from data.rs"
     );
 }
@@ -23,7 +23,7 @@ fn get_all_categories_matches_data_module() {
 #[test]
 fn get_catalogue_software_matches_data_module() {
     let via_command = get_catalogue_software();
-    let direct = almanac_lib::data::get_software_catalogue();
+    let direct = packall_lib::data::get_software_catalogue();
     assert_eq!(via_command.len(), direct.len());
     assert_eq!(via_command[0].id, direct[0].id);
 }
@@ -78,7 +78,7 @@ fn execute_package_action_multi_word_packages_build_full_command_string() {
 
 #[test]
 fn execute_multi_step_action_wraps_engine_result() {
-    let steps = vec![almanac_lib::system::MultiStepCommand {
+    let steps = vec![packall_lib::system::MultiStepCommand {
         title: "say".into(),
         command: "echo hello".into(),
         description: None,
@@ -92,7 +92,7 @@ fn execute_multi_step_action_wraps_engine_result() {
 #[test]
 fn resolve_app_icon_for_nonsense_name_returns_none() {
     assert!(
-        resolve_app_icon("almanac-not-a-real-app-icon-xyz-123".to_string()).is_none(),
+        resolve_app_icon("packall-not-a-real-app-icon-xyz-123".to_string()).is_none(),
         "missing icons must be None so the UI can fall back to its placeholder"
     );
 }

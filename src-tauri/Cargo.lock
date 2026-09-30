@@ -33,19 +33,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "almanac"
-version = "0.1.0"
-dependencies = [
- "base64 0.22.1",
- "open",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-shell",
-]
-
-[[package]]
 name = "android_system_properties"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2196,6 +2183,19 @@ checksum = "7d8fae84b431384b68627d0f9b3b1245fcf9f46f6c0e3dc902e9dce64edd1967"
 dependencies = [
  "libc",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "packall"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "open",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-shell",
 ]
 
 [[package]]

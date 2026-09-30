@@ -2,7 +2,7 @@ import * as React from "react"
 import { useAppState, useFilteredSoftware } from "./app-state"
 
 /**
- * Grid-aware keybindings for Almanac.
+ * Grid-aware keybindings for Packall.
  *
  * Supported keys:
  *   /       — Focus global search

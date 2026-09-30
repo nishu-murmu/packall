@@ -186,20 +186,20 @@ describe("AppStateProvider", () => {
     renderProbe()
     fireEvent.click(screen.getByTestId("toggle-firefox"))
     expect(screen.getByTestId("installed").textContent).toBe("firefox")
-    expect(localStorage.getItem("almanac_installed")).toBe('["firefox"]')
+    expect(localStorage.getItem("packall_installed")).toBe('["firefox"]')
     fireEvent.click(screen.getByTestId("toggle-firefox"))
     expect(screen.getByTestId("installed").textContent).toBe("")
-    expect(localStorage.getItem("almanac_installed")).toBe("[]")
+    expect(localStorage.getItem("packall_installed")).toBe("[]")
   })
 
   it("restores the installed set from localStorage on boot", () => {
-    localStorage.setItem("almanac_installed", JSON.stringify(["firefox", "btop"]))
+    localStorage.setItem("packall_installed", JSON.stringify(["firefox", "btop"]))
     renderProbe()
     expect(screen.getByTestId("installed").textContent).toBe("btop,firefox")
   })
 
   it("ignores corrupted localStorage payloads", () => {
-    localStorage.setItem("almanac_installed", "{not json")
+    localStorage.setItem("packall_installed", "{not json")
     renderProbe()
     expect(screen.getByTestId("installed").textContent).toBe("")
   })
@@ -290,7 +290,7 @@ describe("AppStateProvider", () => {
     })
 
     it("remove success unmarks packages", async () => {
-      localStorage.setItem("almanac_installed", JSON.stringify(["firefox"]))
+      localStorage.setItem("packall_installed", JSON.stringify(["firefox"]))
       invokeMock.mockImplementation((cmd: string) => {
         if (cmd === "execute_package_action") {
           return Promise.resolve({ success: true, command: "c", output: "ok", error: null })
@@ -404,7 +404,7 @@ describe("useFilteredSoftware", () => {
   })
 
   it("in the installed view, search is limited to installed entries", () => {
-    localStorage.setItem("almanac_installed", JSON.stringify(["firefox"]))
+    localStorage.setItem("packall_installed", JSON.stringify(["firefox"]))
     renderProbe()
     fireEvent.click(screen.getByTestId("goto-installed"))
     fireEvent.click(screen.getByTestId("set-query"))

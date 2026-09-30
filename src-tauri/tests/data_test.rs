@@ -1,11 +1,11 @@
-//! Data integrity tests for the Almanac catalogue and category definitions.
+//! Data integrity tests for the Packall catalogue and category definitions.
 //!
 //! These tests treat the hard-coded catalogue in `data.rs` as a contract:
 //! the frontend relies on every category referenced by a software entry
 //! existing, on ids being unique (they double as React keys), and on every
 //! entry carrying enough information to render its card and detail views.
 
-use almanac_lib::data::{get_categories, get_software_catalogue};
+use packall_lib::data::{get_categories, get_software_catalogue};
 use std::collections::HashSet;
 
 const KNOWN_METHODS: [&str; 13] = [
@@ -212,7 +212,7 @@ fn software_entry_serializes_to_json_with_expected_shape() {
 fn software_entry_round_trips_through_json() {
     let catalogue = get_software_catalogue();
     let json = serde_json::to_string(&catalogue).expect("serialization must not fail");
-    let restored: Vec<almanac_lib::data::SoftwareEntry> =
+    let restored: Vec<packall_lib::data::SoftwareEntry> =
         serde_json::from_str(&json).expect("deserialization must not fail");
     assert_eq!(restored.len(), catalogue.len());
     assert_eq!(restored[0].id, catalogue[0].id);

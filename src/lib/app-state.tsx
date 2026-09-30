@@ -68,7 +68,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [installed, setInstalled] = React.useState<Set<string>>(() => {
     try {
-      const saved = localStorage.getItem("almanac_installed")
+      const saved = localStorage.getItem("packall_installed") ?? localStorage.getItem("almanac_installed")
       return saved ? new Set(JSON.parse(saved)) : new Set()
     } catch {
       return new Set()
@@ -88,7 +88,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     try {
-      localStorage.setItem("almanac_installed", JSON.stringify(Array.from(installed)))
+      localStorage.setItem("packall_installed", JSON.stringify(Array.from(installed)))
     } catch {
       // ignore
     }
@@ -151,7 +151,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       setPackageManagers(managers)
       setDistroInfo(distro)
 
-      // Auto-mark packages as installed in Almanac if detected on host system
+      // Auto-mark packages as installed in Packall if detected on host system
       if (sysPkgs && sysPkgs.length > 0) {
         const sysNames = new Set(sysPkgs.map((p) => p.name.toLowerCase()))
         setInstalled((prev) => {

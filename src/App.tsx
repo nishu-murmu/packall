@@ -42,7 +42,7 @@ function AppContent() {
                 <div className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md shadow-primary/20">
                   <Package className="size-3.5" />
                 </div>
-                <span className="text-sm font-bold tracking-tight gradient-text">Almanac</span>
+                <span className="text-sm font-bold tracking-tight gradient-text">Packall</span>
               </div>
             )}
           </div>

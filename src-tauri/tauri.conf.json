@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Almanac",
+  "productName": "Packall",
   "version": "0.1.0",
-  "identifier": "app.almanac.desktop",
+  "identifier": "app.packall.desktop",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Almanac - Software Directory",
+        "title": "Packall - Software Directory",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -41,6 +41,6 @@
     ],
     "category": "Utility",
     "shortDescription": "A graphical directory of essential Linux software",
-    "longDescription": "Almanac is a graphical directory that categorizes and helps you install essential Linux software. Navigate the entire app with Neovim-style keyboard shortcuts."
+    "longDescription": "Packall is a graphical directory that categorizes and helps you install essential Linux software. Navigate the entire app with Neovim-style keyboard shortcuts."
   }
 }

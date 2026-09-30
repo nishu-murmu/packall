@@ -1,8 +1,8 @@
-# Almanac
+# Packall
 
 > **A graphical directory of essential Linux software — categorized, searchable, and fully navigable with Neovim-style keyboard shortcuts.**
 
-Almanac is an offline-first, keyboard-driven application catalog designed specifically for Linux desktop environments and sysadmins. It organizes software across **14 distinct categories**, supports **11 packaging formats**, and allows complete navigation from your home row without a mouse.
+Packall is an offline-first, keyboard-driven application catalog designed specifically for Linux desktop environments and sysadmins. It organizes software across **14 distinct categories**, supports **11 packaging formats**, and allows complete navigation from your home row without a mouse.
 
 ---
 
@@ -20,7 +20,7 @@ Almanac is an offline-first, keyboard-driven application catalog designed specif
 ## Project Structure
 
 ```
-almanac/
+packall/
 ├── src/                  # Desktop frontend (React 19 + Tailwind CSS + Radix UI)
 │   ├── components/       # UI components (sidebar, software grid, details drawer, overlays)
 │   ├── lib/              # Catalog data, keybindings, state management & types

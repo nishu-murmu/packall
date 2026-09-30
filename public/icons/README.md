@@ -1,6 +1,6 @@
 # Package Icons
 
-Place application icons here. Almanac will automatically use them on the software grid.
+Place application icons here. Packall will automatically use them on the software grid.
 
 ## Naming Convention
 
@@ -33,7 +33,7 @@ Great sources for high-quality app icons:
 | **Flathub** | https://flathub.org | App screenshots and icons |
 | **App vendor sites** | — | Official brand assets |
 
-## How Almanac Loads Icons
+## How Packall Loads Icons
 
 1. Looks for `/icons/<id>.svg` first
 2. Falls back to `/icons/<id>.png`, `.webp`, `.avif`, `.jpg`

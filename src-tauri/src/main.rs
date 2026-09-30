@@ -3,10 +3,10 @@ fn main() {
 
     // If CLI arguments are provided and user didn't request GUI mode, run CLI directly
     if !args.is_empty() && args[0] != "gui" && args[0] != "--gui" {
-        almanac_lib::cli::handle_cli(&args);
+        packall_lib::cli::handle_cli(&args);
         return;
     }
 
     // Otherwise launch the full desktop GUI
-    almanac_lib::run();
+    packall_lib::run();
 }

@@ -1,7 +1,7 @@
 {
-  "name": "@almanac/shared",
+  "name": "@packall/shared",
   "version": "0.1.0",
-  "description": "Shared types, categories, software catalog, and installation methods for Almanac",
+  "description": "Shared types, categories, software catalog, and installation methods for Packall",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
