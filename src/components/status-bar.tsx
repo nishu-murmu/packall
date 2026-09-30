@@ -4,7 +4,7 @@ import { SOFTWARE_MAP } from "@/lib/software"
 import { Kbd } from "@/components/ui/kbd"
 
 export function StatusBar() {
-  const { view, selectedIndex, favorites, installed, inspectSoftwareId } =
+  const { view, selectedIndex, installed, inspectSoftwareId } =
     useAppState()
   const filtered = useFilteredSoftware()
 
@@ -17,8 +17,8 @@ export function StatusBar() {
   const mode = inspectSoftwareId
     ? "INSPECT"
     : view.kind === "detail"
-    ? "DETAIL"
-    : view.kind.toUpperCase()
+      ? "DETAIL"
+      : view.kind.toUpperCase()
 
   return (
     <footer className="flex h-7 items-center justify-between border-t border-border/50 bg-background/60 backdrop-blur-sm px-3 text-[11px] text-muted-foreground/70">
@@ -55,7 +55,7 @@ export function StatusBar() {
         </span>
         <span className="text-muted-foreground/20">│</span>
         <span className="tabular-nums">
-          {favorites.size} fav · {installed.size} inst
+          {installed.size} inst
         </span>
       </div>
     </footer>

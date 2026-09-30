@@ -1,7 +1,7 @@
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
-import { Heart, Star, Terminal, Package, Cpu, Search } from "lucide-react"
+import { Star, Terminal, Package, Cpu, Search, ExternalLink, Code, Zap } from "lucide-react"
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -61,99 +61,61 @@ export function AboutView() {
             GitHub
           </a>
           <a
-            href="https://ko-fi.com"
+            href="https://github.com/nishu-murmu/almanac/stargazers"
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-500 dark:text-rose-400 px-4 py-2 text-xs font-semibold transition-all hover:bg-rose-500/20 hover:scale-102"
+            className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 px-4 py-2 text-xs font-semibold transition-all hover:bg-amber-500/20"
           >
-            <Heart className="size-4 fill-current" />
-            Support
+            <Star className="size-4 fill-current" />
+            Star on GitHub
           </a>
         </div>
       </div>
 
       <div className="px-6 pb-10 space-y-7 max-w-3xl mx-auto pt-8">
+        {/* Statistics */}
         <section className="space-y-3">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Support & Sponsorship</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Almanac is free, open-source software built for the Linux community.
-              Choose your preferred platform to support ongoing development:
-            </p>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Statistics</h2>
+          <div className="grid gap-3 sm:grid-cols-4">
+            {stats.map((s) => (
+              <div key={s.label} className={`rounded-xl border p-3.5 flex flex-col gap-1 ${s.bg}`}>
+                <s.icon className={`size-4 ${s.color}`} />
+                <div className="text-2xl font-bold tabular-nums text-foreground">{s.value}</div>
+                <div className="text-xs text-muted-foreground font-medium">{s.label}</div>
+              </div>
+            ))}
           </div>
+        </section>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <a
-              href="https://github.com/sponsors/nishu-murmu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer flex items-center justify-between rounded-xl border border-border/60 bg-card/70 p-3 text-xs font-semibold shadow-sm transition-all hover:bg-accent hover:border-pink-500/40 hover:scale-[1.01]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-pink-500/10 text-pink-500">
-                  <Heart className="size-4 fill-current" />
-                </div>
-                <div>
-                  <div className="font-semibold text-foreground">GitHub Sponsors</div>
-                  <div className="text-[10px] text-muted-foreground font-normal">0% platform fee · Direct support</div>
-                </div>
-              </div>
-              <span className="text-[10px] text-primary font-medium">Sponsor →</span>
-            </a>
-
-            <a
-              href="https://buymeacoffee.com/nishumurmu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer flex items-center justify-between rounded-xl border border-border/60 bg-card/70 p-3 text-xs font-semibold shadow-sm transition-all hover:bg-accent hover:border-amber-500/40 hover:scale-[1.01]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 font-bold text-sm">
-                  ☕
-                </div>
-                <div>
-                  <div className="font-semibold text-foreground">Buy Me a Coffee</div>
-                  <div className="text-[10px] text-muted-foreground font-normal">Card / Apple Pay / Google Pay</div>
-                </div>
-              </div>
-              <span className="text-[10px] text-primary font-medium">Donate →</span>
-            </a>
-
-            <a
-              href="https://ko-fi.com/nishumurmu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer flex items-center justify-between rounded-xl border border-border/60 bg-card/70 p-3 text-xs font-semibold shadow-sm transition-all hover:bg-accent hover:border-rose-500/40 hover:scale-[1.01]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500">
-                  <Heart className="size-4" />
-                </div>
-                <div>
-                  <div className="font-semibold text-foreground">Ko-fi / PayPal</div>
-                  <div className="text-[10px] text-muted-foreground font-normal">One-time or monthly tips</div>
-                </div>
-              </div>
-              <span className="text-[10px] text-primary font-medium">Tip →</span>
-            </a>
-
+        {/* Open Source */}
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Open Source</h2>
+          <div className="rounded-xl border border-border/60 bg-card/70 p-4 space-y-2">
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Almanac is free, open-source software licensed under GPLv3. Built for the Linux community with ❤️.
+              Contributions, bug reports, and feature requests are welcome on GitHub.
+            </p>
             <a
               href="https://github.com/nishu-murmu/almanac"
               target="_blank"
               rel="noopener noreferrer"
-              className="cursor-pointer flex items-center justify-between rounded-xl border border-border/60 bg-card/70 p-3 text-xs font-semibold shadow-sm transition-all hover:bg-accent hover:border-primary/40 hover:scale-[1.01]"
+              className="cursor-pointer inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <GithubIcon className="size-4" />
-                </div>
-                <div>
-                  <div className="font-semibold text-foreground">Star on GitHub</div>
-                  <div className="text-[10px] text-muted-foreground font-normal">Help spread the word</div>
-                </div>
-              </div>
-              <span className="text-[10px] text-primary font-medium">⭐ Star →</span>
+              <ExternalLink className="size-3" />
+              View source code →
             </a>
+          </div>
+        </section>
+
+        {/* Built With */}
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Built With</h2>
+          <div className="flex flex-wrap gap-2">
+            {["Tauri 2", "Rust", "React 19", "TypeScript", "Tailwind CSS v4", "Lucide Icons", "Radix UI"].map((tech) => (
+              <span key={tech} className="rounded-lg bg-muted/40 border border-border/60 px-3 py-1 text-xs font-medium text-foreground/80">
+                {tech}
+              </span>
+            ))}
           </div>
         </section>
       </div>

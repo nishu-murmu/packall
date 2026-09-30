@@ -2,6 +2,27 @@ import * as React from "react"
 import { useAppState, useFilteredSoftware } from "./app-state"
 import type { View } from "./types"
 
+/**
+ * Grid-aware keybindings for Almanac.
+ *
+ * Supported keys:
+ *   /       — Focus global search
+ *   Space   — Toggle selected item in queue
+ *   j / k   — Move selection down / up (1 row = COLS items)
+ *   h / l   — Move selection left / right
+ *   c       — Clear all selected items
+ *   Esc     — Close highlight / drawer / go back
+ *   ?       — Open keybindings help overlay
+ *   Enter   — Open selected app detail drawer
+ *   g g     — Jump to first item
+ *   G       — Jump to last item
+ *   s       — Toggle sidebar
+ *   1-5     — Navigate to views
+ */
+
+/** The number of columns in the grid — must match the CSS grid-cols-* on md breakpoint */
+const GRID_COLS = 4
+
 export function useKeybindings() {
   const state = useAppState()
   const filtered = useFilteredSoftware()
@@ -20,8 +41,8 @@ export function useKeybindings() {
     setSearchFocused,
     setSearchQuery,
     goBack,
-    toggleFavorite,
-    toggleInstalled,
+    clearQueue,
+    toggleQueueItem,
   } = state
 
   const keyBuffer = React.useRef<string>("")
@@ -35,27 +56,32 @@ export function useKeybindings() {
     }
   }, [])
 
-  const moveSelection = React.useCallback(
-    (delta: number) => {
+  const clampIndex = React.useCallback(
+    (idx: number) => {
       const max = filtered.length - 1
-      if (max < 0) return
-      setSelectedIndex(Math.min(Math.max(0, selectedIndex + delta), max))
+      if (max < 0) return 0
+      return Math.min(Math.max(0, idx), max)
     },
-    [filtered.length, selectedIndex, setSelectedIndex]
+    [filtered.length]
   )
-
-
 
   const handleKey = React.useCallback(
     (e: KeyboardEvent) => {
+      // Don't hijack typing in inputs / textareas
+      const target = e.target as HTMLElement
+      const isInput = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable
+
+      // When search is focused, only handle Escape to blur
       if (searchFocused) {
         if (e.key === "Escape") {
+          e.preventDefault()
           setSearchFocused(false)
           ;(document.getElementById("search-input") as HTMLInputElement)?.blur()
         }
         return
       }
 
+      // When help overlay is open, only handle Escape and ? to close
       if (helpOpen) {
         if (e.key === "Escape" || e.key === "?") {
           e.preventDefault()
@@ -64,16 +90,19 @@ export function useKeybindings() {
         return
       }
 
-
+      // Don't handle keys when typing in other inputs
+      if (isInput) return
 
       const key = e.key
 
+      // Buffer management for multi-key sequences (like gg)
       if (bufferTimeout.current) {
         clearTimeout(bufferTimeout.current)
       }
-      bufferTimeout.current = setTimeout(flushBuffer, 800)
+      bufferTimeout.current = setTimeout(flushBuffer, 600)
 
-      if (/^[0-9]$/.test(key)) {
+      // Handle number prefix for repeated motions
+      if (/^[0-9]$/.test(key) && key !== "1" && key !== "3" && key !== "4" && key !== "5") {
         keyBuffer.current += key
         e.preventDefault()
         return
@@ -83,17 +112,36 @@ export function useKeybindings() {
       keyBuffer.current += key
 
       switch (key) {
+        // === Navigation ===
         case "j":
+        case "ArrowDown":
           e.preventDefault()
-          moveSelection(count)
-          flushBuffer()
-          break
-        case "k":
-          e.preventDefault()
-          moveSelection(-count)
+          setSelectedIndex(clampIndex(selectedIndex + GRID_COLS * count))
           flushBuffer()
           break
 
+        case "k":
+        case "ArrowUp":
+          e.preventDefault()
+          setSelectedIndex(clampIndex(selectedIndex - GRID_COLS * count))
+          flushBuffer()
+          break
+
+        case "l":
+        case "ArrowRight":
+          e.preventDefault()
+          setSelectedIndex(clampIndex(selectedIndex + count))
+          flushBuffer()
+          break
+
+        case "h":
+        case "ArrowLeft":
+          e.preventDefault()
+          setSelectedIndex(clampIndex(selectedIndex - count))
+          flushBuffer()
+          break
+
+        // === Jump ===
         case "g":
           if (keyBuffer.current.endsWith("gg")) {
             e.preventDefault()
@@ -101,110 +149,96 @@ export function useKeybindings() {
             flushBuffer()
           }
           break
+
         case "G":
           e.preventDefault()
           setSelectedIndex(filtered.length - 1)
           flushBuffer()
           break
+
+        // === Actions ===
+        case " ": // Space — toggle queue
+          e.preventDefault()
+          if (filtered[selectedIndex]) {
+            toggleQueueItem(filtered[selectedIndex].id)
+          }
+          flushBuffer()
+          break
+
+        case "c": // Clear all selected
+          e.preventDefault()
+          clearQueue()
+          flushBuffer()
+          break
+
         case "Enter":
           e.preventDefault()
           if (filtered[selectedIndex]) {
-            // Enter opens the slide-over drawer for the highlighted app
             setInspectSoftwareId(filtered[selectedIndex].id)
           }
           flushBuffer()
           break
+
         case "Escape":
-        case "Backspace":
           e.preventDefault()
           if (inspectSoftwareId) {
             setInspectSoftwareId(null)
           } else if (view.kind === "detail") {
             goBack()
           } else {
+            // Clear search if active, otherwise just deselect
             setSearchQuery("")
+            setSelectedIndex(0)
           }
           flushBuffer()
           break
+
         case "/":
           e.preventDefault()
           setSearchFocused(true)
+          setTimeout(() => {
+            ;(document.getElementById("search-input") as HTMLInputElement)?.focus()
+          }, 0)
           flushBuffer()
           break
-        case "f":
-          e.preventDefault()
-          if (filtered[selectedIndex]) {
-            toggleFavorite(filtered[selectedIndex].id)
-          }
-          flushBuffer()
-          break
-        case "i":
-          e.preventDefault()
-          if (filtered[selectedIndex]) {
-            toggleInstalled(filtered[selectedIndex].id)
-          }
-          flushBuffer()
-          break
+
         case "?":
           e.preventDefault()
           setHelpOpen(true)
           flushBuffer()
           break
+
         case "s":
           e.preventDefault()
           setSidebarOpen(!state.sidebarOpen)
           flushBuffer()
           break
-        case "Tab":
-          e.preventDefault()
-          {
-            const views: View[] = [
-              { kind: "grid" },
-              { kind: "favorites" },
-              { kind: "installed" },
-              { kind: "settings" },
-            ]
-            const currentIdx = views.findIndex(
-              (v) => v.kind === view.kind
-            )
-            const nextIdx = (currentIdx + 1) % views.length
-            setView(views[nextIdx])
-          }
-          flushBuffer()
-          break
-        case "x":
-        case " ":
-          e.preventDefault()
-          if (filtered[selectedIndex]) {
-            state.toggleQueueItem(filtered[selectedIndex].id)
-          }
-          flushBuffer()
-          break
+
+        // === View shortcuts ===
         case "1":
           e.preventDefault()
           setView({ kind: "grid" })
           flushBuffer()
           break
-        case "2":
-          e.preventDefault()
-          setView({ kind: "favorites" })
-          flushBuffer()
-          break
+
         case "3":
           e.preventDefault()
           setView({ kind: "installed" })
           flushBuffer()
           break
+
         case "4":
           e.preventDefault()
           setView({ kind: "system" })
           flushBuffer()
           break
+
         case "5":
           e.preventDefault()
           setView({ kind: "settings" })
           flushBuffer()
           break
+
         default:
           flushBuffer()
           break
@@ -216,17 +250,19 @@ export function useKeybindings() {
       view,
       filtered,
       selectedIndex,
+      inspectSoftwareId,
       state.sidebarOpen,
-      moveSelection,
+      clampIndex,
       setSelectedIndex,
       setView,
       setSearchQuery,
       setSearchFocused,
       setHelpOpen,
       setSidebarOpen,
+      setInspectSoftwareId,
       goBack,
-      toggleFavorite,
-      toggleInstalled,
+      clearQueue,
+      toggleQueueItem,
       flushBuffer,
     ]
   )

@@ -25,6 +25,7 @@ import {
   Package,
   type LucideIcon,
 } from "lucide-react"
+import { CATEGORY_MAP } from "@/lib/categories"
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Globe,
@@ -55,11 +56,19 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 export function CategoryIcon({
   name,
+  categoryId,
   className,
 }: {
-  name: string
+  name?: string
+  categoryId?: string
   className?: string
 }) {
-  const Icon = ICON_MAP[name] ?? Package
+  let iconName = name
+  if (!iconName && categoryId) {
+    const cat = CATEGORY_MAP[categoryId as keyof typeof CATEGORY_MAP]
+    iconName = cat?.icon
+  }
+  const Icon = (iconName ? ICON_MAP[iconName] : undefined) ?? Package
   return <Icon className={className} />
 }
+

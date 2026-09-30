@@ -7,10 +7,8 @@ import {
   Settings,
   HelpCircle,
   PanelLeftClose,
-  Package,
   Cpu,
   CheckSquare,
-  Heart,
   Info,
   ExternalLink,
   RefreshCw,
@@ -48,17 +46,8 @@ export function AppSidebar() {
         sidebarOpen ? "w-60" : "w-0 overflow-hidden"
       )}
     >
-      {/* Logo */}
-      <div className="flex items-center justify-between gap-2 p-4 pb-3 border-b border-border/50">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-lg shadow-primary/20">
-            <Package className="size-4" />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold tracking-tight gradient-text">Almanac</span>
-            <span className="text-[10px] text-muted-foreground">Software Manager</span>
-          </div>
-        </div>
+      {/* Collapse toggle */}
+      <div className="flex items-center justify-end p-2.5 pb-2 border-b border-border/50">
         <Button
           variant="ghost"
           size="icon-xs"
@@ -167,7 +156,7 @@ export function AppSidebar() {
           active={isAbout}
           onClick={() => setView({ kind: "about" })}
           icon={<Info className="size-4" />}
-          label="About & Donate"
+          label="About"
         />
         <SidebarLink
           onClick={() => setHelpOpen(true)}
@@ -189,13 +178,6 @@ export function AppSidebar() {
           <span className="flex-1 text-left">Star on GitHub</span>
           <Star className="size-3 text-amber-400" />
         </a>
-        <button
-          onClick={() => setView({ kind: "about" })}
-          className="cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:bg-sidebar-accent/40 hover:text-rose-400 transition-all duration-200"
-        >
-          <Heart className="size-3.5 text-rose-400" />
-          <span className="flex-1 text-left">Sponsor / Donate</span>
-        </button>
       </div>
     </aside>
   )

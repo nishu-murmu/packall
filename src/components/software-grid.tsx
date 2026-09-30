@@ -3,6 +3,7 @@ import { useAppState, useFilteredSoftware } from "@/lib/app-state"
 import { CATEGORIES } from "@/lib/categories"
 import { SOFTWARE } from "@/lib/software"
 import { SoftwareCard } from "@/components/software-card"
+import { CategoryIcon } from "@/components/category-icon"
 import { Button } from "@/components/ui/button"
 import {
   Empty,
@@ -10,7 +11,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty"
-import { Package, Search, CheckSquare, X, Sparkles } from "lucide-react"
+import { Package, Search, X, Sparkles, ChevronDown, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function SoftwareGrid() {
@@ -18,7 +19,6 @@ export function SoftwareGrid() {
     installed,
     selectedQueue,
     toggleQueueItem,
-    selectAllVisible,
     view,
     searchQuery,
     setSearchQuery,
@@ -27,71 +27,95 @@ export function SoftwareGrid() {
     setInspectSoftwareId,
   } = useAppState()
 
-  const [activeCategory, setActiveCategory] = React.useState<string | null>(null)
+  const filtered = useFilteredSoftware()
 
-  const baseFiltered = useFilteredSoftware()
+  // Track collapsed categories
+  const [collapsedCategories, setCollapsedCategories] = React.useState<Set<string>>(new Set())
 
-  // Apply category chip filter on top of the base filtered list
-  const filtered = React.useMemo(() => {
-    if (!activeCategory) return baseFiltered
-    return baseFiltered.filter((s) => s.category === activeCategory)
-  }, [baseFiltered, activeCategory])
+  const toggleCategory = React.useCallback((categoryId: string) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev)
+      if (next.has(categoryId)) {
+        next.delete(categoryId)
+      } else {
+        next.add(categoryId)
+      }
+      return next
+    })
+  }, [])
 
-  // Reset category filter when search query or view mode changes
+  // Reset selected index when search query or view mode changes
   React.useEffect(() => {
-    setActiveCategory(null)
     setSelectedIndex(0)
   }, [searchQuery, view.kind, setSelectedIndex])
 
-  // Get categories that are actually present in the current base list
-  const availableCategories = React.useMemo(() => {
-    const counts: Record<string, number> = {}
-    for (const s of baseFiltered) {
-      counts[s.category] = (counts[s.category] ?? 0) + 1
+  // Group filtered software by category
+  const groupedByCategory = React.useMemo(() => {
+    const groups: { category: typeof CATEGORIES[number]; items: typeof filtered }[] = []
+    const itemsByCategory: Record<string, typeof filtered> = {}
+
+    for (const sw of filtered) {
+      if (!itemsByCategory[sw.category]) {
+        itemsByCategory[sw.category] = []
+      }
+      itemsByCategory[sw.category].push(sw)
     }
-    return CATEGORIES.filter((c) => (counts[c.id] ?? 0) > 0).map((c) => ({
-      ...c,
-      count: counts[c.id] ?? 0,
-    }))
-  }, [baseFiltered])
+
+    // Maintain the order from CATEGORIES
+    for (const cat of CATEGORIES) {
+      const items = itemsByCategory[cat.id]
+      if (items && items.length > 0) {
+        groups.push({ category: cat, items })
+      }
+    }
+
+    return groups
+  }, [filtered])
+
+  // Build flat index mapping: flat index → { categoryIdx, itemIdx }
+  const flatItems = React.useMemo(() => {
+    const items: { software: typeof filtered[number]; categoryId: string; flatIdx: number }[] = []
+    let idx = 0
+    for (const group of groupedByCategory) {
+      if (collapsedCategories.has(group.category.id)) continue
+      for (const sw of group.items) {
+        items.push({ software: sw, categoryId: group.category.id, flatIdx: idx })
+        idx++
+      }
+    }
+    return items
+  }, [groupedByCategory, collapsedCategories])
 
   const isGlobalSearch = Boolean(searchQuery.trim())
 
   const title = React.useMemo(() => {
     if (isGlobalSearch) return `Results for "${searchQuery}"`
     if (view.kind === "installed") return "Installed Software"
-    if (activeCategory) {
-      const cat = CATEGORIES.find((c) => c.id === activeCategory)
-      return cat ? cat.name : "All Software"
-    }
     return "All Software"
-  }, [isGlobalSearch, searchQuery, view, activeCategory])
+  }, [isGlobalSearch, searchQuery, view])
 
   const subtitle = React.useMemo(() => {
     if (isGlobalSearch) {
       return `Searching across all ${SOFTWARE.length} apps (${filtered.length} found)`
     }
     if (view.kind === "installed") return "Applications detected or marked as installed on this system"
-    if (activeCategory) {
-      const cat = CATEGORIES.find((c) => c.id === activeCategory)
-      return cat?.description ?? `${filtered.length} apps in ${cat?.name || "category"}`
-    }
-    return `${filtered.length} applications across ${availableCategories.length} categories`
-  }, [isGlobalSearch, filtered.length, view, activeCategory, availableCategories.length])
-
-  const allVisibleSelected =
-    filtered.length > 0 && filtered.every((s) => selectedQueue.has(s.id))
-
-  const handleSelectAllVisible = () => {
-    selectAllVisible(filtered.map((s) => s.id))
-  }
+    return `${filtered.length} applications across ${groupedByCategory.length} categories`
+  }, [isGlobalSearch, filtered.length, view, groupedByCategory.length])
 
   // Handle selecting a card — Enter key or click opens slide-over drawer
   const handleSelectCard = (softwareId: string) => {
     setInspectSoftwareId(softwareId)
   }
 
-  if (filtered.length === 0 && !isGlobalSearch && availableCategories.length === 0) {
+  // Auto-scroll highlighted item into view
+  React.useEffect(() => {
+    const el = document.querySelector('[data-highlighted="true"]')
+    if (el) {
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" })
+    }
+  }, [selectedIndex])
+
+  if (filtered.length === 0 && !isGlobalSearch && groupedByCategory.length === 0) {
     const emptyMsg =
         view.kind === "installed"
         ? "No installed software detected or marked yet."
@@ -153,6 +177,9 @@ export function SoftwareGrid() {
     )
   }
 
+  // Track the running flat index across categories for highlighting
+  let runningFlatIdx = 0
+
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header bar */}
@@ -175,16 +202,6 @@ export function SoftwareGrid() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSelectAllVisible}
-            className="cursor-pointer h-8 gap-1.5 text-xs rounded-xl"
-          >
-            <CheckSquare className="size-3.5" />
-            {allVisibleSelected ? "Deselect All" : "Select All"}
-          </Button>
-
           {isGlobalSearch && (
             <Button
               variant="ghost"
@@ -199,65 +216,72 @@ export function SoftwareGrid() {
         </div>
       </div>
 
-      {/* Category filter chips — only when not searching and in grid view */}
-      {!isGlobalSearch && view.kind !== "installed" && availableCategories.length > 1 && (
-        <div className="flex items-center gap-1.5 px-6 py-2.5 border-b border-border/50 overflow-x-auto scrollbar-thin shrink-0">
-          <button
-            onClick={() => {
-              setActiveCategory(null)
-              setSelectedIndex(0)
-            }}
-            className={cn(
-              "cursor-pointer shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200",
-              !activeCategory
-                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-            )}
-          >
-            All
-          </button>
-          {availableCategories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => {
-                setActiveCategory(activeCategory === cat.id ? null : cat.id)
-                setSelectedIndex(0)
-              }}
-              className={cn(
-                "cursor-pointer shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5",
-                activeCategory === cat.id
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <span className={cn("size-1.5 rounded-full shrink-0", `cat-dot-${cat.id}`)} />
-              {cat.name}
-              <span className={cn(
-                "text-[10px] font-mono",
-                activeCategory === cat.id ? "text-primary-foreground/70" : "text-muted-foreground/50"
-              )}>
-                {cat.count}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Collapsible category groups */}
+      <div className="flex-1 overflow-y-auto pb-28">
+        {groupedByCategory.map((group) => {
+          const isCollapsed = collapsedCategories.has(group.category.id)
+          const startIdx = runningFlatIdx
 
-      {/* Grid */}
-      <div className="flex-1 overflow-y-auto p-5 pb-28">
-        <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
-          {filtered.map((sw, index) => (
-            <SoftwareCard
-              key={sw.id}
-              software={sw}
-              isInstalled={installed.has(sw.id)}
-              isQueued={selectedQueue.has(sw.id)}
-              isHighlighted={selectedIndex === index}
-              onSelect={() => handleSelectCard(sw.id)}
-              onToggleQueue={() => toggleQueueItem(sw.id)}
-            />
-          ))}
-        </div>
+          if (!isCollapsed) {
+            runningFlatIdx += group.items.length
+          }
+
+          return (
+            <div key={group.category.id} className="border-b border-border/30 last:border-b-0">
+              {/* Category Header — clickable to toggle collapse */}
+              <button
+                onClick={() => toggleCategory(group.category.id)}
+                className={cn(
+                  "cursor-pointer flex w-full items-center gap-3 px-6 py-3 text-left transition-colors duration-150",
+                  "hover:bg-muted/30 group select-none",
+                  isCollapsed && "bg-muted/10"
+                )}
+              >
+                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                  {isCollapsed ? (
+                    <ChevronRight className="size-4" />
+                  ) : (
+                    <ChevronDown className="size-4" />
+                  )}
+                </span>
+                <CategoryIcon categoryId={group.category.id} className="size-4 text-primary/70" />
+                <span className="text-sm font-semibold text-foreground tracking-tight">
+                  {group.category.name}
+                </span>
+                <span className="rounded-md bg-muted/60 text-muted-foreground px-1.5 py-0.5 text-[10px] font-mono tabular-nums">
+                  {group.items.length}
+                </span>
+                {group.category.description && (
+                  <span className="hidden md:inline text-[11px] text-muted-foreground/60 truncate ml-1">
+                    — {group.category.description}
+                  </span>
+                )}
+              </button>
+
+              {/* Items grid — 4 columns of compact cards */}
+              {!isCollapsed && (
+                <div className="px-6 pb-4 pt-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {group.items.map((sw, localIdx) => {
+                      const globalIdx = startIdx + localIdx
+                      return (
+                        <SoftwareCard
+                          key={sw.id}
+                          software={sw}
+                          isInstalled={installed.has(sw.id)}
+                          isQueued={selectedQueue.has(sw.id)}
+                          isHighlighted={selectedIndex === globalIdx}
+                          onSelect={() => handleSelectCard(sw.id)}
+                          onToggleQueue={() => toggleQueueItem(sw.id)}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

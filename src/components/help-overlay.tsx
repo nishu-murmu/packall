@@ -16,13 +16,13 @@ export function HelpOverlay() {
 
   const groups = React.useMemo(() => {
     const nav = KEYBINDINGS.filter((k) =>
-      ["j", "k", "h", "l", "g g", "G", "Enter", "Tab"].includes(k.key)
+      ["j", "k", "h", "l", "g g", "G", "Enter"].includes(k.key)
     )
     const actions = KEYBINDINGS.filter((k) =>
-      ["f", "i", "/", "Esc", "s"].includes(k.key)
+      ["/", "Space", "c", "Esc", "s"].includes(k.key)
     )
     const views = KEYBINDINGS.filter((k) =>
-      ["1", "2", "3", "4", "?"].includes(k.key)
+      ["1", "3", "4", "5", "?"].includes(k.key)
     )
     return { nav, actions, views }
   }, [])
@@ -42,13 +42,6 @@ export function HelpOverlay() {
           <ShortcutGroup title="Navigation" bindings={groups.nav} />
           <ShortcutGroup title="Actions" bindings={groups.actions} />
           <ShortcutGroup title="Views" bindings={groups.views} />
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold">Number Prefix</h4>
-            <p className="text-xs text-muted-foreground">
-              Type a number before a motion to repeat it. For example{" "}
-              <Kbd>5</Kbd> <Kbd>j</Kbd> moves down 5 items.
-            </p>
-          </div>
         </div>
 
         <Separator />
