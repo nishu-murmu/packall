@@ -1,27 +1,138 @@
-# .github/workflows/release.yml
 name: Release
+
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Build on the oldest supported Ubuntu so the .deb/.AppImage run on older glibc.
+  BUILD_OS: ubuntu-22.04
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
       - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
       - name: Install system deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: cargo test --manifest-path src-tauri/Cargo.toml
+
+  build:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf rpm
       - run: npm ci
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'Almanac ${{ github.ref_name }}'
-          releaseBody: 'See the assets below for download.'
+          releaseName: 'Packall ${{ github.ref_name }}'
+          releaseBody: |
+            Packall ${{ github.ref_name }} — open source (AGPL-3.0).
+
+            **Install**
+            - Debian / Ubuntu: `sudo apt install ./Packall_*_amd64.deb`
+            - Fedora / openSUSE: `sudo dnf install ./Packall-*.rpm`
+            - Arch: `paru -S packall-bin`
+            - Any distro: make the `.AppImage` executable and run it
+          releaseDraft: false
+          prerelease: false
+          args: --bundles deb,rpm,appimage
+
+  aur:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set version from tag
+        run: |
+          ver="${GITHUB_REF_NAME#v}"
+          sed -i "s/^pkgver=.*/pkgver=${ver}/" packaging/aur/packall-bin/PKGBUILD packaging/aur/packall/PKGBUILD
+      - name: Publish packall-bin to the AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v3
+        with:
+          pkgname: packall-bin
+          pkgbuild: packaging/aur/packall-bin/PKGBUILD
+          updpkgsums: true
+          test: true
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: Update to ${{ github.ref_name }}
+      - name: Publish packall (source) to the AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v3
+        with:
+          pkgname: packall
+          pkgbuild: packaging/aur/packall/PKGBUILD
+          updpkgsums: true
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_message: Update to ${{ github.ref_name }}
+
+  repos:
+    # Static APT + RPM repositories served from GitHub Pages (branch: gh-pages).
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tooling
+        run: sudo apt-get update && sudo apt-get install -y dpkg-dev apt-utils createrepo-c rpm gnupg
+      - name: Download release packages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p assets/deb assets/rpm
+          gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --dir assets/deb
+          gh release download "$GITHUB_REF_NAME" --pattern '*.rpm' --dir assets/rpm
+      - name: Import signing key (optional)
+        id: gpg
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.REPO_GPG_PRIVATE_KEY }}
+        run: |
+          if [ -n "$GPG_PRIVATE_KEY" ]; then
+            echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+            echo "key=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5; exit}')" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build repositories
+        run: |
+          packaging/scripts/make-apt-repo.sh assets/deb site "${{ steps.gpg.outputs.key }}"
+          packaging/scripts/make-rpm-repo.sh assets/rpm site "${{ steps.gpg.outputs.key }}"
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: site
+          keep_files: true

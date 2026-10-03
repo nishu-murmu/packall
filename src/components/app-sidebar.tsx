@@ -25,7 +25,7 @@ export function AppSidebar() {
     setSidebarOpen,
     installed,
     selectedQueue,
-    openBatchAction,
+    requestBatch,
     setHelpOpen,
     clearQueue,
     isLoadingSystem,
@@ -106,19 +106,19 @@ export function AppSidebar() {
               </div>
               <div className="grid grid-cols-3 gap-1">
                 <QueueBtn
-                  onClick={() => openBatchAction("install")}
+                  onClick={() => void requestBatch("install")}
                   icon={<Download className="size-3" />}
                   label="Install"
                   color="primary"
                 />
                 <QueueBtn
-                  onClick={() => openBatchAction("update")}
+                  onClick={() => void requestBatch("update")}
                   icon={<RefreshCw className="size-3" />}
                   label="Update"
                   color="secondary"
                 />
                 <QueueBtn
-                  onClick={() => openBatchAction("remove")}
+                  onClick={() => void requestBatch("remove")}
                   icon={<Trash2 className="size-3" />}
                   label="Remove"
                   color="danger"

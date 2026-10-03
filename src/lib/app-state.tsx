@@ -1,5 +1,5 @@
 import * as React from "react"
-import { SOFTWARE } from "@/lib/software"
+import { SOFTWARE, SOFTWARE_MAP } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
 import type {
   CategoryId,
@@ -11,8 +11,22 @@ import type {
   DistroInfo,
   InstallStep,
   MultiStepActionResult,
+  DistroFilter,
+  Batch,
+  Job,
+  JobEvent,
 } from "@/lib/types"
 import { invoke } from "@tauri-apps/api/core"
+import { listen } from "@tauri-apps/api/event"
+import { applyJobEvent, batchCounts } from "@/lib/jobs-reducer"
+import {
+  buildCommands,
+  buildSystemPackageCommands,
+  matchesDistroFilter,
+  optionInstalled,
+  pickOption,
+  type PickContext,
+} from "@/lib/actions"
 import { toast } from "sonner"
 
 interface AppState {
@@ -30,8 +44,11 @@ interface AppState {
   distroInfo: DistroInfo | null
   inspectSoftwareId: string | null
   isLoadingSystem: boolean
-  batchModalOpen: boolean
-  batchAction: BatchAction
+  distroFilter: DistroFilter
+  collapsedCategories: Set<string>
+  batches: Batch[]
+  jobsPanelOpen: boolean
+  removeConfirmOpen: boolean
 
   setView: (view: View) => void
   setSelectedCategory: (id: CategoryId) => void
@@ -45,8 +62,16 @@ interface AppState {
   setSidebarOpen: (open: boolean) => void
   setHelpOpen: (open: boolean) => void
   setSearchFocused: (f: boolean) => void
-  setBatchModalOpen: (open: boolean) => void
-  openBatchAction: (action: BatchAction) => void
+  setDistroFilter: (f: DistroFilter) => void
+  toggleCategoryCollapsed: (id: string) => void
+  setJobsPanelOpen: (open: boolean) => void
+  setRemoveConfirmOpen: (open: boolean) => void
+  /** One-click entry point: starts at once, except removals which ask first. */
+  requestBatch: (action: BatchAction) => Promise<void>
+  /** Start `action` for every queued item (or `ids` when given) in the background. */
+  runBatch: (action: BatchAction, ids?: string[]) => Promise<void>
+  cancelBatch: (batchId: string) => Promise<void>
+  dismissBatch: (batchId: string) => void
   refreshSystemPackages: () => Promise<void>
   runPackageAction: (
     action: BatchAction,
@@ -78,8 +103,17 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(true)
   const [helpOpen, setHelpOpen] = React.useState(false)
   const [searchFocused, setSearchFocused] = React.useState(false)
-  const [batchModalOpen, setBatchModalOpen] = React.useState(false)
-  const [batchAction, setBatchAction] = React.useState<BatchAction>("install")
+  const [distroFilter, setDistroFilterState] = React.useState<DistroFilter>(() => {
+    try {
+      return (localStorage.getItem("packall_distro_filter") as DistroFilter) || "all"
+    } catch {
+      return "all"
+    }
+  })
+  const [collapsedCategories, setCollapsedCategories] = React.useState<Set<string>>(new Set())
+  const [batches, setBatches] = React.useState<Batch[]>([])
+  const [jobsPanelOpen, setJobsPanelOpen] = React.useState(false)
+  const [removeConfirmOpen, setRemoveConfirmOpen] = React.useState(false)
   const [systemPackages, setSystemPackages] = React.useState<SystemPackage[]>([])
   const [packageManagers, setPackageManagers] = React.useState<PackageManagerInfo[]>([])
   const [distroInfo, setDistroInfo] = React.useState<DistroInfo | null>(null)
@@ -159,7 +193,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           for (const s of SOFTWARE) {
             if (
               sysNames.has(s.id.toLowerCase()) ||
-              sysNames.has(s.name.toLowerCase())
+              sysNames.has(s.name.toLowerCase()) ||
+              s.install.some((o) => optionInstalled(o, sysPkgs))
             ) {
               next.add(s.id)
             }
@@ -241,9 +276,195 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
-  const openBatchAction = React.useCallback((action: BatchAction) => {
-    setBatchAction(action)
-    setBatchModalOpen(true)
+  const setDistroFilter = React.useCallback((f: DistroFilter) => {
+    setDistroFilterState(f)
+    setSelectedIndex(0)
+    try {
+      localStorage.setItem("packall_distro_filter", f)
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  const toggleCategoryCollapsed = React.useCallback((id: string) => {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+    setSelectedIndex(0)
+  }, [])
+
+  // ---- Background batch jobs -------------------------------------------------
+
+  const batchesRef = React.useRef<Batch[]>([])
+  React.useEffect(() => {
+    batchesRef.current = batches
+  }, [batches])
+
+  const handleJobEvent = React.useCallback(
+    (ev: JobEvent) => {
+      const batch = batchesRef.current.find((b) => b.id === ev.batch_id)
+      if (!batch) return
+      const updated = applyJobEvent(batch, ev)
+      batchesRef.current = batchesRef.current.map((b) => (b.id === batch.id ? updated : b))
+      setBatches(batchesRef.current)
+
+      if (ev.kind === "finished" && ev.success) {
+        if (batch.action === "install") {
+          setInstalled((prev) => new Set(prev).add(ev.job_id))
+        } else if (batch.action === "remove") {
+          setInstalled((prev) => {
+            const next = new Set(prev)
+            next.delete(ev.job_id)
+            return next
+          })
+        }
+      }
+
+      if (ev.kind === "batch_done") {
+        const c = batchCounts(updated)
+        const verb =
+          batch.action === "install" ? "installed" : batch.action === "update" ? "updated" : "removed"
+        if (c.cancelled > 0) toast.message(`Cancelled — ${c.success} ${verb}`)
+        else if (c.failed > 0) toast.error(`${c.success} ${verb}, ${c.failed} failed`)
+        else toast.success(`${c.success} ${verb} successfully`)
+        void refreshSystemPackages()
+      }
+    },
+    [refreshSystemPackages]
+  )
+
+  React.useEffect(() => {
+    let unlisten: (() => void) | undefined
+    let cancelled = false
+    try {
+      Promise.resolve(listen<JobEvent>("packall-job", (e) => handleJobEvent(e.payload)))
+        .then((fn) => {
+          if (cancelled) fn?.()
+          else unlisten = fn
+        })
+        .catch(() => {})
+    } catch {
+      // Not running inside Tauri.
+    }
+    return () => {
+      cancelled = true
+      unlisten?.()
+    }
+  }, [handleJobEvent])
+
+  const runBatch = React.useCallback(
+    async (action: BatchAction, ids?: string[]) => {
+      const targets = ids ?? Array.from(selectedQueue)
+      if (targets.length === 0) return
+
+      const ctx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages }
+      const jobs: Job[] = []
+      const specs: { id: string; name: string; commands: string[] }[] = []
+
+      for (const id of targets) {
+        const sw = SOFTWARE_MAP[id]
+        const base: Job = { id, name: sw?.name ?? id, action, status: "queued", percent: null, log: [] }
+        if (!sw) {
+          // Not in the catalogue: a raw package picked from the System view.
+          const sysPkg = systemPackages.find((p) => p.name === id)
+          const commands =
+            sysPkg && action !== "install"
+              ? buildSystemPackageCommands(action, sysPkg, packageManagers)
+              : []
+          if (!sysPkg || commands.length === 0) {
+            jobs.push({ ...base, status: "skipped", error: "Cannot manage this package automatically" })
+          } else {
+            jobs.push({ ...base, method: sysPkg.manager })
+            specs.push({ id, name: id, commands })
+          }
+          continue
+        }
+        if (action === "install" && installed.has(id)) {
+          jobs.push({ ...base, status: "skipped", error: "Already installed" })
+          continue
+        }
+        if (action !== "install" && !installed.has(id)) {
+          jobs.push({ ...base, status: "skipped", error: "Not installed" })
+          continue
+        }
+        const opt = pickOption(sw, action, ctx)
+        const commands = opt ? buildCommands(action, opt, packageManagers) : []
+        if (!opt || commands.length === 0) {
+          jobs.push({
+            ...base,
+            status: "skipped",
+            error: "No automatic method for this system — open Details for manual steps",
+          })
+          continue
+        }
+        jobs.push({ ...base, method: opt.method })
+        specs.push({ id, name: sw.name, commands })
+      }
+
+      const batch: Batch = {
+        id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        action,
+        jobs,
+        done: specs.length === 0,
+        startedAt: Date.now(),
+      }
+      batchesRef.current = [batch, ...batchesRef.current].slice(0, 5)
+      setBatches(batchesRef.current)
+      setJobsPanelOpen(true)
+      setSelectedQueue(new Set())
+
+      if (specs.length === 0) {
+        toast.error("Nothing to do for the selected items")
+        return
+      }
+
+      try {
+        await invoke("start_batch", { batchId: batch.id, jobs: specs })
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err)
+        const failed: Batch = {
+          ...batch,
+          done: true,
+          jobs: batch.jobs.map((j) =>
+            j.status === "queued"
+              ? { ...j, status: "failed", error: "Package actions need the Packall desktop app" }
+              : j
+          ),
+        }
+        batchesRef.current = batchesRef.current.map((b) => (b.id === batch.id ? failed : b))
+        setBatches(batchesRef.current)
+        toast.error(`Could not start background job: ${message}`)
+      }
+    },
+    [selectedQueue, distroInfo, packageManagers, systemPackages, installed]
+  )
+
+  const requestBatch = React.useCallback(
+    async (action: BatchAction) => {
+      if (selectedQueue.size === 0) return
+      if (action === "remove") {
+        setRemoveConfirmOpen(true)
+        return
+      }
+      await runBatch(action)
+    },
+    [selectedQueue, runBatch]
+  )
+
+  const cancelBatch = React.useCallback(async (batchId: string) => {
+    try {
+      await invoke("cancel_batch_job", { batchId })
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  const dismissBatch = React.useCallback((batchId: string) => {
+    batchesRef.current = batchesRef.current.filter((b) => b.id !== batchId)
+    setBatches(batchesRef.current)
   }, [])
 
   const runPackageAction = React.useCallback(
@@ -355,8 +576,11 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     distroInfo,
     inspectSoftwareId,
     isLoadingSystem,
-    batchModalOpen,
-    batchAction,
+    distroFilter,
+    collapsedCategories,
+    batches,
+    jobsPanelOpen,
+    removeConfirmOpen,
     setView: setViewWrapper,
     setSelectedCategory,
     setSearchQuery,
@@ -369,8 +593,14 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setSidebarOpen,
     setHelpOpen,
     setSearchFocused,
-    setBatchModalOpen,
-    openBatchAction,
+    setDistroFilter,
+    toggleCategoryCollapsed,
+    setJobsPanelOpen,
+    setRemoveConfirmOpen,
+    requestBatch,
+    runBatch,
+    cancelBatch,
+    dismissBatch,
     refreshSystemPackages,
     runPackageAction,
     runMultiStepAction,
@@ -394,22 +624,23 @@ export function useAppState() {
  * of which category is currently selected!
  */
 export function useFilteredSoftware() {
-  const { view, searchQuery, installed } =
-    useAppState()
+  const { view, searchQuery, installed, distroFilter } = useAppState()
 
   return React.useMemo(() => {
     let list = SOFTWARE
 
-    // If search query is active, search across the ENTIRE catalogue (Global Search!)
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase()
-      let searchList = SOFTWARE
+    if (view.kind === "installed") {
+      list = list.filter((s) => installed.has(s.id))
+    }
 
-      if (view.kind === "installed") {
-        searchList = searchList.filter((s) => installed.has(s.id))
-      }
+    if (distroFilter !== "all") {
+      list = list.filter((s) => matchesDistroFilter(s, distroFilter))
+    }
 
-      return searchList.filter(
+    // Global search covers every category regardless of the selected one.
+    const q = searchQuery.trim().toLowerCase()
+    if (q) {
+      list = list.filter(
         (s) =>
           s.name.toLowerCase().includes(q) ||
           s.tagline.toLowerCase().includes(q) ||
@@ -419,15 +650,22 @@ export function useFilteredSoftware() {
       )
     }
 
-    if (view.kind === "installed") {
-      list = list.filter((s) => installed.has(s.id))
-    }
-    // For "grid" and all other views: show all software
-
-    return list
-  }, [view, searchQuery, installed])
+    // Order by category (matching the on-screen sections) so the keyboard
+    // cursor index lines up with what is drawn.
+    const order = new Map(CATEGORIES.map((c, i) => [c.id, i]))
+    return [...list].sort((a, b) => (order.get(a.category) ?? 99) - (order.get(b.category) ?? 99))
+  }, [view, searchQuery, installed, distroFilter])
 }
 
+/** The filtered list minus collapsed categories: exactly what is on screen. */
+export function useNavigableSoftware() {
+  const filtered = useFilteredSoftware()
+  const { collapsedCategories } = useAppState()
+  return React.useMemo(
+    () => filtered.filter((s) => !collapsedCategories.has(s.category)),
+    [filtered, collapsedCategories]
+  )
+}
 
 export function useCategoryCount(id: CategoryId) {
   return React.useMemo(

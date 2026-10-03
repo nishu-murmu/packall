@@ -1,6 +1,8 @@
 # Packall
 
 > **A graphical directory of essential Linux software — categorized, searchable, and fully navigable with Neovim-style keyboard shortcuts.**
+>
+> Free and open source software, licensed under the [AGPL-3.0](LICENSE). Contributions welcome — see [Contributing](#contributing).
 
 Packall is an offline-first, keyboard-driven application catalog designed specifically for Linux desktop environments and sysadmins. It organizes software across **14 distinct categories**, supports **11 packaging formats**, and allows complete navigation from your home row without a mouse.
 
@@ -11,7 +13,8 @@ Packall is an offline-first, keyboard-driven application catalog designed specif
 - **Tauri v2 + Rust Architecture**: Native desktop experience with a tiny memory footprint (< 40MB RAM) and sub-10ms startup.
 - **Neovim-Style Keyboard Navigation**: Fast modal keybindings (`/`, `Space`, `j`/`k`, `h`/`l`, `c`, `Esc`, `?`) for efficient, mouse-free browsing.
 - **Collapsible Category Grid**: Software catalog grouped into collapsible categories with responsive 4-column layout and instant global filtering.
-- **Selection Queue & Batch Helper**: Toggle applications with `Space` and inspect or copy installation commands in batch.
+- **One-click background actions**: Select software, press **Install**, **Update** or **Remove** (or `i` / `u` / `x`). Work runs on a background thread, with an overall progress bar, per-package status, live logs and a Cancel button. Privileged steps use the system's graphical polkit prompt (`pkexec`).
+- **Distro-aware**: Detects Debian/Ubuntu, Fedora/RHEL, Arch, openSUSE and derivatives (via `ID_LIKE`), picks the right package manager per app, and falls back to Flatpak/Snap. A distro filter narrows the catalogue to what your distro offers.
 - **Live System Detection**: Automatically detects host package managers (`apt`, `dnf`, `pacman`, `zypper`, `flatpak`, `snap`, `brew`).
 - **Offline-First Catalog**: Rich curated database of 50+ Linux utilities, development tools, and desktop applications.
 
@@ -64,6 +67,8 @@ packall/
 | `Space` | Toggle Queue | Toggle highlighted application in selection queue |
 | `j` / `k` | Move Down / Up | Move highlight cursor up or down in the grid |
 | `h` / `l` | Move Left / Right | Move highlight cursor left or right |
+| `a` | Select All | Select / deselect everything visible |
+| `i` / `u` / `x` | Install / Update / Remove | Run the action for every selected item in the background |
 | `c` | Clear Queue | Clear all selected items from queue |
 | `Esc` | Close / Dismiss | Close details modal, clear search, or reset highlight |
 | `?` | Keybindings Help | Open keybindings cheatsheet modal |
@@ -71,6 +76,19 @@ packall/
 | `g g` / `G` | Jump to Top / Bottom | Quick jump to beginning or end of catalog |
 | `s` | Toggle Sidebar | Collapse or expand category sidebar |
 | `1` - `5` | Switch View | `1`: Grid, `3`: Installed, `4`: System Managers, `5`: Settings |
+
+---
+
+## Install
+
+| Distro | Command |
+|---|---|
+| Arch / Manjaro / EndeavourOS | `paru -S packall-bin` |
+| Debian / Ubuntu / Mint | `sudo apt install ./Packall_*_amd64.deb` (from [Releases](https://github.com/nishu-murmu/packall/releases)) |
+| Fedora / RHEL / openSUSE | `sudo dnf install ./Packall-*.rpm` |
+| Any distro | Download the `.AppImage`, `chmod +x`, run |
+
+Maintainers: see [`packaging/`](packaging/README.md) for the AUR, APT, RPM and release automation.
 
 ---
 
@@ -87,13 +105,11 @@ npm install
 To run the full Tauri desktop application:
 ```bash
 npm run dev:tauri
-# or with bun:
-bun run dev:tauri
 ```
 
-To run the Vite web frontend independently in your browser:
+To run the Vite web frontend independently in your browser (package actions need the desktop shell):
 ```bash
-npm run dev
+npm run web:dev
 ```
 
 ### 3. Run Tests & Typecheck
@@ -121,7 +137,11 @@ Bundled executables (`.deb`, `.rpm`, `.AppImage`) will be generated under `src-t
 
 ---
 
-## Contributing Software
+## Contributing
+
+Packall is open source and PRs are welcome: bug fixes, new distro support, packaging, and catalogue entries. Please run `npm run typecheck && npm test` (and `cargo test --manifest-path src-tauri/Cargo.toml`) before opening a PR.
+
+### Adding software
 
 To propose a new software entry, append a `SoftwareEntry` object to `src/lib/software.ts`:
 

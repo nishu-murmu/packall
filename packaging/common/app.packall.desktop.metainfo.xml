@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>app.packall.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-only</project_license>
+  <name>Packall</name>
+  <summary>A graphical directory of essential Linux software</summary>
+  <description>
+    <p>Packall is an open source, keyboard-driven software directory. Browse over 200 curated
+    applications, filter by distribution, select what you want and install, update or remove it in
+    one click while a progress bar tracks the work in the background.</p>
+  </description>
+  <launchable type="desktop-id">packall.desktop</launchable>
+  <url type="homepage">https://github.com/nishu-murmu/packall</url>
+  <url type="bugtracker">https://github.com/nishu-murmu/packall/issues</url>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-10-03"/>
+  </releases>
+</component>

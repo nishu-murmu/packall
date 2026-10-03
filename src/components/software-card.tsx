@@ -2,7 +2,7 @@ import * as React from "react"
 import type { SoftwareEntry } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { AlertCircle, Check, CheckSquare, Square } from "lucide-react"
-import { CATEGORY_MAP } from "@/lib/categories"
+import { isSupportedOnHost } from "@/lib/actions"
 import { useAppState } from "@/lib/app-state"
 
 // Detect which icon format is available for a given software id
@@ -82,6 +82,7 @@ export { AppIcon }
 
 export function SoftwareCard({
   software,
+  index,
   isInstalled,
   isQueued,
   isHighlighted,
@@ -89,6 +90,7 @@ export function SoftwareCard({
   onToggleQueue,
 }: {
   software: SoftwareEntry
+  index?: number
   isInstalled: boolean
   isQueued?: boolean
   isHighlighted?: boolean
@@ -96,7 +98,6 @@ export function SoftwareCard({
   onToggleQueue?: () => void
 }) {
   const { distroInfo, packageManagers } = useAppState()
-  const category = CATEGORY_MAP[software.category]
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -105,17 +106,15 @@ export function SoftwareCard({
     }
   }
 
-  const isSupported = React.useMemo(() => {
-    if (!distroInfo) return true;
-    const availableSystemManagers = packageManagers.filter((m) => m.available).map(m => m.id.toLowerCase());
-    return software.install.some(opt => 
-      availableSystemManagers.includes(opt.method) || 
-      (distroInfo.id.includes('ubuntu') && opt.method === 'deb') || 
-      (distroInfo.id.includes('debian') && opt.method === 'deb') || 
-      (distroInfo.id.includes('arch') && opt.method === 'aur') ||
-      (distroInfo.id.includes('fedora') && opt.method === 'dnf')
-    );
-  }, [distroInfo, packageManagers, software.install])
+  const isSupported = React.useMemo(
+    () =>
+      isSupportedOnHost(software, {
+        distro: distroInfo,
+        managers: packageManagers,
+        systemPackages: [],
+      }),
+    [distroInfo, packageManagers, software]
+  )
 
   return (
     <div
@@ -123,61 +122,61 @@ export function SoftwareCard({
       tabIndex={0}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
+      data-card-index={index}
       data-highlighted={isHighlighted ? "true" : undefined}
+      data-queued={isQueued ? "true" : undefined}
+      aria-label={software.name}
       className={cn(
-        "group flex items-center justify-between gap-3 p-2.5 rounded-xl border transition-all duration-200 select-none cursor-pointer outline-none",
-        "focus-visible:ring-2 focus-visible:ring-ring/50",
-        isQueued
-          ? "border-primary/50 bg-primary/10 shadow-sm"
-          : "border-border/60 bg-card hover:bg-muted/40 hover:border-border",
-        isHighlighted && !isQueued && "ring-1 ring-primary/30 bg-primary/5"
+        "sw-card group flex min-h-[4.25rem] items-center gap-3 rounded-xl border border-border bg-card p-3 text-left shadow-xs",
+        "cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-ring"
       )}
     >
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        {onToggleQueue && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              onToggleQueue()
-            }}
-            title={isQueued ? "Remove from queue" : "Add to queue"}
-            className="shrink-0 transition-transform duration-200 hover:scale-110 cursor-pointer p-0.5"
-          >
-            {isQueued ? (
-              <CheckSquare className="size-5 text-primary" />
-            ) : (
-              <Square className="size-5 text-muted-foreground/30 group-hover:text-primary/70" />
-            )}
-          </button>
-        )}
+      {onToggleQueue && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation()
+            onToggleQueue()
+          }}
+          aria-label={isQueued ? `Remove ${software.name} from selection` : `Select ${software.name}`}
+          aria-pressed={isQueued}
+          className="shrink-0 rounded-md p-0.5 outline-none transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {isQueued ? (
+            <CheckSquare className="size-5 text-primary" />
+          ) : (
+            <Square className="size-5 text-muted-foreground/60 group-hover:text-primary" />
+          )}
+        </button>
+      )}
 
-        <AppIcon
-          id={software.id}
-          name={software.name}
-          className="size-9 shrink-0 transition-transform duration-300 group-hover:scale-105"
-        />
+      <AppIcon id={software.id} name={software.name} className="size-10 shrink-0" />
 
-        <div className="flex flex-col min-w-0">
-          <span className="text-sm font-semibold truncate text-foreground leading-tight">
-            {software.name}
-          </span>
-          <span className="text-[10px] text-muted-foreground truncate">
-            {category?.name || "App"}
-          </span>
-        </div>
+      <div className="min-w-0 flex-1">
+        <span className="line-clamp-2 break-words text-sm font-semibold leading-snug text-foreground">
+          {software.name}
+        </span>
+        <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+          {software.tagline}
+        </span>
       </div>
 
-      <div className="flex items-center gap-1.5 shrink-0 pl-1">
-        {!isSupported && (
-          <div title="Not natively supported on your current distribution" className="flex size-6 items-center justify-center rounded-full bg-destructive/10 text-destructive/80 group-hover:bg-destructive/20">
-            <AlertCircle className="size-3.5" />
-          </div>
-        )}
+      <div className="flex shrink-0 flex-col items-center gap-1">
         {isInstalled && (
-          <div title="Installed" className="flex size-6 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-500 group-hover:bg-emerald-500/20">
-            <Check className="size-3.5" strokeWidth={3} />
-          </div>
+          <span
+            title="Installed"
+            className="flex size-5 items-center justify-center rounded-full bg-success/15 text-success"
+          >
+            <Check className="size-3" strokeWidth={3} />
+          </span>
+        )}
+        {!isSupported && (
+          <span
+            title="No automatic install method for your distribution"
+            className="flex size-5 items-center justify-center rounded-full bg-destructive/10 text-destructive"
+          >
+            <AlertCircle className="size-3" />
+          </span>
         )}
       </div>
     </div>

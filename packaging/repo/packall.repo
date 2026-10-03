@@ -1,0 +1,6 @@
+[packall]
+name=Packall
+baseurl=https://nishu-murmu.github.io/packall/rpm
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0

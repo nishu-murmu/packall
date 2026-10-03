@@ -30,7 +30,7 @@ export function SoftwareDetail() {
     selectedQueue,
     toggleInstalled,
     toggleQueueItem,
-    runPackageAction,
+    runBatch,
   } = useAppState()
 
   if (view.kind !== "detail") return null
@@ -60,12 +60,12 @@ export function SoftwareDetail() {
 
   const handleQuickInstall = async () => {
     toast.info(`Starting installation for ${software.name}...`)
-    await runPackageAction("install", [software.id])
+    await runBatch("install", [software.id])
   }
 
   const handleQuickRemove = async () => {
     toast.info(`Removing ${software.name}...`)
-    await runPackageAction("remove", [software.id])
+    await runBatch("remove", [software.id])
   }
 
   return (

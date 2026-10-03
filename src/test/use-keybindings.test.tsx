@@ -6,6 +6,10 @@ import { SOFTWARE } from "@/lib/software"
 
 const invokeMock = vi.fn()
 
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: () => Promise.resolve(() => {}),
+}))
+
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }))
@@ -19,6 +23,8 @@ function wireInvokeMock() {
         return Promise.resolve([])
       case "get_distro_info":
         return Promise.resolve({ id: "arch", pretty_name: "Arch" })
+      case "start_batch":
+        return Promise.resolve()
       default:
         return Promise.reject(new Error(`unexpected invoke: ${cmd}`))
     }
@@ -180,6 +186,24 @@ describe("useKeybindings", () => {
     await pressKey(" ")
     expect(screen.getByTestId("queue").textContent).toBe(SOFTWARE[0].id)
     await pressKey("c")
+    expect(screen.getByTestId("queue").textContent).toBe("")
+  })
+
+  it("a selects everything visible and c clears it", async () => {
+    render(<AppStateProvider><Probe /></AppStateProvider>)
+    await pressKey("a")
+    expect(screen.getByTestId("queue").textContent?.split(",").length).toBe(SOFTWARE.length)
+    await pressKey("c")
+    expect(screen.getByTestId("queue").textContent).toBe("")
+  })
+
+  it("i starts a background install for the queue and clears it", async () => {
+    render(<AppStateProvider><Probe /></AppStateProvider>)
+    await pressKey(" ")
+    await act(async () => {
+      window.dispatchEvent(new KeyboardEvent("keydown", { key: "i" }))
+    })
+    expect(invokeMock).toHaveBeenCalledWith("start_batch", expect.anything())
     expect(screen.getByTestId("queue").textContent).toBe("")
   })
 

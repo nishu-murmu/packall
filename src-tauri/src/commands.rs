@@ -5,7 +5,9 @@ use crate::system::{
     resolve_linux_icon_path, scan_system_packages, ActionExecutionResult, DistroInfo,
     MultiStepActionResult, MultiStepCommand, PackageManagerInfo, SystemPackage,
 };
+use crate::jobs::{cancel_batch, run_batch, JobSpec};
 use std::process::Command;
+use tauri::{AppHandle, Emitter};
 
 #[tauri::command]
 pub fn get_all_categories() -> Vec<Category> {
@@ -85,4 +87,26 @@ pub fn execute_multi_step_action(
     steps: Vec<MultiStepCommand>,
 ) -> Result<MultiStepActionResult, String> {
     Ok(execute_multi_step_commands(steps))
+}
+
+/// Start a batch of install / update / remove jobs on a background thread and
+/// return immediately. Progress is delivered through `packall-job` events.
+#[tauri::command]
+pub fn start_batch(app: AppHandle, batch_id: String, jobs: Vec<JobSpec>) -> Result<(), String> {
+    std::thread::Builder::new()
+        .name(format!("packall-batch-{}", batch_id))
+        .spawn(move || {
+            let id = batch_id.clone();
+            run_batch(&id, jobs, |event| {
+                let _ = app.emit("packall-job", event);
+            });
+            invalidate_system_cache();
+        })
+        .map(|_| ())
+        .map_err(|e| format!("Failed to start background worker: {}", e))
+}
+
+#[tauri::command]
+pub fn cancel_batch_job(batch_id: String) -> bool {
+    cancel_batch(&batch_id)
 }
