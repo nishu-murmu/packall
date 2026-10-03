@@ -1,6 +1,5 @@
 import * as React from "react"
 import { useAppState, useFilteredSoftware, useNavigableSoftware } from "@/lib/app-state"
-import { DISTRO_FILTERS, familyFromDistro } from "@/lib/actions"
 import { CATEGORIES } from "@/lib/categories"
 import { SOFTWARE } from "@/lib/software"
 import { SoftwareCard } from "@/components/software-card"
@@ -12,7 +11,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty"
-import { Package, Search, X, Sparkles, ChevronDown, ChevronRight, Filter } from "lucide-react"
+import { Package, Search, X, Sparkles, ChevronDown, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function SoftwareGrid() {
@@ -30,7 +29,6 @@ export function SoftwareGrid() {
     toggleCategoryCollapsed: toggleCategory,
     distroFilter,
     setDistroFilter,
-    distroInfo,
   } = useAppState()
 
   const filtered = useFilteredSoftware()
@@ -189,11 +187,6 @@ export function SoftwareGrid() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <DistroFilterSelect
-            value={distroFilter}
-            onChange={setDistroFilter}
-            detected={familyFromDistro(distroInfo)}
-          />
           {isGlobalSearch && (
             <Button
               variant="ghost"
@@ -278,33 +271,3 @@ export function SoftwareGrid() {
   )
 }
 
-function DistroFilterSelect({
-  value,
-  onChange,
-  detected,
-}: {
-  value: import("@/lib/types").DistroFilter
-  onChange: (v: import("@/lib/types").DistroFilter) => void
-  detected: import("@/lib/types").DistroFamily
-}) {
-  const detectedFilter = detected === "other" ? null : detected
-  return (
-    <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
-      <Filter className="size-3.5" aria-hidden />
-      <span className="sr-only">Filter by distribution</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as typeof value)}
-        aria-label="Filter by distribution"
-        className="h-8 rounded-lg border border-input bg-card px-2 text-xs font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {DISTRO_FILTERS.map((f) => (
-          <option key={f.id} value={f.id}>
-            {f.label}
-            {f.id === detectedFilter ? " (this system)" : ""}
-          </option>
-        ))}
-      </select>
-    </label>
-  )
-}

@@ -8,13 +8,14 @@ import { BatchActionBar } from "@/components/batch-action-bar"
 import { JobsDock } from "@/components/jobs-dock"
 import { SearchBar } from "@/components/search-bar"
 import { HelpOverlay } from "@/components/help-overlay"
-import { SettingsView } from "@/components/settings-view"
 import { AboutView } from "@/components/about-view"
 import { StatusBar } from "@/components/status-bar"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
 import { Toaster } from "@/components/ui/sonner"
-import { PanelLeft, Package } from "lucide-react"
+import { PanelLeft } from "lucide-react"
+import { Logo } from "@/components/logo"
+import { PasswordDialog } from "@/components/password-dialog"
 
 function AppContent() {
   const { view, sidebarOpen, setSidebarOpen, inspectSoftwareId } = useAppState()
@@ -39,10 +40,8 @@ function AppContent() {
             )}
             {!sidebarOpen && (
               <div className="flex items-center gap-2">
-                <div className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md shadow-primary/20">
-                  <Package className="size-3.5" />
-                </div>
-                <span className="text-sm font-bold tracking-tight gradient-text">Packall</span>
+                <Logo className="size-7" />
+                <span className="text-sm font-bold tracking-tight">Packall</span>
               </div>
             )}
           </div>
@@ -54,9 +53,7 @@ function AppContent() {
         </header>
 
         <main className="flex flex-1 overflow-hidden relative">
-          {view.kind === "settings" ? (
-            <SettingsView />
-          ) : view.kind === "about" ? (
+          {view.kind === "about" ? (
             <AboutView />
           ) : view.kind === "system" ? (
             <SystemPackagesView />
@@ -77,6 +74,7 @@ function AppContent() {
       {/* Slide-over Software Detail Drawer */}
       <SoftwareDrawer />
 
+      <PasswordDialog />
       <HelpOverlay />
       <Toaster />
     </div>

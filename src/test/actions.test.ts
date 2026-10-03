@@ -65,7 +65,8 @@ describe("buildCommands", () => {
       "sudo pacman -S --needed --noconfirm git",
     ])
     expect(buildCommands("install", opt("flatpak", "flatpak install flathub org.x.Y"))).toEqual([
-      "flatpak install -y --noninteractive flathub org.x.Y",
+      "flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo",
+      "flatpak install --user -y --noninteractive flathub org.x.Y",
     ])
     expect(buildCommands("install", opt("zypper", "sudo zypper install git"))).toEqual([
       "sudo zypper --non-interactive install git",
@@ -76,17 +77,17 @@ describe("buildCommands", () => {
     expect(buildCommands("remove", opt("apt", "sudo apt install git"))).toEqual(["sudo apt-get remove -y git"])
     expect(buildCommands("remove", opt("pacman", "sudo pacman -S git"))).toEqual(["sudo pacman -Rns --noconfirm git"])
     expect(buildCommands("update", opt("dnf", "sudo dnf install git"))).toEqual(["sudo dnf upgrade -y git"])
-    expect(buildCommands("update", opt("flatpak", "flatpak install flathub a.b.C"))).toEqual([
-      "flatpak update -y --noninteractive a.b.C",
-    ])
+    expect(buildCommands("update", opt("flatpak", "flatpak install flathub a.b.C"))[0]).toContain(
+      "flatpak update --user -y --noninteractive a.b.C ||"
+    )
   })
 
   it("uses the installed AUR helper with a graphical sudo", () => {
     const o = { method: "aur" as const, command: "yay -S vivaldi" }
     expect(buildCommands("install", o, [mgr("paru"), mgr("yay", false)])[0]).toBe(
-      "paru --sudo pkexec -S --needed --noconfirm vivaldi"
+      "paru -S --needed --noconfirm vivaldi"
     )
-    expect(buildCommands("install", o, [mgr("paru", false), mgr("yay")])[0]).toContain("yay --sudo pkexec")
+    expect(buildCommands("install", o, [mgr("paru", false), mgr("yay")])[0]).toContain("yay -S")
   })
 
   it("returns nothing for prose instructions", () => {
@@ -107,7 +108,9 @@ describe("buildCommands", () => {
 
   it("builds raw system package commands", () => {
     const pkg = { name: "Firefox", version: "1", manager: "flatpak", installed: true, description: "org.mozilla.firefox" }
-    expect(buildSystemPackageCommands("remove", pkg)).toEqual(["flatpak uninstall -y --noninteractive org.mozilla.firefox"])
+    expect(buildSystemPackageCommands("remove", pkg)).toEqual([
+      "flatpak uninstall --user -y --noninteractive org.mozilla.firefox || sudo flatpak uninstall --system -y --noninteractive org.mozilla.firefox",
+    ])
   })
 })
 

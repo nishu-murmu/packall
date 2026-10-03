@@ -1,0 +1,10 @@
+changelog:
+  categories:
+    - title: New features
+      labels: [enhancement, feature]
+    - title: Bug fixes
+      labels: [bug, fix]
+    - title: Packaging and distros
+      labels: [packaging, distro]
+    - title: Everything else
+      labels: ["*"]

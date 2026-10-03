@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="Packall">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#46e8ad"/>
+      <stop offset="0.55" stop-color="#14a475"/>
+      <stop offset="1" stop-color="#0a6b4f"/>
+    </linearGradient>
+    <radialGradient id="gloss" cx="0.3" cy="0" r="0.9">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="0.6" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glyph" gradientUnits="userSpaceOnUse" x1="0" y1="232" x2="0" y2="750">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d3f6e6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#04382a" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="230" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="230" fill="url(#gloss)"/>
+  <rect x="2" y="2" width="1020" height="1020" rx="228" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="4"/>
+  <g filter="url(#shadow)" fill="none" stroke="url(#glyph)" stroke-width="64" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M512 232v322"/>
+    <path d="M384 428l128 128 128-128"/>
+    <path d="M276 606v76a68 68 0 0 0 68 68h336a68 68 0 0 0 68-68v-76"/>
+  </g>
+</svg>

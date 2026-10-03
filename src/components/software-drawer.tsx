@@ -36,6 +36,7 @@ export function SoftwareDrawer() {
     selectedQueue,
     toggleQueueItem,
     runBatch,
+    busyIds,
     runMultiStepAction,
     distroInfo,
     packageManagers,
@@ -112,6 +113,7 @@ export function SoftwareDrawer() {
 
   const category = CATEGORY_MAP[software.category]
   const isInst = installed.has(software.id)
+  const busy = busyIds.has(software.id)
   const isQueued = selectedQueue.has(software.id)
 
   const currentOption: InstallOption | undefined =
@@ -227,6 +229,7 @@ export function SoftwareDrawer() {
                 variant="outline"
                 size="sm"
                 onClick={handleQuickUpdate}
+                disabled={busy}
                 className="gap-1.5 rounded-xl cursor-pointer text-xs"
               >
                 <RefreshCw className="size-3.5" />
@@ -238,6 +241,7 @@ export function SoftwareDrawer() {
                 variant="destructive"
                 size="sm"
                 onClick={handleQuickRemove}
+                disabled={busy}
                 className="gap-1.5 rounded-xl cursor-pointer text-xs"
               >
                 <Trash2 className="size-3.5" />
@@ -248,10 +252,11 @@ export function SoftwareDrawer() {
                 variant="default"
                 size="sm"
                 onClick={handleQuickInstall}
+                disabled={busy}
                 className="gap-1.5 rounded-xl shadow-md shadow-primary/20 cursor-pointer text-xs"
               >
-                <Play className="size-3.5" />
-                Install Now
+                {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Play className="size-3.5" />}
+                {busy ? "Working…" : "Install Now"}
               </Button>
             )}
           </div>
@@ -588,10 +593,11 @@ export function SoftwareDrawer() {
                     variant="default"
                     size="sm"
                     onClick={handleQuickInstall}
+                    disabled={busy}
                     className="w-full gap-2 rounded-xl shadow-md shadow-primary/20 cursor-pointer font-semibold"
                   >
-                    <Play className="size-4" />
-                    Install via {METHOD_LABELS[currentOption.method]}
+                    {busy ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
+                    {busy ? "In progress…" : `Install via ${METHOD_LABELS[currentOption.method]}`}
                   </Button>
                 </div>
               )}

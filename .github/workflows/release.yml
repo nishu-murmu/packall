@@ -59,16 +59,36 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseName: 'Packall ${{ github.ref_name }}'
           releaseBody: |
-            Packall ${{ github.ref_name }} — open source (AGPL-3.0).
+            Packall ${{ github.ref_name }} — free and open source (AGPL-3.0). See [CHANGELOG.md](https://github.com/nishu-murmu/packall/blob/main/CHANGELOG.md).
 
-            **Install**
-            - Debian / Ubuntu: `sudo apt install ./Packall_*_amd64.deb`
-            - Fedora / openSUSE: `sudo dnf install ./Packall-*.rpm`
-            - Arch: `paru -S packall-bin`
-            - Any distro: make the `.AppImage` executable and run it
+            ## Download
+
+            | Your system | File | Install |
+            |---|---|---|
+            | Debian, Ubuntu, Mint, Pop!_OS | `Packall_*_amd64.deb` | `sudo apt install ./Packall_*_amd64.deb` |
+            | Fedora, RHEL, openSUSE | `Packall-*.x86_64.rpm` | `sudo dnf install ./Packall-*.rpm` |
+            | Any Linux (x86_64) | `Packall_*_amd64.AppImage` | `chmod +x Packall_*.AppImage && ./Packall_*.AppImage` |
+            | Arch, Manjaro, EndeavourOS | AUR | `paru -S packall-bin` |
+
+            Verify downloads with `sha256sum -c SHA256SUMS.txt`.
           releaseDraft: false
           prerelease: false
           args: --bundles deb,rpm,appimage
+
+  checksums:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish SHA256SUMS
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          mkdir assets && cd assets
+          gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --pattern '*.rpm' --pattern '*.AppImage'
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          gh release upload "$GITHUB_REF_NAME" SHA256SUMS.txt --clobber
 
   aur:
     needs: build

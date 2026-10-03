@@ -126,7 +126,6 @@ export type View =
   | { kind: "detail"; id: string }
   | { kind: "installed" }
   | { kind: "system" }
-  | { kind: "settings" }
   | { kind: "about" }
   | { kind: "help" }
 

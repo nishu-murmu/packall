@@ -199,15 +199,26 @@ function commandsForParsed(
     case "paru":
     case "yay": {
       const helper = aurHelper(managers)
-      // pkexec gives the helper a graphical password prompt.
-      if (action === "install") return [`${helper} --sudo pkexec -S --needed --noconfirm ${pkgs}`]
-      if (action === "update") return [`${helper} --sudo pkexec -S --noconfirm ${pkgs}`]
+      // The helper calls `sudo` itself; the worker supplies the password.
+      if (action === "install") return [`${helper} -S --needed --noconfirm ${pkgs}`]
+      if (action === "update") return [`${helper} -S --noconfirm ${pkgs}`]
       return [`sudo pacman -Rns --noconfirm ${pkgs}`]
     }
+    // Flatpak runs per-user so polkit is never involved; update/remove fall back
+    // to the system installation through sudo.
     case "flatpak":
-      if (action === "install") return [`flatpak install -y --noninteractive flathub ${pkgs}`]
-      if (action === "update") return [`flatpak update -y --noninteractive ${pkgs}`]
-      return [`flatpak uninstall -y --noninteractive ${pkgs}`]
+      if (action === "install")
+        return [
+          "flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo",
+          `flatpak install --user -y --noninteractive flathub ${pkgs}`,
+        ]
+      if (action === "update")
+        return [
+          `flatpak update --user -y --noninteractive ${pkgs} || sudo flatpak update --system -y --noninteractive ${pkgs}`,
+        ]
+      return [
+        `flatpak uninstall --user -y --noninteractive ${pkgs} || sudo flatpak uninstall --system -y --noninteractive ${pkgs}`,
+      ]
     case "snap":
       if (action === "install") return [`sudo snap install ${pkgs} ${flags}`.trim()]
       if (action === "update") return [`sudo snap refresh ${pkgs}`]

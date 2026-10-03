@@ -207,15 +207,13 @@ describe("useKeybindings", () => {
     expect(screen.getByTestId("queue").textContent).toBe("")
   })
 
-  it("numeric keys 1, 3, 4, 5 switch views", async () => {
+  it("numeric keys 1, 3, 4 switch views", async () => {
     render(<AppStateProvider><Probe /></AppStateProvider>)
     expect(screen.getByTestId("view").textContent).toBe("grid")
     await pressKey("3")
     expect(screen.getByTestId("view").textContent).toBe("installed")
     await pressKey("4")
     expect(screen.getByTestId("view").textContent).toBe("system")
-    await pressKey("5")
-    expect(screen.getByTestId("view").textContent).toBe("settings")
     await pressKey("1")
     expect(screen.getByTestId("view").textContent).toBe("grid")
   })

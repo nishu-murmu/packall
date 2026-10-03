@@ -5,7 +5,7 @@ use crate::system::{
     resolve_linux_icon_path, scan_system_packages, ActionExecutionResult, DistroInfo,
     MultiStepActionResult, MultiStepCommand, PackageManagerInfo, SystemPackage,
 };
-use crate::jobs::{cancel_batch, run_batch, JobSpec};
+use crate::jobs::{cancel_batch, forget_sudo, run_batch, sudo_status, unlock_sudo, JobSpec};
 use std::process::Command;
 use tauri::{AppHandle, Emitter};
 
@@ -109,4 +109,20 @@ pub fn start_batch(app: AppHandle, batch_id: String, jobs: Vec<JobSpec>) -> Resu
 #[tauri::command]
 pub fn cancel_batch_job(batch_id: String) -> bool {
     cancel_batch(&batch_id)
+}
+
+/// "ready" | "needs_password" | "unavailable"
+#[tauri::command]
+pub fn sudo_state() -> String {
+    sudo_status().to_string()
+}
+
+#[tauri::command]
+pub fn unlock_privileges(password: String) -> Result<(), String> {
+    unlock_sudo(&password)
+}
+
+#[tauri::command]
+pub fn forget_privileges() {
+    forget_sudo()
 }
