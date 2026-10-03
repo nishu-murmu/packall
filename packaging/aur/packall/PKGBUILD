@@ -1,0 +1,38 @@
+# Maintainer: nishu-murmu <https://github.com/nishu-murmu>
+# Builds Packall from source.
+pkgname=packall
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Keyboard-driven graphical directory of essential Linux software'
+arch=('x86_64' 'aarch64')
+url='https://github.com/nishu-murmu/packall'
+license=('AGPL-3.0-only')
+depends=('webkit2gtk-4.1' 'gtk3' 'polkit')
+makedepends=('rust' 'cargo' 'nodejs' 'npm' 'patchelf')
+optdepends=('flatpak: install Flatpak apps'
+            'paru: install AUR packages'
+            'yay: install AUR packages')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('SKIP')   # replace with `updpkgsums` after each release
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  npm ci --no-audit --no-fund
+  npm run web:build
+  cargo build --release --locked --features custom-protocol \
+    --manifest-path src-tauri/Cargo.toml
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  install -Dm755 src-tauri/target/release/packall "${pkgdir}/usr/bin/packall"
+  install -Dm644 packaging/common/packall.desktop \
+    "${pkgdir}/usr/share/applications/packall.desktop"
+  install -Dm644 packaging/common/app.packall.desktop.metainfo.xml \
+    "${pkgdir}/usr/share/metainfo/app.packall.desktop.metainfo.xml"
+  install -Dm644 src-tauri/icons/128x128.png \
+    "${pkgdir}/usr/share/icons/hicolor/128x128/apps/packall.png"
+  install -Dm644 src-tauri/icons/32x32.png \
+    "${pkgdir}/usr/share/icons/hicolor/32x32/apps/packall.png"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

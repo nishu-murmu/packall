@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Packall
+GenericName=Software Directory
+Comment=A graphical directory of essential Linux software
+Exec=packall
+Icon=packall
+Terminal=false
+Categories=System;PackageManager;Utility;
+Keywords=packages;install;software;apt;dnf;pacman;flatpak;snap;
+StartupWMClass=packall

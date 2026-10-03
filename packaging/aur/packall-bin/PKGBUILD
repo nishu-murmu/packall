@@ -1,0 +1,26 @@
+# Maintainer: nishu-murmu <https://github.com/nishu-murmu>
+# Repackages the .deb built by the release workflow, so installs are fast.
+pkgname=packall-bin
+_name=packall
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Keyboard-driven graphical directory of essential Linux software (prebuilt)'
+arch=('x86_64')
+url='https://github.com/nishu-murmu/packall'
+license=('AGPL-3.0-only')
+depends=('webkit2gtk-4.1' 'gtk3' 'polkit')
+optdepends=('flatpak: install Flatpak apps'
+            'paru: install AUR packages'
+            'yay: install AUR packages')
+provides=("${_name}")
+conflicts=("${_name}")
+options=('!strip' '!debug')
+source=("${_name}-${pkgver}.deb::${url}/releases/download/v${pkgver}/Packall_${pkgver}_amd64.deb"
+        "LICENSE::https://raw.githubusercontent.com/nishu-murmu/packall/v${pkgver}/LICENSE")
+sha256sums=('SKIP'   # replace with `updpkgsums` after each release
+            'SKIP')
+
+package() {
+  bsdtar -xf data.tar.* -C "${pkgdir}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

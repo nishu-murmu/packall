@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "bunx vite",
-    "beforeBuildCommand": "bunx vite build"
+    "beforeDevCommand": "npm run web:dev",
+    "beforeBuildCommand": "npm run web:build"
   },
   "app": {
     "windows": [
@@ -41,6 +41,29 @@
     ],
     "category": "Utility",
     "shortDescription": "A graphical directory of essential Linux software",
-    "longDescription": "Packall is a graphical directory that categorizes and helps you install essential Linux software. Navigate the entire app with Neovim-style keyboard shortcuts."
+    "longDescription": "Packall is a graphical directory that categorizes and helps you install essential Linux software. Navigate the entire app with Neovim-style keyboard shortcuts.",
+    "licenseFile": "../LICENSE",
+    "linux": {
+      "deb": {
+        "depends": [
+          "libwebkit2gtk-4.1-0",
+          "libgtk-3-0",
+          "policykit-1 | polkitd"
+        ],
+        "section": "utils"
+      },
+      "rpm": {
+        "depends": [
+          "webkit2gtk4.1",
+          "gtk3",
+          "polkit"
+        ],
+        "release": "1"
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    },
+    "homepage": "https://github.com/nishu-murmu/packall"
   }
 }

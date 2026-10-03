@@ -4,18 +4,17 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n \"tauri,marketing,docs\" -c \"magenta,yellow,blue\" \"bun run dev:tauri\" \"bun run dev:marketing\" \"bun run dev:docs\"",
+    "dev": "npm run dev:tauri",
     "dev:tauri": "node scripts/kill-dev-port.cjs && tauri dev",
-    "dev:marketing": "cd apps/marketing && bun run dev",
-    "dev:docs": "cd apps/docs && bun run dev",
-    "build": "bun run build:tauri && bun run build:marketing && bun run build:docs",
+    "build": "npm run build:tauri",
     "build:tauri": "tauri build",
-    "build:marketing": "cd apps/marketing && bun run build",
-    "build:docs": "cd apps/docs && bun run build",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml"
+    "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "web:dev": "vite",
+    "web:build": "vite build",
+    "tauri": "tauri"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -56,5 +55,10 @@
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
     "vitest": "^5.0.2"
+  },
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nishu-murmu/packall.git"
   }
 }
