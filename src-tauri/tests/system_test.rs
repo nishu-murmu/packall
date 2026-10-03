@@ -595,10 +595,24 @@ fn distro_info_serialization_uses_snake_case_fields() {
         name: "Test".into(),
         pretty_name: "Test OS".into(),
         preferred_manager: "paru".into(),
+        family: "arch".into(),
         managers,
     };
     let value = serde_json::to_value(&info).unwrap();
     assert_eq!(value["preferred_manager"], "paru");
     assert_eq!(value["pretty_name"], "Test OS");
     assert!(value["managers"].is_array());
+}
+
+#[test]
+fn classify_family_uses_id_and_id_like() {
+    use packall_lib::system::classify_family;
+    assert_eq!(classify_family("arch", ""), "arch");
+    assert_eq!(classify_family("endeavouros", "arch"), "arch");
+    assert_eq!(classify_family("ubuntu", "debian"), "debian");
+    assert_eq!(classify_family("pop", "ubuntu debian"), "debian");
+    assert_eq!(classify_family("fedora", ""), "fedora");
+    assert_eq!(classify_family("rocky", "rhel centos fedora"), "fedora");
+    assert_eq!(classify_family("opensuse-tumbleweed", "opensuse suse"), "suse");
+    assert_eq!(classify_family("nixos", ""), "other");
 }

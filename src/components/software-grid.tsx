@@ -1,5 +1,6 @@
 import * as React from "react"
-import { useAppState, useFilteredSoftware } from "@/lib/app-state"
+import { useAppState, useFilteredSoftware, useNavigableSoftware } from "@/lib/app-state"
+import { DISTRO_FILTERS, familyFromDistro } from "@/lib/actions"
 import { CATEGORIES } from "@/lib/categories"
 import { SOFTWARE } from "@/lib/software"
 import { SoftwareCard } from "@/components/software-card"
@@ -11,7 +12,7 @@ import {
   EmptyTitle,
   EmptyDescription,
 } from "@/components/ui/empty"
-import { Package, Search, X, Sparkles, ChevronDown, ChevronRight } from "lucide-react"
+import { Package, Search, X, Sparkles, ChevronDown, ChevronRight, Filter } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function SoftwareGrid() {
@@ -25,29 +26,24 @@ export function SoftwareGrid() {
     selectedIndex,
     setSelectedIndex,
     setInspectSoftwareId,
+    collapsedCategories,
+    toggleCategoryCollapsed: toggleCategory,
+    distroFilter,
+    setDistroFilter,
+    distroInfo,
   } = useAppState()
 
   const filtered = useFilteredSoftware()
-
-  // Track collapsed categories
-  const [collapsedCategories, setCollapsedCategories] = React.useState<Set<string>>(new Set())
-
-  const toggleCategory = React.useCallback((categoryId: string) => {
-    setCollapsedCategories((prev) => {
-      const next = new Set(prev)
-      if (next.has(categoryId)) {
-        next.delete(categoryId)
-      } else {
-        next.add(categoryId)
-      }
-      return next
-    })
-  }, [])
+  const navigable = useNavigableSoftware()
+  const indexById = React.useMemo(
+    () => new Map(navigable.map((sw, i) => [sw.id, i])),
+    [navigable]
+  )
 
   // Reset selected index when search query or view mode changes
   React.useEffect(() => {
     setSelectedIndex(0)
-  }, [searchQuery, view.kind, setSelectedIndex])
+  }, [searchQuery, view.kind, distroFilter, setSelectedIndex])
 
   // Group filtered software by category
   const groupedByCategory = React.useMemo(() => {
@@ -104,9 +100,11 @@ export function SoftwareGrid() {
 
   if (filtered.length === 0 && !isGlobalSearch && groupedByCategory.length === 0) {
     const emptyMsg =
-        view.kind === "installed"
+      view.kind === "installed"
         ? "No installed software detected or marked yet."
-        : "No packages available."
+        : distroFilter !== "all"
+          ? "Nothing in the catalogue matches this distro filter."
+          : "No packages available."
     return (
       <div className="flex flex-1 items-center justify-center p-8">
         <Empty>
@@ -115,6 +113,11 @@ export function SoftwareGrid() {
           </EmptyMedia>
           <EmptyTitle>No software found</EmptyTitle>
           <EmptyDescription>{emptyMsg}</EmptyDescription>
+          {distroFilter !== "all" && (
+            <Button variant="outline" size="sm" onClick={() => setDistroFilter("all")} className="mt-4 gap-1.5">
+              <X className="size-3.5" /> Reset distro filter
+            </Button>
+          )}
         </Empty>
       </div>
     )
@@ -164,9 +167,6 @@ export function SoftwareGrid() {
     )
   }
 
-  // Track the running flat index across categories for highlighting
-  let runningFlatIdx = 0
-
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* Header bar */}
@@ -189,6 +189,11 @@ export function SoftwareGrid() {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
+          <DistroFilterSelect
+            value={distroFilter}
+            onChange={setDistroFilter}
+            detected={familyFromDistro(distroInfo)}
+          />
           {isGlobalSearch && (
             <Button
               variant="ghost"
@@ -207,11 +212,6 @@ export function SoftwareGrid() {
       <div className="flex-1 overflow-y-auto pb-28">
         {groupedByCategory.map((group) => {
           const isCollapsed = collapsedCategories.has(group.category.id)
-          const startIdx = runningFlatIdx
-
-          if (!isCollapsed) {
-            runningFlatIdx += group.items.length
-          }
 
           return (
             <div key={group.category.id} className="border-b border-border/30 last:border-b-0">
@@ -220,7 +220,7 @@ export function SoftwareGrid() {
                 onClick={() => toggleCategory(group.category.id)}
                 className={cn(
                   "cursor-pointer flex w-full items-center gap-3 px-6 py-3 text-left transition-colors duration-150",
-                  "hover:bg-muted/30 group select-none",
+                  "hover:bg-muted/60 group select-none",
                   isCollapsed && "bg-muted/10"
                 )}
               >
@@ -247,14 +247,18 @@ export function SoftwareGrid() {
 
               {/* Items grid — 4 columns of compact cards */}
               {!isCollapsed && (
-                <div className="px-6 pb-4 pt-1">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                    {group.items.map((sw, localIdx) => {
-                      const globalIdx = startIdx + localIdx
+                <div className="px-6 pb-5 pt-1">
+                  <div
+                    className="grid gap-3"
+                    style={{ gridTemplateColumns: "repeat(auto-fill, minmax(17rem, 1fr))" }}
+                  >
+                    {group.items.map((sw) => {
+                      const globalIdx = indexById.get(sw.id) ?? -1
                       return (
                         <SoftwareCard
                           key={sw.id}
                           software={sw}
+                          index={globalIdx}
                           isInstalled={installed.has(sw.id)}
                           isQueued={selectedQueue.has(sw.id)}
                           isHighlighted={selectedIndex === globalIdx}
@@ -271,5 +275,36 @@ export function SoftwareGrid() {
         })}
       </div>
     </div>
+  )
+}
+
+function DistroFilterSelect({
+  value,
+  onChange,
+  detected,
+}: {
+  value: import("@/lib/types").DistroFilter
+  onChange: (v: import("@/lib/types").DistroFilter) => void
+  detected: import("@/lib/types").DistroFamily
+}) {
+  const detectedFilter = detected === "other" ? null : detected
+  return (
+    <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <Filter className="size-3.5" aria-hidden />
+      <span className="sr-only">Filter by distribution</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as typeof value)}
+        aria-label="Filter by distribution"
+        className="h-8 rounded-lg border border-input bg-card px-2 text-xs font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {DISTRO_FILTERS.map((f) => (
+          <option key={f.id} value={f.id}>
+            {f.label}
+            {f.id === detectedFilter ? " (this system)" : ""}
+          </option>
+        ))}
+      </select>
+    </label>
   )
 }

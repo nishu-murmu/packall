@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import type { InstallMethod, InstallOption, StepExecutionResult } from "@/lib/types"
 import {
   Check,
+  RefreshCw,
   ExternalLink,
   X,
   Plus,
@@ -34,7 +35,7 @@ export function SoftwareDrawer() {
     installed,
     selectedQueue,
     toggleQueueItem,
-    runPackageAction,
+    runBatch,
     runMultiStepAction,
     distroInfo,
     packageManagers,
@@ -136,13 +137,15 @@ export function SoftwareDrawer() {
   }
 
   const handleQuickInstall = async () => {
-    toast.info(`Starting installation for ${software.name}...`)
-    await runPackageAction("install", [software.id], selectedMethod || undefined)
+    await runBatch("install", [software.id])
   }
 
   const handleQuickRemove = async () => {
-    toast.info(`Removing ${software.name}...`)
-    await runPackageAction("remove", [software.id], selectedMethod || undefined)
+    await runBatch("remove", [software.id])
+  }
+
+  const handleQuickUpdate = async () => {
+    await runBatch("update", [software.id])
   }
 
   const handleRunMultiStep = async () => {
@@ -219,6 +222,17 @@ export function SoftwareDrawer() {
               )}
             </Button>
 
+            {isInst && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleQuickUpdate}
+                className="gap-1.5 rounded-xl cursor-pointer text-xs"
+              >
+                <RefreshCw className="size-3.5" />
+                Update
+              </Button>
+            )}
             {isInst ? (
               <Button
                 variant="destructive"

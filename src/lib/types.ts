@@ -74,6 +74,8 @@ export interface SystemPackage {
   category?: CategoryId
 }
 
+export type DistroFamily = "arch" | "debian" | "fedora" | "suse" | "other"
+
 export interface PackageManagerInfo {
   id: string
   name: string
@@ -89,6 +91,7 @@ export interface DistroInfo {
   name: string
   pretty_name: string
   preferred_manager: string
+  family?: DistroFamily
   managers: PackageManagerInfo[]
 }
 
@@ -126,3 +129,39 @@ export type View =
   | { kind: "settings" }
   | { kind: "about" }
   | { kind: "help" }
+
+export type DistroFilter = "all" | "debian" | "fedora" | "arch" | "suse" | "flatpak" | "snap"
+
+export type JobStatus = "queued" | "running" | "success" | "failed" | "cancelled" | "skipped"
+
+export interface Job {
+  id: string
+  name: string
+  action: BatchAction
+  status: JobStatus
+  /** 0-100, only meaningful while running */
+  percent: number | null
+  /** Package manager / method used, e.g. "apt" */
+  method?: string
+  log: string[]
+  error?: string
+}
+
+export interface Batch {
+  id: string
+  action: BatchAction
+  jobs: Job[]
+  done: boolean
+  startedAt: number
+}
+
+/** Mirrors the `packall-job` event emitted by the Rust worker. */
+export interface JobEvent {
+  batch_id: string
+  job_id: string
+  kind: "started" | "output" | "finished" | "batch_done"
+  line?: string | null
+  percent?: number | null
+  success?: boolean | null
+  cancelled?: boolean
+}

@@ -24,7 +24,7 @@ export function SystemPackagesView() {
     selectedQueue,
     toggleQueueItem,
     selectAllVisible,
-    openBatchAction,
+    requestBatch,
     runPackageAction,
   } = useAppState()
 
@@ -127,7 +127,7 @@ export function SystemPackagesView() {
                 <Button
                   variant="default"
                   size="sm"
-                  onClick={() => openBatchAction("update")}
+                  onClick={() => void requestBatch("update")}
                   className="gap-1.5 text-xs h-8 rounded-xl shadow-sm shadow-primary/20"
                 >
                   <RefreshCw className="size-3.5" />
@@ -137,7 +137,7 @@ export function SystemPackagesView() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => openBatchAction("remove")}
+                  onClick={() => void requestBatch("remove")}
                   className="gap-1.5 text-xs h-8 rounded-xl"
                 >
                   <Trash2 className="size-3.5" />

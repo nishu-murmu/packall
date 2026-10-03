@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useAppState, useFilteredSoftware } from "./app-state"
+import { useAppState, useNavigableSoftware } from "./app-state"
 
 /**
  * Grid-aware keybindings for Packall.
@@ -16,15 +16,60 @@ import { useAppState, useFilteredSoftware } from "./app-state"
  *   g g     — Jump to first item
  *   G       — Jump to last item
  *   s       — Toggle sidebar
+ *   i/u/x   — Install / update / remove everything in the queue
+ *   a       — Select / deselect everything visible
  *   1-5     — Navigate to views
  */
 
-/** The number of columns in the grid — must match the CSS grid-cols-* on md breakpoint */
-const GRID_COLS = 4
+/** Used only when the layout cannot be measured (tests, hidden window). */
+const FALLBACK_COLS = 4
+
+/**
+ * Find the card directly above/below `index` by measuring the rendered grid.
+ * The grid is responsive (auto-fill) and split into category sections of
+ * different lengths, so a fixed column count cannot work.
+ */
+function verticalNeighbor(index: number, dir: 1 | -1, max: number): number {
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-card-index]"))
+  const current = cards.find((c) => Number(c.dataset.cardIndex) === index)
+  const curRect = current?.getBoundingClientRect()
+  if (!current || !curRect || (curRect.width === 0 && curRect.height === 0)) {
+    return Math.min(Math.max(0, index + dir * FALLBACK_COLS), max)
+  }
+
+  const curX = curRect.left + curRect.width / 2
+  const candidates = cards
+    .map((el) => ({ el, rect: el.getBoundingClientRect(), idx: Number(el.dataset.cardIndex) }))
+    .filter(({ rect }) => (dir === 1 ? rect.top > curRect.top + 4 : rect.top < curRect.top - 4))
+  if (candidates.length === 0) return index
+
+  // Nearest row first, then nearest column within that row.
+  const rowTop =
+    dir === 1
+      ? Math.min(...candidates.map((c) => c.rect.top))
+      : Math.max(...candidates.map((c) => c.rect.top))
+  const row = candidates.filter((c) => Math.abs(c.rect.top - rowTop) < 4)
+  row.sort(
+    (a, b) =>
+      Math.abs(a.rect.left + a.rect.width / 2 - curX) -
+      Math.abs(b.rect.left + b.rect.width / 2 - curX)
+  )
+  return row[0].idx
+}
+
+function moveVertical(index: number, dir: 1 | -1, count: number, max: number): number {
+  let idx = index
+  for (let i = 0; i < count; i++) {
+    const next = verticalNeighbor(idx, dir, max)
+    if (next === idx) break
+    idx = next
+  }
+  return idx
+}
 
 export function useKeybindings() {
   const state = useAppState()
-  const filtered = useFilteredSoftware()
+  const filtered = useNavigableSoftware()
 
   const {
     view,
@@ -42,6 +87,8 @@ export function useKeybindings() {
     goBack,
     clearQueue,
     toggleQueueItem,
+    selectAllVisible,
+    requestBatch,
   } = state
 
   const keyBuffer = React.useRef<string>("")
@@ -115,14 +162,14 @@ export function useKeybindings() {
         case "j":
         case "ArrowDown":
           e.preventDefault()
-          setSelectedIndex(clampIndex(selectedIndex + GRID_COLS * count))
+          setSelectedIndex(moveVertical(clampIndex(selectedIndex), 1, count, filtered.length - 1))
           flushBuffer()
           break
 
         case "k":
         case "ArrowUp":
           e.preventDefault()
-          setSelectedIndex(clampIndex(selectedIndex - GRID_COLS * count))
+          setSelectedIndex(moveVertical(clampIndex(selectedIndex), -1, count, filtered.length - 1))
           flushBuffer()
           break
 
@@ -161,6 +208,30 @@ export function useKeybindings() {
           if (filtered[selectedIndex]) {
             toggleQueueItem(filtered[selectedIndex].id)
           }
+          flushBuffer()
+          break
+
+        case "a": // Select / deselect everything visible
+          e.preventDefault()
+          selectAllVisible(filtered.map((sw) => sw.id))
+          flushBuffer()
+          break
+
+        case "i":
+          e.preventDefault()
+          void requestBatch("install")
+          flushBuffer()
+          break
+
+        case "u":
+          e.preventDefault()
+          void requestBatch("update")
+          flushBuffer()
+          break
+
+        case "x":
+          e.preventDefault()
+          void requestBatch("remove")
           flushBuffer()
           break
 
@@ -262,6 +333,8 @@ export function useKeybindings() {
       goBack,
       clearQueue,
       toggleQueueItem,
+      selectAllVisible,
+      requestBatch,
       flushBuffer,
     ]
   )

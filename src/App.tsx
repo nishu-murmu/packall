@@ -5,7 +5,7 @@ import { SoftwareGrid } from "@/components/software-grid"
 import { SoftwareDrawer } from "@/components/software-drawer"
 import { SystemPackagesView } from "@/components/system-packages-view"
 import { BatchActionBar } from "@/components/batch-action-bar"
-import { BatchExecutionModal } from "@/components/batch-execution-modal"
+import { JobsDock } from "@/components/jobs-dock"
 import { SearchBar } from "@/components/search-bar"
 import { HelpOverlay } from "@/components/help-overlay"
 import { SettingsView } from "@/components/settings-view"
@@ -71,8 +71,8 @@ function AppContent() {
         <StatusBar />
       </div>
 
-      {/* Batch Execution Dialog */}
-      <BatchExecutionModal />
+      {/* Background job progress */}
+      <JobsDock />
 
       {/* Slide-over Software Detail Drawer */}
       <SoftwareDrawer />

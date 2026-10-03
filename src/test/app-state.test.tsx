@@ -21,6 +21,10 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
 }))
 
+vi.mock("@tauri-apps/api/event", () => ({
+  listen: () => Promise.resolve(() => {}),
+}))
+
 vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccess(...args),
@@ -73,8 +77,8 @@ function Probe() {
       <div data-testid="help">{String(state.helpOpen)}</div>
       <div data-testid="filtered-count">{filtered.length}</div>
       <div data-testid="browser-count">{browserCount}</div>
-      <div data-testid="modal">{String(state.batchModalOpen)}</div>
-      <div data-testid="batch-action">{state.batchAction}</div>
+      <div data-testid="remove-confirm">{String(state.removeConfirmOpen)}</div>
+      <div data-testid="batches">{state.batches.length}</div>
       <div data-testid="distro">{state.distroInfo?.id ?? "none"}</div>
       <div data-testid="sys-pkgs">{state.systemPackages.length}</div>
       <div data-testid="loading">{String(state.isLoadingSystem)}</div>
@@ -89,7 +93,7 @@ function Probe() {
       <button data-testid="open-detail" onClick={() => state.setInspectSoftwareId("firefox")}>detail</button>
       <button data-testid="go-back" onClick={() => state.goBack()}>back</button>
       <button data-testid="goto-settings" onClick={() => state.setView({ kind: "settings" })}>settings</button>
-      <button data-testid="open-batch" onClick={() => state.openBatchAction("remove" as BatchAction)}>batch</button>
+      <button data-testid="open-batch" onClick={() => void state.requestBatch("remove" as BatchAction)}>batch</button>
       <button data-testid="set-query" onClick={() => state.setSearchQuery("browser")}>query</button>
       <button data-testid="goto-installed" onClick={() => state.setView({ kind: "installed" })}>installed-view</button>
       <button data-testid="refresh" onClick={() => void state.refreshSystemPackages()}>refresh</button>
@@ -156,8 +160,8 @@ describe("AppStateProvider", () => {
     expect(screen.getByTestId("index").textContent).toBe("0")
     expect(screen.getByTestId("queue").textContent).toBe("")
     expect(screen.getByTestId("sidebar").textContent).toBe("true")
-    expect(screen.getByTestId("modal").textContent).toBe("false")
-    expect(screen.getByTestId("batch-action").textContent).toBe("install")
+    expect(screen.getByTestId("remove-confirm").textContent).toBe("false")
+    expect(screen.getByTestId("batches").textContent).toBe("0")
     expect(screen.getByTestId("distro").textContent).toBe("arch")
     expect(screen.getByTestId("loading").textContent).toBe("false")
   })
@@ -248,11 +252,14 @@ describe("AppStateProvider", () => {
     expect(screen.getByTestId("view").textContent).toBe("grid")
   })
 
-  it("openBatchAction arms the modal with the requested action", () => {
+  it("requestBatch('remove') asks for confirmation, and does nothing with an empty queue", async () => {
     renderProbe()
+    await flushPromises()
     fireEvent.click(screen.getByTestId("open-batch"))
-    expect(screen.getByTestId("modal").textContent).toBe("true")
-    expect(screen.getByTestId("batch-action").textContent).toBe("remove")
+    expect(screen.getByTestId("remove-confirm").textContent).toBe("false")
+    fireEvent.click(screen.getByTestId("queue-firefox"))
+    fireEvent.click(screen.getByTestId("open-batch"))
+    expect(screen.getByTestId("remove-confirm").textContent).toBe("true")
   })
 
   it("auto-marks catalogue entries installed when system scan reports them", async () => {

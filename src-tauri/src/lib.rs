@@ -1,12 +1,13 @@
 pub mod cli;
 pub mod commands;
 pub mod data;
+pub mod jobs;
 pub mod system;
 
 use commands::{
     detect_package_managers, execute_multi_step_action, execute_package_action,
-    get_all_categories, get_catalogue_software, get_distro_info, get_system_packages,
-    open_external_url, resolve_app_icon,
+    cancel_batch_job, get_all_categories, get_catalogue_software, get_distro_info, get_system_packages,
+    open_external_url, resolve_app_icon, start_batch,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -31,6 +32,8 @@ pub fn run() {
             execute_multi_step_action,
             open_external_url,
             resolve_app_icon,
+            start_batch,
+            cancel_batch_job,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

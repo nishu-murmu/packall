@@ -51,6 +51,8 @@ pub struct DistroInfo {
     pub name: String,
     pub pretty_name: String,
     pub preferred_manager: String,
+    /// "arch" | "debian" | "fedora" | "suse" | "other"
+    pub family: String,
     pub managers: Vec<PackageManagerInfo>,
 }
 
@@ -272,6 +274,33 @@ fn scan_apt() -> Vec<SystemPackage> {
     pkgs
 }
 
+fn scan_rpm() -> Vec<SystemPackage> {
+    let mut pkgs = Vec::new();
+    if is_executable_in_path("rpm") {
+        if let Ok(output) = Command::new("rpm")
+            .args(["-qa", "--qf", "%{NAME}\t%{VERSION}\n"])
+            .output()
+        {
+            if output.status.success() {
+                let manager = if is_executable_in_path("zypper") { "zypper" } else { "dnf" };
+                for line in String::from_utf8_lossy(&output.stdout).lines() {
+                    if let Some((name, version)) = line.split_once('\t') {
+                        pkgs.push(SystemPackage {
+                            name: name.to_string(),
+                            version: version.to_string(),
+                            manager: manager.to_string(),
+                            description: None,
+                            installed: true,
+                            icon: resolve_linux_icon_path(name),
+                        });
+                    }
+                }
+            }
+        }
+    }
+    pkgs
+}
+
 fn scan_brew() -> Vec<SystemPackage> {
     let mut pkgs = Vec::new();
     if is_executable_in_path("brew") {
@@ -315,6 +344,7 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
         let h_flatpak = s.spawn(scan_flatpak);
         let h_snap = s.spawn(scan_snap);
         let h_apt = s.spawn(scan_apt);
+        let h_rpm = s.spawn(scan_rpm);
         let h_brew = s.spawn(scan_brew);
 
         let mut gathered = Vec::new();
@@ -323,6 +353,7 @@ pub fn scan_system_packages() -> Vec<SystemPackage> {
         gathered.extend(h_flatpak.join().unwrap_or_default());
         gathered.extend(h_snap.join().unwrap_or_default());
         gathered.extend(h_apt.join().unwrap_or_default());
+        gathered.extend(h_rpm.join().unwrap_or_default());
         gathered.extend(h_brew.join().unwrap_or_default());
         gathered
     });
@@ -497,6 +528,25 @@ pub fn build_action_command(action: &str, packages: &[String], manager: Option<&
     }
 }
 
+/// Map an os-release `ID` / `ID_LIKE` pair onto a package-family.
+pub fn classify_family(id: &str, id_like: &str) -> &'static str {
+    let tokens: Vec<&str> = std::iter::once(id)
+        .chain(id_like.split_whitespace())
+        .collect();
+    let has = |names: &[&str]| tokens.iter().any(|t| names.contains(t));
+    if has(&["arch", "manjaro", "endeavouros", "garuda", "artix", "cachyos"]) {
+        "arch"
+    } else if has(&["debian", "ubuntu", "linuxmint", "pop", "elementary", "zorin", "kali", "raspbian", "neon"]) {
+        "debian"
+    } else if has(&["fedora", "rhel", "centos", "almalinux", "rocky", "nobara", "ol"]) {
+        "fedora"
+    } else if tokens.iter().any(|t| t.contains("suse") || *t == "sles") {
+        "suse"
+    } else {
+        "other"
+    }
+}
+
 /// Detect the Linux distribution and its available package managers
 pub fn detect_distro_info() -> DistroInfo {
     if let Ok(lock) = DISTRO_CACHE.lock() {
@@ -507,8 +557,9 @@ pub fn detect_distro_info() -> DistroInfo {
 
     let managers = detect_available_managers();
     #[cfg(unix)]
-    let (distro_id, distro_name, pretty_name) = {
+    let (distro_id, id_like, distro_name, pretty_name) = {
         let mut d_id = "linux".to_string();
+        let mut d_like = String::new();
         let mut d_name = "Linux".to_string();
         let mut p_name = "Linux".to_string();
         let os_release_paths = ["/etc/os-release", "/usr/lib/os-release"];
@@ -517,6 +568,8 @@ pub fn detect_distro_info() -> DistroInfo {
                 for line in content.lines() {
                     if let Some(val) = line.strip_prefix("ID=") {
                         d_id = val.trim_matches('"').trim().to_lowercase();
+                    } else if let Some(val) = line.strip_prefix("ID_LIKE=") {
+                        d_like = val.trim_matches('"').trim().to_lowercase();
                     } else if let Some(val) = line.strip_prefix("NAME=") {
                         d_name = val.trim_matches('"').trim().to_string();
                     } else if let Some(val) = line.strip_prefix("PRETTY_NAME=") {
@@ -526,93 +579,50 @@ pub fn detect_distro_info() -> DistroInfo {
                 break;
             }
         }
-        (d_id, d_name, p_name)
+        (d_id, d_like, d_name, p_name)
     };
 
     #[cfg(not(unix))]
-    let (distro_id, distro_name, pretty_name) = (
+    let (distro_id, id_like, distro_name, pretty_name) = (
         "windows".to_string(),
+        String::new(),
         "Windows (Dev Mode)".to_string(),
         "Windows Dev Environment".to_string(),
     );
 
-    let is_arch_like = distro_id == "arch" 
-        || distro_id == "manjaro" 
-        || distro_id == "endeavouros" 
-        || distro_id == "garuda" 
-        || distro_id == "artix";
-
-    let is_debian_like = distro_id == "debian" 
-        || distro_id == "ubuntu" 
-        || distro_id == "linuxmint" 
-        || distro_id == "pop" 
-        || distro_id == "elementary" 
-        || distro_id == "zorin";
-
-    let is_fedora_like = distro_id == "fedora" 
-        || distro_id == "rhel" 
-        || distro_id == "centos" 
-        || distro_id == "almalinux" 
-        || distro_id == "rocky";
-
-    let is_suse_like = distro_id == "opensuse" 
-        || distro_id.contains("suse");
+    let family = classify_family(&distro_id, &id_like);
 
     let is_available = |id: &str| -> bool {
         managers.iter().any(|m| m.id == id && m.available)
     };
 
-    let preferred_manager = if is_arch_like {
-        if is_available("paru") {
-            "paru"
-        } else if is_available("yay") {
-            "yay"
-        } else if is_available("pacman") {
-            "pacman"
-        } else if is_available("flatpak") {
-            "flatpak"
-        } else {
-            "paru"
-        }
-    } else if is_debian_like {
-        if is_available("apt") {
-            "apt"
-        } else if is_available("flatpak") {
-            "flatpak"
-        } else if is_available("snap") {
-            "snap"
-        } else {
-            "apt"
-        }
-    } else if is_fedora_like {
-        if is_available("dnf") {
-            "dnf"
-        } else if is_available("flatpak") {
-            "flatpak"
-        } else {
-            "dnf"
-        }
-    } else if is_suse_like {
-        if is_available("zypper") {
-            "zypper"
-        } else if is_available("flatpak") {
-            "flatpak"
-        } else {
-            "zypper"
-        }
-    } else {
-        managers
-            .iter()
-            .find(|m| m.available)
-            .map(|m| m.id.as_str())
-            .unwrap_or("paru")
+    let priority: &[&str] = match family {
+        "arch" => &["paru", "yay", "pacman", "flatpak"],
+        "debian" => &["apt", "flatpak", "snap"],
+        "fedora" => &["dnf", "flatpak"],
+        "suse" => &["zypper", "flatpak"],
+        _ => &[],
     };
+    let default_manager = match family {
+        "arch" => "pacman",
+        "debian" => "apt",
+        "fedora" => "dnf",
+        "suse" => "zypper",
+        _ => "flatpak",
+    };
+    let preferred_manager = priority
+        .iter()
+        .find(|id| is_available(id))
+        .copied()
+        .or_else(|| managers.iter().find(|m| m.available).map(|m| m.id.as_str()))
+        .unwrap_or(default_manager);
 
     let distro_info = DistroInfo {
         id: distro_id,
         name: distro_name,
         pretty_name,
         preferred_manager: preferred_manager.to_string(),
+        family: family.to_string(),
         managers,
     };
 
