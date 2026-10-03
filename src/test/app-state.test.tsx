@@ -44,6 +44,9 @@ function wireInvokeMock() {
   invokeMock.mockImplementation((cmd: string) => {
     if (backend.failing) return Promise.reject(new Error("tauri unavailable"))
     switch (cmd) {
+      case "start_batch":
+      case "sudo_state":
+        return Promise.resolve("ready")
       case "get_system_packages":
         return Promise.resolve(backend.systemPackages)
       case "detect_package_managers":
@@ -92,10 +95,19 @@ function Probe() {
       <button data-testid="clear-queue" onClick={() => state.clearQueue()}>clr</button>
       <button data-testid="open-detail" onClick={() => state.setInspectSoftwareId("firefox")}>detail</button>
       <button data-testid="go-back" onClick={() => state.goBack()}>back</button>
-      <button data-testid="goto-settings" onClick={() => state.setView({ kind: "settings" })}>settings</button>
+      <button data-testid="goto-settings" onClick={() => state.setView({ kind: "about" })}>settings</button>
       <button data-testid="open-batch" onClick={() => void state.requestBatch("remove" as BatchAction)}>batch</button>
       <button data-testid="set-query" onClick={() => state.setSearchQuery("browser")}>query</button>
       <button data-testid="goto-installed" onClick={() => state.setView({ kind: "installed" })}>installed-view</button>
+      <button
+        data-testid="batch-twice"
+        onClick={() => {
+          void state.runBatch("install", ["firefox"])
+          void state.runBatch("install", ["firefox"])
+        }}
+      >
+        twice
+      </button>
       <button data-testid="refresh" onClick={() => void state.refreshSystemPackages()}>refresh</button>
       <button
         data-testid="run-install"
@@ -179,7 +191,7 @@ describe("AppStateProvider", () => {
   it("setSelectedCategory switches category and resets the view to the grid", () => {
     renderProbe()
     fireEvent.click(screen.getByTestId("goto-settings"))
-    expect(screen.getByTestId("view").textContent).toBe("settings")
+    expect(screen.getByTestId("view").textContent).toBe("about")
     fireEvent.click(screen.getByTestId("cat-development"))
     expect(screen.getByTestId("category").textContent).toBe("development")
     expect(screen.getByTestId("view").textContent).toBe("grid")
@@ -260,6 +272,16 @@ describe("AppStateProvider", () => {
     fireEvent.click(screen.getByTestId("queue-firefox"))
     fireEvent.click(screen.getByTestId("open-batch"))
     expect(screen.getByTestId("remove-confirm").textContent).toBe("true")
+  })
+
+  it("starts a job only once when the same action is triggered repeatedly", async () => {
+    renderProbe()
+    await flushPromises()
+    fireEvent.click(screen.getByTestId("batch-twice"))
+    await flushPromises(5)
+    const starts = invokeMock.mock.calls.filter((c) => c[0] === "start_batch")
+    expect(starts).toHaveLength(1)
+    expect(screen.getByTestId("batches").textContent).toBe("1")
   })
 
   it("auto-marks catalogue entries installed when system scan reports them", async () => {

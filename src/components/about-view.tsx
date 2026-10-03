@@ -1,7 +1,8 @@
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
-import { Star, Terminal, Package, Cpu, Search, ExternalLink } from "lucide-react"
+import { Star, Terminal, Package, Cpu, Search } from "lucide-react"
+import { Logo } from "@/components/logo"
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -37,9 +38,7 @@ export function AboutView() {
         {/* Subtle decorative glow circle */}
         <div className="pointer-events-none absolute -top-12 size-72 rounded-full bg-primary/15 blur-3xl" />
 
-        <div className="relative flex size-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary to-violet-500 text-primary-foreground shadow-xl shadow-primary/25 ring-1 ring-white/20">
-          <Package className="size-8" />
-        </div>
+        <Logo className="relative size-20 drop-shadow-xl" />
         <div className="relative">
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text">
             Packall
@@ -87,36 +86,14 @@ export function AboutView() {
           </div>
         </section>
 
-        {/* Open Source */}
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Open Source</h2>
-          <div className="rounded-xl border border-border/60 bg-card/70 p-4 space-y-2">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Packall is free, open-source software licensed under AGPL-3.0. Built for the Linux community with ❤️.
-              Contributions, bug reports, and feature requests are welcome on GitHub.
-            </p>
-            <a
-              href="https://github.com/nishu-murmu/packall"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cursor-pointer inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline"
-            >
-              <ExternalLink className="size-3" />
-              View source code →
-            </a>
-          </div>
-        </section>
-
         {/* Built With */}
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Built With</h2>
-          <div className="flex flex-wrap gap-2">
-            {["Tauri 2", "Rust", "React 19", "TypeScript", "Tailwind CSS v4", "Lucide Icons", "Radix UI"].map((tech) => (
-              <span key={tech} className="rounded-lg bg-muted/40 border border-border/60 px-3 py-1 text-xs font-medium text-foreground/80">
-                {tech}
-              </span>
-            ))}
-          </div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Built with</h2>
+          <p className="text-sm leading-relaxed text-foreground/80">
+            Packall is a native desktop app. Its core is written in Rust and runs on Tauri 2, so it starts
+            quickly and uses little memory. The interface is built with React 19 and TypeScript,
+            styled with Tailwind CSS, and uses Radix UI components and Lucide icons.
+          </p>
         </section>
       </div>
     </div>

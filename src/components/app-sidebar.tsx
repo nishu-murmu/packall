@@ -4,18 +4,17 @@ import { cn } from "@/lib/utils"
 import {
   Star,
   Download,
-  Settings,
   HelpCircle,
   PanelLeftClose,
   Cpu,
-  CheckSquare,
   Info,
   ExternalLink,
   RefreshCw,
-  Trash2,
   Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/logo"
+import { DistroSelect } from "@/components/distro-select"
 
 export function AppSidebar() {
   const {
@@ -24,10 +23,7 @@ export function AppSidebar() {
     sidebarOpen,
     setSidebarOpen,
     installed,
-    selectedQueue,
-    requestBatch,
     setHelpOpen,
-    clearQueue,
     isLoadingSystem,
     refreshSystemPackages,
     systemPackages,
@@ -36,7 +32,6 @@ export function AppSidebar() {
   const isGrid = view.kind === "grid" || view.kind === "detail"
   const isInst = view.kind === "installed"
   const isSystem = view.kind === "system"
-  const isSettings = view.kind === "settings"
   const isAbout = view.kind === "about"
 
   return (
@@ -46,12 +41,17 @@ export function AppSidebar() {
         sidebarOpen ? "w-60" : "w-0 overflow-hidden"
       )}
     >
-      {/* Collapse toggle */}
-      <div className="flex items-center justify-end p-2.5 pb-2 border-b border-border/50">
+      {/* Brand + collapse */}
+      <div className="flex items-center justify-between gap-2 border-b border-border/50 p-3">
+        <div className="flex items-center gap-2.5">
+          <Logo className="size-8" />
+          <span className="text-base font-extrabold tracking-tight">Packall</span>
+        </div>
         <Button
           variant="ghost"
           size="icon-xs"
           onClick={() => setSidebarOpen(false)}
+          aria-label="Collapse sidebar"
           className="cursor-pointer text-muted-foreground hover:text-foreground"
         >
           <PanelLeftClose className="size-4" />
@@ -87,46 +87,8 @@ export function AppSidebar() {
           shortcut="4"
         />
 
-        {/* Selected queue section */}
-        {selectedQueue.size > 0 && (
-          <>
-            <NavLabel className="mt-4">Selection Queue</NavLabel>
-            <div className="rounded-xl border border-primary/30 bg-primary/5 p-2.5 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-primary">
-                  <CheckSquare className="size-3.5" />
-                  {selectedQueue.size} selected
-                </span>
-                <button
-                  onClick={clearQueue}
-                  className="cursor-pointer text-[10px] text-muted-foreground hover:text-destructive transition-colors"
-                >
-                  Clear
-                </button>
-              </div>
-              <div className="grid grid-cols-3 gap-1">
-                <QueueBtn
-                  onClick={() => void requestBatch("install")}
-                  icon={<Download className="size-3" />}
-                  label="Install"
-                  color="primary"
-                />
-                <QueueBtn
-                  onClick={() => void requestBatch("update")}
-                  icon={<RefreshCw className="size-3" />}
-                  label="Update"
-                  color="secondary"
-                />
-                <QueueBtn
-                  onClick={() => void requestBatch("remove")}
-                  icon={<Trash2 className="size-3" />}
-                  label="Remove"
-                  color="danger"
-                />
-              </div>
-            </div>
-          </>
-        )}
+        <NavLabel className="mt-4">Filter</NavLabel>
+        <DistroSelect />
 
         {/* System actions */}
         <NavLabel className="mt-4">Actions</NavLabel>
@@ -143,15 +105,10 @@ export function AppSidebar() {
           </span>
         </button>
 
-        {/* Settings & About */}
-        <NavLabel className="mt-4">App</NavLabel>
-        <SidebarLink
-          active={isSettings}
-          onClick={() => setView({ kind: "settings" })}
-          icon={<Settings className="size-4" />}
-          label="Settings"
-          shortcut="5"
-        />
+      </div>
+
+      {/* Bottom: app links */}
+      <div className="space-y-0.5 border-t border-border/50 p-2">
         <SidebarLink
           active={isAbout}
           onClick={() => setView({ kind: "about" })}
@@ -164,19 +121,15 @@ export function AppSidebar() {
           label="CLI & Keybindings"
           shortcut="?"
         />
-      </div>
-
-      {/* Footer */}
-      <div className="border-t border-border/50 p-3 space-y-1">
         <a
           href="https://github.com/nishu-murmu/packall"
           target="_blank"
           rel="noopener noreferrer"
-          className="cursor-pointer flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-sidebar-foreground/60 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground transition-all duration-200"
+          className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-semibold text-sidebar-foreground/70 transition-all duration-200 hover:bg-sidebar-accent/40 hover:text-sidebar-accent-foreground"
         >
-          <ExternalLink className="size-3.5" />
+          <ExternalLink className="size-4 text-muted-foreground" />
           <span className="flex-1 text-left">Star on GitHub</span>
-          <Star className="size-3 text-amber-400" />
+          <Star className="size-3 text-amber-500" />
         </a>
       </div>
     </aside>
@@ -235,37 +188,6 @@ function SidebarLink({
           {shortcut}
         </kbd>
       )}
-    </button>
-  )
-}
-
-function QueueBtn({
-  onClick,
-  icon,
-  label,
-  color,
-}: {
-  onClick: () => void
-  icon: React.ReactNode
-  label: string
-  color: "primary" | "secondary" | "danger"
-}) {
-  const colorClasses = {
-    primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground",
-    danger: "bg-destructive/15 text-destructive hover:bg-destructive/25",
-  }
-
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "cursor-pointer flex items-center justify-center gap-1 rounded-lg py-1 px-1.5 text-[10px] font-semibold transition-all",
-        colorClasses[color]
-      )}
-    >
-      {icon}
-      <span>{label}</span>
     </button>
   )
 }

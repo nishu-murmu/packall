@@ -22,7 +22,7 @@ export function HelpOverlay() {
       ["/", "Space", "a", "i", "u", "x", "c", "Esc", "s"].includes(k.key)
     )
     const views = KEYBINDINGS.filter((k) =>
-      ["1", "3", "4", "5", "?"].includes(k.key)
+      ["1", "3", "4", "?"].includes(k.key)
     )
     return { nav, actions, views }
   }, [])

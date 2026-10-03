@@ -49,6 +49,10 @@ interface AppState {
   batches: Batch[]
   jobsPanelOpen: boolean
   removeConfirmOpen: boolean
+  passwordPromptOpen: boolean
+  busyIds: Set<string>
+  /** Navigable ids in the System Packages view (set by that view). */
+  systemNavIds: string[]
 
   setView: (view: View) => void
   setSelectedCategory: (id: CategoryId) => void
@@ -66,6 +70,8 @@ interface AppState {
   toggleCategoryCollapsed: (id: string) => void
   setJobsPanelOpen: (open: boolean) => void
   setRemoveConfirmOpen: (open: boolean) => void
+  finishPasswordPrompt: (ok: boolean) => void
+  setSystemNavIds: (ids: string[]) => void
   /** One-click entry point: starts at once, except removals which ask first. */
   requestBatch: (action: BatchAction) => Promise<void>
   /** Start `action` for every queued item (or `ids` when given) in the background. */
@@ -114,6 +120,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [batches, setBatches] = React.useState<Batch[]>([])
   const [jobsPanelOpen, setJobsPanelOpen] = React.useState(false)
   const [removeConfirmOpen, setRemoveConfirmOpen] = React.useState(false)
+  const [passwordPromptOpen, setPasswordPromptOpen] = React.useState(false)
+  const [systemNavIds, setSystemNavIds] = React.useState<string[]>([])
+  const passwordResolver = React.useRef<((ok: boolean) => void) | null>(null)
+  const startingIds = React.useRef<Set<string>>(new Set())
   const [systemPackages, setSystemPackages] = React.useState<SystemPackage[]>([])
   const [packageManagers, setPackageManagers] = React.useState<PackageManagerInfo[]>([])
   const [distroInfo, setDistroInfo] = React.useState<DistroInfo | null>(null)
@@ -355,10 +365,33 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     }
   }, [handleJobEvent])
 
-  const runBatch = React.useCallback(
-    async (action: BatchAction, ids?: string[]) => {
-      const targets = ids ?? Array.from(selectedQueue)
-      if (targets.length === 0) return
+  const busyIds = React.useMemo(() => {
+    const ids = new Set<string>()
+    for (const b of batches) {
+      for (const j of b.jobs) {
+        if (j.status === "queued" || j.status === "running") ids.add(j.id)
+      }
+    }
+    return ids
+  }, [batches])
+
+  const askForPassword = React.useCallback(
+    () =>
+      new Promise<boolean>((resolve) => {
+        passwordResolver.current = resolve
+        setPasswordPromptOpen(true)
+      }),
+    []
+  )
+
+  const finishPasswordPrompt = React.useCallback((ok: boolean) => {
+    passwordResolver.current?.(ok)
+    passwordResolver.current = null
+    setPasswordPromptOpen(false)
+  }, [])
+
+  const startBatch = React.useCallback(
+    async (action: BatchAction, targets: string[]) => {
 
       const ctx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages }
       const jobs: Job[] = []
@@ -404,6 +437,22 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         specs.push({ id, name: sw.name, commands })
       }
 
+      if (specs.length > 0 && specs.some((sp) => sp.commands.some((c) => /\bsudo\b/.test(c)))) {
+        let state = "ready"
+        try {
+          state = await invoke<string>("sudo_state")
+        } catch {
+          state = "ready" // not running inside Tauri; the start call reports it
+        }
+        if (state === "unavailable") {
+          toast.error("sudo is required to install system packages, but it was not found")
+          return
+        }
+        if (state === "needs_password" && !(await askForPassword())) {
+          return
+        }
+      }
+
       const batch: Batch = {
         id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         action,
@@ -439,7 +488,31 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         toast.error(`Could not start background job: ${message}`)
       }
     },
-    [selectedQueue, distroInfo, packageManagers, systemPackages, installed]
+    [distroInfo, packageManagers, systemPackages, installed, askForPassword]
+  )
+
+  const runBatch = React.useCallback(
+    async (action: BatchAction, ids?: string[]) => {
+      const requested = ids ?? Array.from(selectedQueue)
+      // Ignore anything that is already running or being started: repeated
+      // clicks must not start the same job twice.
+      const busyNow = new Set<string>()
+      for (const b of batchesRef.current) {
+        for (const j of b.jobs) if (j.status === "queued" || j.status === "running") busyNow.add(j.id)
+      }
+      const targets = requested.filter((id) => !busyNow.has(id) && !startingIds.current.has(id))
+      if (targets.length === 0) {
+        if (requested.length > 0) toast.info("Already in progress")
+        return
+      }
+      targets.forEach((id) => startingIds.current.add(id))
+      try {
+        await startBatch(action, targets)
+      } finally {
+        targets.forEach((id) => startingIds.current.delete(id))
+      }
+    },
+    [selectedQueue, startBatch]
   )
 
   const requestBatch = React.useCallback(
@@ -581,6 +654,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     batches,
     jobsPanelOpen,
     removeConfirmOpen,
+    passwordPromptOpen,
+    busyIds,
+    systemNavIds,
     setView: setViewWrapper,
     setSelectedCategory,
     setSearchQuery,
@@ -597,6 +673,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     toggleCategoryCollapsed,
     setJobsPanelOpen,
     setRemoveConfirmOpen,
+    finishPasswordPrompt,
+    setSystemNavIds,
     requestBatch,
     runBatch,
     cancelBatch,

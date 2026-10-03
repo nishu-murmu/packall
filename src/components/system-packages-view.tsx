@@ -24,8 +24,10 @@ export function SystemPackagesView() {
     selectedQueue,
     toggleQueueItem,
     selectAllVisible,
-    requestBatch,
-    runPackageAction,
+    runBatch,
+    selectedIndex,
+    setSelectedIndex,
+    setSystemNavIds,
   } = useAppState()
 
   const [filterManager, setFilterManager] = React.useState<string>("all")
@@ -58,6 +60,19 @@ export function SystemPackagesView() {
     })
   }, [systemPackages, filterManager, filterSearch])
 
+  // Let the keyboard handler move over exactly the rows on screen.
+  React.useEffect(() => {
+    setSystemNavIds(filteredPackages.map((p) => p.name))
+    setSelectedIndex(0)
+    return () => setSystemNavIds([])
+  }, [filteredPackages, setSystemNavIds, setSelectedIndex])
+
+  React.useEffect(() => {
+    document
+      .querySelector('[data-highlighted="true"]')
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+  }, [selectedIndex])
+
   const allVisibleSelected =
     filteredPackages.length > 0 &&
     filteredPackages.every((p) => selectedQueue.has(p.name))
@@ -76,15 +91,11 @@ export function SystemPackagesView() {
     setManualPkgInput("")
   }
 
-  const handleSingleUpdate = async (name: string, manager: string) => {
-    toast.info(`Updating '${name}' via ${manager}...`)
-    await runPackageAction("update", [name], manager)
-  }
+  const handleSingleUpdate = (name: string) => void runBatch("update", [name])
 
-  const handleSingleRemove = async (name: string, manager: string) => {
+  const handleSingleRemove = (name: string) => {
     if (confirm(`Are you sure you want to uninstall package '${name}'?`)) {
-      toast.info(`Removing '${name}' via ${manager}...`)
-      await runPackageAction("remove", [name], manager)
+      void runBatch("remove", [name])
     }
   }
 
@@ -122,29 +133,6 @@ export function SystemPackagesView() {
               Scan Host
             </Button>
 
-            {selectedQueue.size > 0 && (
-              <>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => void requestBatch("update")}
-                  className="gap-1.5 text-xs h-8 rounded-xl shadow-sm shadow-primary/20"
-                >
-                  <RefreshCw className="size-3.5" />
-                  Update Selected ({selectedQueue.size})
-                </Button>
-
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => void requestBatch("remove")}
-                  className="gap-1.5 text-xs h-8 rounded-xl"
-                >
-                  <Trash2 className="size-3.5" />
-                  Remove Selected ({selectedQueue.size})
-                </Button>
-              </>
-            )}
           </div>
         </div>
 
@@ -251,7 +239,7 @@ export function SystemPackagesView() {
               </div>
             </div>
 
-            {filteredPackages.map((pkg) => {
+            {filteredPackages.map((pkg, idx) => {
               const isQueued = selectedQueue.has(pkg.name)
               const mgrColor =
                 pkg.manager === "aur"
@@ -265,13 +253,11 @@ export function SystemPackagesView() {
               return (
                 <div
                   key={`${pkg.manager}:${pkg.name}`}
+                  data-card-index={idx}
+                  data-highlighted={selectedIndex === idx ? "true" : undefined}
+                  data-queued={isQueued ? "true" : undefined}
                   onClick={() => toggleQueueItem(pkg.name)}
-                  className={cn(
-                    "cursor-pointer flex items-center justify-between rounded-xl border p-3 transition-all select-none",
-                    isQueued
-                      ? "border-primary/50 bg-primary/8 ring-1 ring-primary/30"
-                      : "border-border/50 bg-card/60 hover:border-border hover:bg-card hover:-translate-y-0.5"
-                  )}
+                  className="sw-card cursor-pointer flex items-center justify-between rounded-xl border border-border bg-card p-3 select-none"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <button
@@ -316,7 +302,7 @@ export function SystemPackagesView() {
                         size="icon-xs"
                         variant="ghost"
                         title="Update package"
-                        onClick={() => handleSingleUpdate(pkg.name, pkg.manager)}
+                        onClick={() => handleSingleUpdate(pkg.name)}
                         className="size-7 rounded-lg hover:bg-primary/10 hover:text-primary"
                       >
                         <RefreshCw className="size-3" />
@@ -326,7 +312,7 @@ export function SystemPackagesView() {
                         size="icon-xs"
                         variant="ghost"
                         title="Remove package"
-                        onClick={() => handleSingleRemove(pkg.name, pkg.manager)}
+                        onClick={() => handleSingleRemove(pkg.name)}
                         className="size-7 rounded-lg hover:bg-destructive/10 hover:text-destructive"
                       >
                         <Trash2 className="size-3" />

@@ -24,5 +24,4 @@ export const KEYBINDINGS: {
   { key: "1", action: "gotoGrid", description: "Go to category grid" },
   { key: "3", action: "gotoInstalled", description: "Go to installed" },
   { key: "4", action: "gotoSystem", description: "Go to system package manager" },
-  { key: "5", action: "gotoSettings", description: "Go to settings" },
 ]

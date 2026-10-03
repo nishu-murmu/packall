@@ -18,7 +18,7 @@ import { useAppState, useNavigableSoftware } from "./app-state"
  *   s       — Toggle sidebar
  *   i/u/x   — Install / update / remove everything in the queue
  *   a       — Select / deselect everything visible
- *   1-5     — Navigate to views
+ *   1/3/4   — Navigate to views
  */
 
 /** Used only when the layout cannot be measured (tests, hidden window). */
@@ -69,7 +69,7 @@ function moveVertical(index: number, dir: 1 | -1, count: number, max: number): n
 
 export function useKeybindings() {
   const state = useAppState()
-  const filtered = useNavigableSoftware()
+  const catalogue = useNavigableSoftware()
 
   const {
     view,
@@ -87,9 +87,16 @@ export function useKeybindings() {
     goBack,
     clearQueue,
     toggleQueueItem,
+    systemNavIds,
     selectAllVisible,
     requestBatch,
   } = state
+
+  // The list the cursor moves over: catalogue cards, or rows in System Packages.
+  const filtered = React.useMemo(
+    () => (view.kind === "system" ? systemNavIds.map((id) => ({ id })) : catalogue),
+    [view.kind, systemNavIds, catalogue]
+  )
 
   const keyBuffer = React.useRef<string>("")
   const bufferTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -148,7 +155,7 @@ export function useKeybindings() {
       bufferTimeout.current = setTimeout(flushBuffer, 600)
 
       // Handle number prefix for repeated motions
-      if (/^[0-9]$/.test(key) && key !== "1" && key !== "3" && key !== "4" && key !== "5") {
+      if (/^[0-9]$/.test(key) && key !== "1" && key !== "3" && key !== "4") {
         keyBuffer.current += key
         e.preventDefault()
         return
@@ -244,7 +251,8 @@ export function useKeybindings() {
         case "Enter":
           e.preventDefault()
           if (filtered[selectedIndex]) {
-            setInspectSoftwareId(filtered[selectedIndex].id)
+            if (view.kind === "system") toggleQueueItem(filtered[selectedIndex].id)
+            else setInspectSoftwareId(filtered[selectedIndex].id)
           }
           flushBuffer()
           break
@@ -300,12 +308,6 @@ export function useKeybindings() {
         case "4":
           e.preventDefault()
           setView({ kind: "system" })
-          flushBuffer()
-          break
-
-        case "5":
-          e.preventDefault()
-          setView({ kind: "settings" })
           flushBuffer()
           break
 

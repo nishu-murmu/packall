@@ -116,54 +116,181 @@ pub fn parse_percent(line: &str) -> Option<f32> {
     None
 }
 
-/// Rewrite `sudo` into `pkexec` so a graphical polkit prompt is used instead of
-/// a terminal password prompt, which a desktop app cannot answer.
-pub fn adapt_privilege(command: &str, is_root: bool, has_pkexec: bool) -> String {
-    if is_root {
-        return command
-            .split_whitespace()
-            .filter(|t| *t != "sudo")
-            .collect::<Vec<_>>()
-            .join(" ");
-    }
-    if !has_pkexec {
-        return command.to_string();
-    }
-    command
-        .split(' ')
-        .map(|t| if t == "sudo" { "pkexec" } else { t })
-        .collect::<Vec<_>>()
-        .join(" ")
+// ---------------------------------------------------------------------------
+// Privilege handling
+//
+// A desktop app has no terminal to type a sudo password into, and pkexec falls
+// back to a text prompt on the launching terminal (and may pick a different
+// admin account than the current user). Instead Packall asks for the password
+// in its own dialog, keeps it in memory and exposes it to `sudo -A` through a
+// private askpass helper. A tiny `sudo` wrapper placed first in PATH makes every
+// `sudo` call (including the ones AUR helpers make) use it.
+// ---------------------------------------------------------------------------
+
+static SUDO_PASSWORD: Mutex<Option<String>> = Mutex::new(None);
+
+#[cfg(unix)]
+pub fn is_root() -> bool {
+    Command::new("id")
+        .arg("-u")
+        .output()
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "0")
+        .unwrap_or(false)
 }
 
-fn is_root() -> bool {
-    #[cfg(unix)]
-    {
-        Command::new("id")
-            .arg("-u")
-            .output()
-            .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "0")
-            .unwrap_or(false)
+#[cfg(not(unix))]
+pub fn is_root() -> bool {
+    false
+}
+
+fn sudo_binary() -> Option<String> {
+    let out = Command::new("sh")
+        .args(["-c", "command -v sudo"])
+        .output()
+        .ok()?;
+    if !out.status.success() {
+        return None;
     }
-    #[cfg(not(unix))]
-    {
-        false
+    let path = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if path.is_empty() {
+        None
+    } else {
+        Some(path)
     }
 }
 
-fn has_pkexec() -> bool {
+fn verify_password(sudo: &str, password: &str) -> bool {
+    use std::io::Write;
+    let child = Command::new(sudo)
+        .args(["-S", "-k", "-p", "", "-v"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn();
+    let Ok(mut child) = child else { return false };
+    if let Some(mut stdin) = child.stdin.take() {
+        let _ = stdin.write_all(password.as_bytes());
+        let _ = stdin.write_all(b"\n");
+    }
+    child.wait().map(|s| s.success()).unwrap_or(false)
+}
+
+/// "ready" (root, passwordless or already unlocked), "needs_password" or "unavailable".
+pub fn sudo_status() -> &'static str {
+    if is_root() {
+        return "ready";
+    }
+    let Some(sudo) = sudo_binary() else {
+        return "unavailable";
+    };
+    let passwordless = Command::new(&sudo)
+        .args(["-n", "-v"])
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .map(|s| s.success())
+        .unwrap_or(false);
+    if passwordless {
+        return "ready";
+    }
+    let stored = SUDO_PASSWORD.lock().ok().and_then(|g| g.clone());
+    match stored {
+        Some(pw) if verify_password(&sudo, &pw) => "ready",
+        _ => "needs_password",
+    }
+}
+
+/// Check the password against sudo and remember it for this session.
+pub fn unlock_sudo(password: &str) -> Result<(), String> {
+    let sudo = sudo_binary().ok_or_else(|| "sudo is not installed".to_string())?;
+    if !verify_password(&sudo, password) {
+        return Err("Incorrect password".to_string());
+    }
+    if let Ok(mut lock) = SUDO_PASSWORD.lock() {
+        *lock = Some(password.to_string());
+    }
+    Ok(())
+}
+
+pub fn forget_sudo() {
+    if let Ok(mut lock) = SUDO_PASSWORD.lock() {
+        *lock = None;
+    }
+}
+
+/// Private directory holding the askpass helper and the `sudo` wrapper.
+pub struct SudoShim {
+    dir: std::path::PathBuf,
+}
+
+impl SudoShim {
     #[cfg(unix)]
-    {
-        Command::new("sh")
-            .args(["-c", "command -v pkexec"])
-            .output()
-            .map(|o| o.status.success())
-            .unwrap_or(false)
+    pub fn create(batch_id: &str) -> Option<SudoShim> {
+        use std::os::unix::fs::{DirBuilderExt, OpenOptionsExt};
+        let root = is_root();
+        let sudo = if root { String::new() } else { sudo_binary()? };
+        let password = SUDO_PASSWORD.lock().ok().and_then(|g| g.clone());
+
+        let dir = std::env::temp_dir().join(format!("packall-{}-{}", std::process::id(), batch_id));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::DirBuilder::new().mode(0o700).create(&dir).ok()?;
+
+        let write = |name: &str, body: &str, mode: u32| -> Option<()> {
+            let mut f = std::fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .mode(mode)
+                .open(dir.join(name))
+                .ok()?;
+            std::io::Write::write_all(&mut f, body.as_bytes()).ok()
+        };
+
+        let wrapper = if root {
+            "#!/bin/sh\nexec \"$@\"\n".to_string()
+        } else if password.is_some() {
+            format!("#!/bin/sh\nexec '{}' -A \"$@\"\n", sudo)
+        } else {
+            // Never block on a prompt nobody can answer.
+            format!("#!/bin/sh\nexec '{}' -n \"$@\"\n", sudo)
+        };
+        write("sudo", &wrapper, 0o700)?;
+        if let Some(pw) = password {
+            write("pw", &pw, 0o600)?;
+            write(
+                "askpass",
+                "#!/bin/sh\ncat \"$(dirname \"$0\")/pw\"\n",
+                0o700,
+            )?;
+        }
+        Some(SudoShim { dir })
     }
+
     #[cfg(not(unix))]
-    {
-        false
+    pub fn create(_batch_id: &str) -> Option<SudoShim> {
+        None
     }
+
+    fn env(&self) -> Vec<(String, String)> {
+        let path = std::env::var("PATH").unwrap_or_default();
+        vec![
+            ("PATH".to_string(), format!("{}:{}", self.dir.display(), path)),
+            (
+                "SUDO_ASKPASS".to_string(),
+                self.dir.join("askpass").display().to_string(),
+            ),
+        ]
+    }
+}
+
+impl Drop for SudoShim {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_dir_all(&self.dir);
+    }
+}
+
+pub fn needs_sudo(command: &str) -> bool {
+    command.split_whitespace().any(|t| t == "sudo")
 }
 
 /// Split a byte stream into lines, treating both `\n` and `\r` as terminators so
@@ -216,6 +343,7 @@ fn run_command<F: Fn(JobEvent)>(
     job_id: &str,
     command: &str,
     cancel: &AtomicBool,
+    env: &[(String, String)],
     emit: &F,
 ) -> bool {
     let mut cmd = if cfg!(windows) {
@@ -228,6 +356,9 @@ fn run_command<F: Fn(JobEvent)>(
         c
     };
     cmd.stdout(Stdio::piped()).stderr(Stdio::piped()).stdin(Stdio::null());
+    for (k, v) in env {
+        cmd.env(k, v);
+    }
     #[cfg(unix)]
     {
         use std::os::unix::process::CommandExt;
@@ -281,8 +412,8 @@ fn run_command<F: Fn(JobEvent)>(
 /// Run every job in order. Failed jobs do not stop the rest of the batch.
 pub fn run_batch<F: Fn(JobEvent)>(batch_id: &str, jobs: Vec<JobSpec>, emit: F) {
     let cancel = register(batch_id);
-    let root = is_root();
-    let pkexec = has_pkexec();
+    let shim = SudoShim::create(batch_id);
+    let env = shim.as_ref().map(|s| s.env()).unwrap_or_default();
 
     for job in jobs {
         if cancel.load(Ordering::SeqCst) {
@@ -296,11 +427,11 @@ pub fn run_batch<F: Fn(JobEvent)>(batch_id: &str, jobs: Vec<JobSpec>, emit: F) {
 
         let mut ok = true;
         for raw in &job.commands {
-            let command = adapt_privilege(raw, root, pkexec);
+            let command = raw.clone();
             let mut ev = JobEvent::new(batch_id, &job.id, "output");
             ev.line = Some(format!("$ {}", command));
             emit(ev);
-            if !run_command(batch_id, &job.id, &command, &cancel, &emit) {
+            if !run_command(batch_id, &job.id, &command, &cancel, &env, &emit) {
                 ok = false;
                 break;
             }
@@ -314,6 +445,7 @@ pub fn run_batch<F: Fn(JobEvent)>(batch_id: &str, jobs: Vec<JobSpec>, emit: F) {
 
     emit(JobEvent::new(batch_id, "", "batch_done"));
     unregister(batch_id);
+    drop(shim);
 }
 
 #[cfg(test)]
@@ -333,19 +465,39 @@ mod tests {
     }
 
     #[test]
-    fn privilege_rewrite() {
-        assert_eq!(
-            adapt_privilege("sudo apt install -y git", false, true),
-            "pkexec apt install -y git"
+    fn detects_sudo_commands() {
+        assert!(needs_sudo("sudo apt install git"));
+        assert!(needs_sudo("sudo sh -c \"apt-get update\""));
+        assert!(!needs_sudo("flatpak install -y flathub x"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn shim_wraps_sudo_and_cleans_up() {
+        let dir;
+        {
+            let shim = SudoShim::create("shimtest").expect("shim");
+            dir = shim.dir.clone();
+            assert!(dir.join("sudo").exists());
+            let env = shim.env();
+            assert!(env.iter().any(|(k, v)| k == "PATH" && v.starts_with(dir.to_str().unwrap())));
+        }
+        assert!(!dir.exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn password_never_prompts_a_terminal() {
+        // With no stored password the wrapper must fail fast instead of hanging.
+        forget_sudo();
+        let events = Mutex::new(Vec::new());
+        run_batch(
+            "t2",
+            vec![JobSpec { id: "a".into(), name: "A".into(), commands: vec!["sudo true".into()] }],
+            |e| events.lock().unwrap().push(e),
         );
-        assert_eq!(
-            adapt_privilege("sudo apt install -y git", true, true),
-            "apt install -y git"
-        );
-        assert_eq!(
-            adapt_privilege("sudo apt install -y git", false, false),
-            "sudo apt install -y git"
-        );
+        let ev = events.lock().unwrap();
+        assert!(ev.iter().any(|e| e.kind == "finished"));
     }
 
     #[cfg(unix)]
