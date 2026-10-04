@@ -18,10 +18,13 @@ import type {
 } from "@/lib/types"
 import { invoke } from "@tauri-apps/api/core"
 import { listen } from "@tauri-apps/api/event"
-import { applyJobEvent, batchCounts } from "@/lib/jobs-reducer"
+import { applyJobEvent } from "@/lib/jobs-reducer"
 import {
   buildCommands,
   buildSystemPackageCommands,
+  bootstrapCommands,
+  missingUniversalFor,
+  syntheticManager,
   matchesDistroFilter,
   optionInstalled,
   pickOption,
@@ -50,6 +53,8 @@ interface AppState {
   jobsPanelOpen: boolean
   removeConfirmOpen: boolean
   passwordPromptOpen: boolean
+  /** Prompt asking to install a missing Flatpak/Snap runtime. */
+  toolPrompt: { tool: "flatpak" | "snap"; count: number } | null
   busyIds: Set<string>
   /** Navigable ids in the System Packages view (set by that view). */
   systemNavIds: string[]
@@ -71,6 +76,7 @@ interface AppState {
   setJobsPanelOpen: (open: boolean) => void
   setRemoveConfirmOpen: (open: boolean) => void
   finishPasswordPrompt: (ok: boolean) => void
+  finishToolPrompt: (ok: boolean) => void
   setSystemNavIds: (ids: string[]) => void
   /** One-click entry point: starts at once, except removals which ask first. */
   requestBatch: (action: BatchAction) => Promise<void>
@@ -78,7 +84,7 @@ interface AppState {
   runBatch: (action: BatchAction, ids?: string[]) => Promise<void>
   cancelBatch: (batchId: string) => Promise<void>
   dismissBatch: (batchId: string) => void
-  refreshSystemPackages: () => Promise<void>
+  refreshSystemPackages: (opts?: { notify?: boolean }) => Promise<void>
   runPackageAction: (
     action: BatchAction,
     pkgNames: string[],
@@ -121,6 +127,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [jobsPanelOpen, setJobsPanelOpen] = React.useState(false)
   const [removeConfirmOpen, setRemoveConfirmOpen] = React.useState(false)
   const [passwordPromptOpen, setPasswordPromptOpen] = React.useState(false)
+  const [toolPrompt, setToolPrompt] = React.useState<{ tool: "flatpak" | "snap"; count: number } | null>(null)
+  const toolResolver = React.useRef<((ok: boolean) => void) | null>(null)
   const [systemNavIds, setSystemNavIds] = React.useState<string[]>([])
   const passwordResolver = React.useRef<((ok: boolean) => void) | null>(null)
   const startingIds = React.useRef<Set<string>>(new Set())
@@ -139,8 +147,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   }, [installed])
 
   // Refresh system packages and distro info from Tauri backend
-  const refreshSystemPackages = React.useCallback(async () => {
+  const refreshSystemPackages = React.useCallback(async (opts?: { notify?: boolean }) => {
     setIsLoadingSystem(true)
+    const toastId = opts?.notify ? toast.loading("Scanning installed packages…") : undefined
     try {
       const [sysPkgs, managers, distro] = await Promise.all([
         invoke<SystemPackage[]>("get_system_packages").catch(() => []),
@@ -194,6 +203,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       setSystemPackages(sysPkgs)
       setPackageManagers(managers)
       setDistroInfo(distro)
+      if (opts?.notify) {
+        toast.success(`Scan complete — ${sysPkgs.length} package${sysPkgs.length === 1 ? "" : "s"} detected`, { id: toastId })
+      }
 
       // Auto-mark packages as installed in Packall if detected on host system
       if (sysPkgs && sysPkgs.length > 0) {
@@ -214,6 +226,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.warn("Could not query system packages (running in web mode?):", err)
+      if (opts?.notify) toast.error("Could not scan system packages", { id: toastId })
     } finally {
       setIsLoadingSystem(false)
     }
@@ -321,7 +334,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       batchesRef.current = batchesRef.current.map((b) => (b.id === batch.id ? updated : b))
       setBatches(batchesRef.current)
 
-      if (ev.kind === "finished" && ev.success) {
+      if (ev.kind === "finished" && ev.success && SOFTWARE_MAP[ev.job_id]) {
         if (batch.action === "install") {
           setInstalled((prev) => new Set(prev).add(ev.job_id))
         } else if (batch.action === "remove") {
@@ -333,13 +346,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      // No completion toast: the progress card already shows the outcome and
+      // dismisses itself. A second toast would be redundant.
       if (ev.kind === "batch_done") {
-        const c = batchCounts(updated)
-        const verb =
-          batch.action === "install" ? "installed" : batch.action === "update" ? "updated" : "removed"
-        if (c.cancelled > 0) toast.message(`Cancelled — ${c.success} ${verb}`)
-        else if (c.failed > 0) toast.error(`${c.success} ${verb}, ${c.failed} failed`)
-        else toast.success(`${c.success} ${verb} successfully`)
         void refreshSystemPackages()
       }
     },
@@ -390,10 +399,48 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setPasswordPromptOpen(false)
   }, [])
 
+  const askInstallTool = React.useCallback(
+    (tool: "flatpak" | "snap", count: number) =>
+      new Promise<boolean>((resolve) => {
+        toolResolver.current = resolve
+        setToolPrompt({ tool, count })
+      }),
+    []
+  )
+
+  const finishToolPrompt = React.useCallback((ok: boolean) => {
+    toolResolver.current?.(ok)
+    toolResolver.current = null
+    setToolPrompt(null)
+  }, [])
+
   const startBatch = React.useCallback(
     async (action: BatchAction, targets: string[]) => {
 
-      const ctx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages }
+      const baseCtx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages }
+
+      // If some apps can only come from a Flatpak/Snap runtime that is not
+      // installed, offer to install that runtime first, then treat it as present.
+      let effectiveManagers = packageManagers
+      let bootstrapTool: "flatpak" | "snap" | null = null
+      if (action === "install") {
+        const needed = new Map<"flatpak" | "snap", number>()
+        for (const id of targets) {
+          const sw = SOFTWARE_MAP[id]
+          if (!sw || installed.has(id)) continue
+          const miss = missingUniversalFor(sw, baseCtx)
+          if (miss) needed.set(miss, (needed.get(miss) ?? 0) + 1)
+        }
+        if (needed.size > 0) {
+          const tool = needed.has("flatpak") ? "flatpak" : "snap"
+          if (await askInstallTool(tool, needed.get(tool) ?? 0)) {
+            bootstrapTool = tool
+            effectiveManagers = [...packageManagers, syntheticManager(tool)]
+          }
+        }
+      }
+
+      const ctx: PickContext = { distro: distroInfo, managers: effectiveManagers, systemPackages }
       const jobs: Job[] = []
       const specs: { id: string; name: string; commands: string[] }[] = []
 
@@ -424,7 +471,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           continue
         }
         const opt = pickOption(sw, action, ctx)
-        const commands = opt ? buildCommands(action, opt, packageManagers) : []
+        const commands = opt ? buildCommands(action, opt, effectiveManagers) : []
         if (!opt || commands.length === 0) {
           jobs.push({
             ...base,
@@ -435,6 +482,25 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }
         jobs.push({ ...base, method: opt.method })
         specs.push({ id, name: sw.name, commands })
+      }
+
+      // Prepend a one-off job that installs the chosen runtime, so it exists
+      // before the apps that need it run.
+      if (bootstrapTool && specs.length > 0) {
+        const setupCommands = bootstrapCommands(bootstrapTool, distroInfo, packageManagers)
+        if (setupCommands.length > 0) {
+          const setupId = `__setup_${bootstrapTool}__`
+          jobs.unshift({
+            id: setupId,
+            name: `Install ${bootstrapTool === "flatpak" ? "Flatpak" : "Snap"}`,
+            action,
+            status: "queued",
+            percent: null,
+            method: "manual",
+            log: [],
+          })
+          specs.unshift({ id: setupId, name: `Install ${bootstrapTool}`, commands: setupCommands })
+        }
       }
 
       if (specs.length > 0 && specs.some((sp) => sp.commands.some((c) => /\bsudo\b/.test(c)))) {
@@ -488,7 +554,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         toast.error(`Could not start background job: ${message}`)
       }
     },
-    [distroInfo, packageManagers, systemPackages, installed, askForPassword]
+    [distroInfo, packageManagers, systemPackages, installed, askForPassword, askInstallTool]
   )
 
   const runBatch = React.useCallback(
@@ -655,6 +721,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     jobsPanelOpen,
     removeConfirmOpen,
     passwordPromptOpen,
+    toolPrompt,
     busyIds,
     systemNavIds,
     setView: setViewWrapper,
@@ -674,6 +741,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setJobsPanelOpen,
     setRemoveConfirmOpen,
     finishPasswordPrompt,
+    finishToolPrompt,
     setSystemNavIds,
     requestBatch,
     runBatch,

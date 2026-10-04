@@ -16,6 +16,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { PanelLeft } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { PasswordDialog } from "@/components/password-dialog"
+import { ToolInstallDialog } from "@/components/tool-install-dialog"
 
 function AppContent() {
   const { view, sidebarOpen, setSidebarOpen, inspectSoftwareId } = useAppState()
@@ -75,6 +76,7 @@ function AppContent() {
       <SoftwareDrawer />
 
       <PasswordDialog />
+      <ToolInstallDialog />
       <HelpOverlay />
       <Toaster />
     </div>
