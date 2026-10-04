@@ -125,7 +125,7 @@ export function SystemPackagesView() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => refreshSystemPackages()}
+              onClick={() => void refreshSystemPackages({ notify: true })}
               disabled={isLoadingSystem}
               className="gap-1.5 text-xs h-8 rounded-xl"
             >
@@ -211,7 +211,7 @@ export function SystemPackagesView() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => refreshSystemPackages()}
+              onClick={() => void refreshSystemPackages({ notify: true })}
               className="mt-4 gap-1.5 rounded-xl text-xs"
             >
               <RefreshCw className="size-3.5" /> Scan Host Now

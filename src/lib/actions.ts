@@ -308,6 +308,55 @@ export function isSupportedOnHost(software: SoftwareEntry, ctx: PickContext): bo
   return pickOption(software, "install", ctx) !== null
 }
 
+/**
+ * When nothing is directly installable but a universal option (Flatpak, then
+ * Snap) exists whose tool is missing, say which tool would unlock it. The UI
+ * can then offer to install that tool first.
+ */
+export function missingUniversalFor(
+  software: SoftwareEntry,
+  ctx: PickContext
+): "flatpak" | "snap" | null {
+  if (pickOption(software, "install", ctx) !== null) return null
+  const has = (m: InstallMethod) => software.install.some((o) => o.method === m && parseOption(o).automatable)
+  if (has("flatpak") && !isMethodAvailable("flatpak", ctx.managers)) return "flatpak"
+  if (has("snap") && !isMethodAvailable("snap", ctx.managers)) return "snap"
+  return null
+}
+
+/** Commands that install Flatpak or Snap itself, using the host's native manager. */
+export function bootstrapCommands(
+  tool: "flatpak" | "snap",
+  distro: DistroInfo | null,
+  managers: PackageManagerInfo[] = []
+): string[] {
+  const family = familyFromDistro(distro)
+  const pkg = tool === "flatpak" ? "flatpak" : "snapd"
+  const native: Partial<Record<DistroFamily, string>> = {
+    debian: `sudo apt-get install -y ${pkg}`,
+    fedora: `sudo dnf install -y ${pkg}`,
+    suse: `sudo zypper --non-interactive install ${pkg}`,
+    arch: tool === "flatpak" ? `sudo pacman -S --needed --noconfirm flatpak` : `${aurHelper(managers)} -S --needed --noconfirm snapd`,
+  }
+  const install = native[family]
+  if (!install) return []
+  if (tool === "flatpak") {
+    return [
+      install,
+      "flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo",
+    ]
+  }
+  // Snap needs its socket running, and Arch/Fedora want the /snap symlink.
+  const post = ["sudo systemctl enable --now snapd.socket"]
+  if (family === "arch" || family === "fedora") post.push("sudo ln -sf /var/lib/snapd/snap /snap")
+  return [install, ...post]
+}
+
+/** A synthetic "available" manager entry, so a just-bootstrapped tool counts as present. */
+export function syntheticManager(id: InstallMethod): PackageManagerInfo {
+  return { id, name: id, available: true, is_aur: false, install_cmd: "", update_cmd: "", remove_cmd: "" }
+}
+
 /** Methods the host has that can install this entry (used for the manager picker). */
 export function availableMethods(software: SoftwareEntry, managers: PackageManagerInfo[]): InstallMethod[] {
   const out: InstallMethod[] = []

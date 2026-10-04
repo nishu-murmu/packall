@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest"
 import {
+  bootstrapCommands,
   buildCommands,
   buildSystemPackageCommands,
   familyFromDistro,
   matchesDistroFilter,
+  missingUniversalFor,
   parseOption,
   pickOption,
 } from "@/lib/actions"
@@ -180,5 +182,48 @@ describe("distro filter", () => {
     expect(familyFromDistro({ ...distro(undefined, "linuxmint") })).toBe("debian")
     expect(familyFromDistro({ ...distro(undefined, "opensuse-tumbleweed") })).toBe("suse")
     expect(familyFromDistro(null)).toBe("other")
+  })
+})
+
+describe("Flatpak/Snap bootstrap", () => {
+  const firefox = SOFTWARE_MAP["firefox"]
+
+  it("asks for flatpak when it is the only option and the tool is missing", () => {
+    // Fedora box with neither dnf-native firefox match usable nor flatpak installed.
+    const miss = missingUniversalFor(firefox, {
+      distro: distro("fedora"),
+      managers: [mgr("dnf", false), mgr("flatpak", false)],
+      systemPackages: [],
+    })
+    expect(miss).toBe("flatpak")
+  })
+
+  it("does not ask when a native or installed method exists", () => {
+    expect(
+      missingUniversalFor(firefox, {
+        distro: distro("debian"),
+        managers: [mgr("apt")],
+        systemPackages: [],
+      })
+    ).toBeNull()
+    expect(
+      missingUniversalFor(firefox, {
+        distro: distro("fedora"),
+        managers: [mgr("flatpak")],
+        systemPackages: [],
+      })
+    ).toBeNull()
+  })
+
+  it("builds runtime-install commands per distro family", () => {
+    expect(bootstrapCommands("flatpak", distro("debian"))[0]).toBe("sudo apt-get install -y flatpak")
+    expect(bootstrapCommands("flatpak", distro("fedora"))[0]).toBe("sudo dnf install -y flatpak")
+    expect(bootstrapCommands("flatpak", distro("arch"))[0]).toBe("sudo pacman -S --needed --noconfirm flatpak")
+    expect(bootstrapCommands("flatpak", distro("debian"))).toContain(
+      "flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo"
+    )
+    const snap = bootstrapCommands("snap", distro("fedora"))
+    expect(snap[0]).toBe("sudo dnf install -y snapd")
+    expect(snap).toContain("sudo systemctl enable --now snapd.socket")
   })
 })

@@ -35,6 +35,15 @@ function BatchCard({ batch, onCancel, onDismiss }: { batch: Batch; onCancel: () 
   const percent = batchProgress(batch)
   const c = batchCounts(batch)
   const active = !batch.done && c.running + c.queued > 0
+
+  // Auto-dismiss a clean run so there is nothing to click away. Runs with a
+  // failure or cancellation stay until dismissed so the reason stays readable.
+  React.useEffect(() => {
+    if (!batch.done || open) return
+    if (c.failed > 0 || c.cancelled > 0) return
+    const t = setTimeout(onDismiss, 4500)
+    return () => clearTimeout(t)
+  }, [batch.done, open, c.failed, c.cancelled, onDismiss])
   const work = c.total - c.skipped
   const current = batch.jobs.find((j) => j.status === "running")
 
