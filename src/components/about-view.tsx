@@ -1,7 +1,7 @@
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
-import { Star, Terminal, Package, Cpu, Search } from "lucide-react"
+import { Terminal, Package, Cpu, Search } from "lucide-react"
 import { Logo } from "@/components/logo"
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
@@ -58,15 +58,6 @@ export function AboutView() {
           >
             <GithubIcon className="size-4" />
             GitHub
-          </a>
-          <a
-            href="https://github.com/nishu-murmu/packall/stargazers"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-600 dark:text-amber-400 px-4 py-2 text-xs font-semibold transition-all hover:bg-amber-500/20"
-          >
-            <Star className="size-4 fill-current" />
-            Star on GitHub
           </a>
         </div>
       </div>
