@@ -13,9 +13,14 @@ workflow (`.github/workflows/release.yml`) automates most of it when you push a
 | AUR `packall` | `packaging/aur/packall/PKGBUILD` | Builds from source; pushed by the `aur` job |
 | APT repo | `packaging/scripts/make-apt-repo.sh` | GitHub Pages (`gh-pages`) |
 | RPM repo | `packaging/scripts/make-rpm-repo.sh` | GitHub Pages (`gh-pages`) |
+| Fedora COPR | `packaging/fedora/packall.spec` | Manual build, see [DEPLOY.md](DEPLOY.md#3-fedora--rhel--copr-manual) |
+| openSUSE OBS | `packaging/fedora/packall.spec` | Manual build, see [DEPLOY.md](DEPLOY.md#4-opensuse--sle--obs-manual) |
+| `install.sh` one-liner | **website repo**, `public/install.sh` | Served from `packall.app` |
 
-> Flatpak is intentionally **not** a target: Packall installs software on the
-> *host* with `apt`/`dnf`/`pacman`, which a Flatpak sandbox cannot reach.
+> Flathub, the Snap Store, Windows and macOS are intentionally **not** targets:
+> Packall installs software on the *host* with `apt`/`dnf`/`pacman`, which a
+> sandbox cannot reach and which has no meaning off Linux. See
+> [DEPLOY.md](DEPLOY.md#scope-linux-x86_64-only).
 
 ## One-time setup
 
@@ -51,13 +56,20 @@ sudo dnf install packall
 curl -fsSL https://packall.app/install.sh | sh
 ```
 
+> `install.sh` is maintained in the **website** repo (`public/install.sh`), not
+> here. It picks the native package per distro and falls back to the AppImage.
+
 ## Releasing a new version
 
 1. Bump `version` in `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`
-   and the `pkgver`/`Version` fields in `packaging/`.
+   and `Version:` in `packaging/fedora/packall.spec`. The AUR `pkgver` fields are
+   rewritten from the tag by CI — leave them alone.
 2. `git tag vX.Y.Z && git push --tags`.
 3. The workflow builds, tests, publishes the release, updates the AUR and the
-   APT/RPM repositories.
+   APT/RPM repositories. COPR and OBS do not watch tags; rebuild them by hand.
+
+See [DEPLOY.md](DEPLOY.md) for the full runbook, including the openSUSE OBS setup
+and the per-channel one-time credentials.
 
 ## Status
 
