@@ -182,6 +182,39 @@ describe("SOFTWARE catalogue", () => {
     }
   })
 
+  it("each install command actually drives its own package manager", () => {
+    // Guards the generated dnf/zypper/snap entries against drifting onto the
+    // wrong tool, which would fail only once a user pressed Install.
+    const driver: Partial<Record<InstallMethod, string>> = {
+      apt: "apt",
+      dnf: "dnf",
+      zypper: "zypper",
+      pacman: "pacman",
+      snap: "snap",
+      flatpak: "flatpak",
+      brew: "brew",
+    }
+    for (const entry of SOFTWARE) {
+      for (const opt of entry.install) {
+        const tool = driver[opt.method]
+        if (!tool) continue
+        expect(
+          opt.command.includes(tool),
+          `'${entry.id}' ${opt.method}: ${opt.command}`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it("no install command targets a debuginfo or debugsource package", () => {
+    for (const entry of SOFTWARE) {
+      for (const opt of entry.install) {
+        const bad = opt.command.includes("-debuginfo") || opt.command.includes("-debugsource")
+        expect(bad, `'${entry.id}' ${opt.method}: ${opt.command}`).toBe(false)
+      }
+    }
+  })
+
   it("multi-step install options carry well-formed steps", () => {
     const withSteps = SOFTWARE.filter((s) => s.install.some((o) => o.steps))
     expect(withSteps.length).toBeGreaterThan(0)

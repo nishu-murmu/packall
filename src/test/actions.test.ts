@@ -4,13 +4,14 @@ import {
   buildCommands,
   buildSystemPackageCommands,
   familyFromDistro,
+  hasNativePackage,
   matchesDistroFilter,
   missingUniversalFor,
   parseOption,
   pickOption,
 } from "@/lib/actions"
 import { SOFTWARE_MAP, SOFTWARE } from "@/lib/software"
-import type { DistroInfo, PackageManagerInfo } from "@/lib/types"
+import type { DistroInfo, PackageManagerInfo, SoftwareEntry } from "@/lib/types"
 
 const mgr = (id: string, available = true): PackageManagerInfo => ({
   id,
@@ -135,12 +136,33 @@ describe("pickOption", () => {
   })
 
   it("falls back to flatpak when no native option exists on the distro", () => {
-    const fedora = pickOption(firefox, "install", {
+    // Synthetic so the assertion tests the fallback, not today's catalogue data.
+    const flatpakOnly: SoftwareEntry = {
+      ...firefox,
+      id: "flatpak-only",
+      install: [{ method: "flatpak", command: "flatpak install flathub com.example.App" }],
+    }
+    const fedora = pickOption(flatpakOnly, "install", {
       distro: distro("fedora"),
       managers: [mgr("dnf"), mgr("flatpak")],
       systemPackages: [],
     })
     expect(fedora?.method).toBe("flatpak")
+  })
+
+  it("prefers the native package once the distro has one", () => {
+    const fedora = pickOption(firefox, "install", {
+      distro: distro("fedora"),
+      managers: [mgr("dnf"), mgr("flatpak")],
+      systemPackages: [],
+    })
+    expect(fedora?.method).toBe("dnf")
+    const suse = pickOption(firefox, "install", {
+      distro: distro("suse"),
+      managers: [mgr("zypper"), mgr("flatpak")],
+      systemPackages: [],
+    })
+    expect(suse?.method).toBe("zypper")
   })
 
   it("ignores methods whose tool is missing", () => {
@@ -166,15 +188,47 @@ describe("distro filter", () => {
   it("matches native packages per family", () => {
     const firefox = SOFTWARE_MAP["firefox"]
     expect(matchesDistroFilter(firefox, "debian")).toBe(true)
-    expect(matchesDistroFilter(firefox, "fedora")).toBe(false)
+    expect(matchesDistroFilter(firefox, "fedora")).toBe(true)
+    expect(matchesDistroFilter(firefox, "suse")).toBe(true)
     expect(matchesDistroFilter(firefox, "flatpak")).toBe(true)
     expect(matchesDistroFilter(firefox, "all")).toBe(true)
   })
 
-  it("every filter returns at least one catalogue entry", () => {
+  it("keeps universal-only apps in every distro view", () => {
+    // Spotify has no native package anywhere; Flatpak is the only way in.
+    const universalOnly: SoftwareEntry = {
+      ...SOFTWARE_MAP["firefox"],
+      id: "universal-only",
+      install: [{ method: "flatpak", command: "flatpak install flathub com.example.App" }],
+    }
+    for (const f of ["debian", "fedora", "arch", "suse"] as const) {
+      expect(matchesDistroFilter(universalOnly, f), `filter '${f}'`).toBe(true)
+      expect(hasNativePackage(universalOnly, f), `native '${f}'`).toBe(false)
+    }
+  })
+
+  it("excludes apps that cannot be installed on the family at all", () => {
+    const archOnly: SoftwareEntry = {
+      ...SOFTWARE_MAP["firefox"],
+      id: "arch-only",
+      install: [{ method: "aur", command: "paru -S something" }],
+    }
+    expect(matchesDistroFilter(archOnly, "arch")).toBe(true)
+    expect(matchesDistroFilter(archOnly, "fedora")).toBe(false)
+    expect(matchesDistroFilter(archOnly, "suse")).toBe(false)
+  })
+
+  it("every filter returns a usable share of the catalogue", () => {
     for (const f of ["debian", "fedora", "arch", "suse", "flatpak", "snap"] as const) {
-      if (f === "suse") continue // no zypper entries in the catalogue yet
-      expect(SOFTWARE.some((s) => matchesDistroFilter(s, f))).toBe(true)
+      const n = SOFTWARE.filter((s) => matchesDistroFilter(s, f)).length
+      expect(n, `filter '${f}' matched ${n} entries`).toBeGreaterThan(20)
+    }
+  })
+
+  it("every distro family has real native packages in the catalogue", () => {
+    for (const f of ["debian", "fedora", "arch", "suse"] as const) {
+      const n = SOFTWARE.filter((s) => hasNativePackage(s, f)).length
+      expect(n, `family '${f}' has only ${n} native packages`).toBeGreaterThan(50)
     }
   })
 

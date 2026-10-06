@@ -36,10 +36,10 @@ const METHOD_PRIORITY: Record<DistroFamily, InstallMethod[]> = {
 
 export const DISTRO_FILTERS: { id: DistroFilter; label: string; hint: string }[] = [
   { id: "all", label: "All distros", hint: "Everything in the catalogue" },
-  { id: "debian", label: "Debian / Ubuntu", hint: "apt packages" },
-  { id: "fedora", label: "Fedora / RHEL", hint: "dnf packages" },
-  { id: "arch", label: "Arch / Manjaro", hint: "pacman and AUR" },
-  { id: "suse", label: "openSUSE", hint: "zypper packages" },
+  { id: "debian", label: "Debian / Ubuntu", hint: "apt, plus Flatpak and Snap" },
+  { id: "fedora", label: "Fedora / RHEL", hint: "dnf, plus Flatpak and Snap" },
+  { id: "arch", label: "Arch / Manjaro", hint: "pacman and AUR, plus Flatpak and Snap" },
+  { id: "suse", label: "openSUSE", hint: "zypper, plus Flatpak and Snap" },
   { id: "flatpak", label: "Flatpak", hint: "Runs on any distro" },
   { id: "snap", label: "Snap", hint: "Runs on any distro" },
 ]
@@ -55,14 +55,29 @@ export function familyFromDistro(info: DistroInfo | null): DistroFamily {
   return "other"
 }
 
-/** Does the entry have an option for the given distro filter? */
+/**
+ * Does the entry have an option for the given distro filter?
+ *
+ * For a distro family this answers "can I install this here?", not "is there a
+ * native package?" — so the universal methods count too, matching the fallback
+ * order in METHOD_PRIORITY. Without them a Flatpak-only app would vanish from
+ * the Fedora view even though pressing Install would happily install it.
+ *
+ * The `flatpak` and `snap` filters are format filters, so they stay exact.
+ */
 export function matchesDistroFilter(software: SoftwareEntry, filter: DistroFilter): boolean {
   if (filter === "all") return true
   if (filter === "flatpak" || filter === "snap") {
     return software.install.some((o) => o.method === filter)
   }
-  const native = NATIVE_METHODS[filter]
-  return software.install.some((o) => native.includes(o.method))
+  const usable = [...NATIVE_METHODS[filter], ...UNIVERSAL_METHODS]
+  return software.install.some((o) => usable.includes(o.method))
+}
+
+/** Does the entry ship a package from the distro's own repositories? */
+export function hasNativePackage(software: SoftwareEntry, filter: DistroFilter): boolean {
+  if (filter === "all" || filter === "flatpak" || filter === "snap") return false
+  return software.install.some((o) => NATIVE_METHODS[filter].includes(o.method))
 }
 
 /** Map a catalogue method onto the tool that has to exist on the host. */
