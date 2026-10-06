@@ -1,3 +1,5 @@
+// GENERATED FILE — do not edit by hand.
+// Source: catalog/packall.json. Regenerate with: npm run catalog
 import type { Category, CategoryId } from "./types"
 
 export const CATEGORIES: Category[] = [

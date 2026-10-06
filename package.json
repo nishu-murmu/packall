@@ -14,7 +14,9 @@
     "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
     "web:dev": "vite",
     "web:build": "vite build",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "catalog": "node scripts/gen-catalog.mjs",
+    "catalog:check": "node scripts/gen-catalog.mjs --check"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
