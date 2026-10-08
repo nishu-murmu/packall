@@ -80,9 +80,9 @@ type document struct {
 }
 
 var (
-	once   sync.Once
-	loaded document
-	byID   map[string]*Entry
+	once    sync.Once
+	loaded  document
+	byID    map[string]*Entry
 	loadErr error
 )
 
