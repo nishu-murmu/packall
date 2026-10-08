@@ -224,6 +224,20 @@ pub struct SudoShim {
     dir: std::path::PathBuf,
 }
 
+/// Prefer `$XDG_RUNTIME_DIR` (per-user, 0700, cleared on logout) over
+/// `$TMPDIR` so the password file lives on a tmpfs and cannot survive a
+/// reboot. Falls back to the system temp dir when the variable is unset.
+#[cfg(unix)]
+fn shim_base_dir() -> std::path::PathBuf {
+    if let Ok(xdg) = std::env::var("XDG_RUNTIME_DIR") {
+        let p = std::path::PathBuf::from(xdg);
+        if p.is_dir() {
+            return p;
+        }
+    }
+    std::env::temp_dir()
+}
+
 impl SudoShim {
     #[cfg(unix)]
     pub fn create(batch_id: &str) -> Option<SudoShim> {
@@ -232,7 +246,7 @@ impl SudoShim {
         let sudo = if root { String::new() } else { sudo_binary()? };
         let password = SUDO_PASSWORD.lock().ok().and_then(|g| g.clone());
 
-        let dir = std::env::temp_dir().join(format!("packall-{}-{}", std::process::id(), batch_id));
+        let dir = shim_base_dir().join(format!("packall-{}-{}", std::process::id(), batch_id));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::DirBuilder::new().mode(0o700).create(&dir).ok()?;
 
@@ -263,6 +277,7 @@ impl SudoShim {
                 0o700,
             )?;
         }
+        register_shim_dir(&dir);
         Some(SudoShim { dir })
     }
 
@@ -286,12 +301,74 @@ impl SudoShim {
 impl Drop for SudoShim {
     fn drop(&mut self) {
         let _ = std::fs::remove_dir_all(&self.dir);
+        #[cfg(unix)]
+        unregister_shim_dir(&self.dir);
     }
 }
 
-pub fn needs_sudo(command: &str) -> bool {
-    command.split_whitespace().any(|t| t == "sudo")
+// ---------------------------------------------------------------------------
+// Signal-safe cleanup: remove shim directories on SIGINT / SIGTERM so the
+// password file never survives an abnormal exit (short of SIGKILL / OOM).
+// ---------------------------------------------------------------------------
+
+#[cfg(unix)]
+static SHIM_DIRS: Mutex<Option<Vec<std::path::PathBuf>>> = Mutex::new(None);
+
+#[cfg(unix)]
+fn register_shim_dir(dir: &std::path::Path) {
+    if let Ok(mut lock) = SHIM_DIRS.lock() {
+        lock.get_or_insert_with(Vec::new).push(dir.to_path_buf());
+    }
 }
+
+#[cfg(unix)]
+fn unregister_shim_dir(dir: &std::path::Path) {
+    if let Ok(mut lock) = SHIM_DIRS.lock() {
+        if let Some(dirs) = lock.as_mut() {
+            dirs.retain(|d| d != dir);
+        }
+    }
+}
+
+#[cfg(unix)]
+fn cleanup_all_shims() {
+    if let Ok(mut lock) = SHIM_DIRS.lock() {
+        if let Some(dirs) = lock.take() {
+            for dir in dirs {
+                let _ = std::fs::remove_dir_all(dir);
+            }
+        }
+    }
+}
+
+/// Install signal handlers that clean up shim directories on SIGINT/SIGTERM.
+/// Safe to call more than once; subsequent calls are no-ops.
+#[cfg(unix)]
+pub fn install_signal_handlers() {
+    use std::sync::Once;
+    static ONCE: Once = Once::new();
+    ONCE.call_once(|| {
+        // Re-raise the signal after cleanup so the default handler runs.
+        unsafe {
+            for sig in [libc::SIGINT, libc::SIGTERM] {
+                libc::signal(sig, signal_handler as libc::sighandler_t);
+            }
+        }
+    });
+}
+
+#[cfg(unix)]
+extern "C" fn signal_handler(sig: libc::c_int) {
+    cleanup_all_shims();
+    // Restore the default handler and re-raise so the process exits normally.
+    unsafe {
+        libc::signal(sig, libc::SIG_DFL);
+        libc::raise(sig);
+    }
+}
+
+#[cfg(not(unix))]
+pub fn install_signal_handlers() {}
 
 /// Split a byte stream into lines, treating both `\n` and `\r` as terminators so
 /// in-place progress meters (curl, flatpak) produce updates.
@@ -411,6 +488,7 @@ fn run_command<F: Fn(JobEvent)>(
 
 /// Run every job in order. Failed jobs do not stop the rest of the batch.
 pub fn run_batch<F: Fn(JobEvent)>(batch_id: &str, jobs: Vec<JobSpec>, emit: F) {
+    install_signal_handlers();
     let cancel = register(batch_id);
     let shim = SudoShim::create(batch_id);
     let env = shim.as_ref().map(|s| s.env()).unwrap_or_default();
@@ -462,13 +540,6 @@ mod tests {
     #[test]
     fn percent_from_pacman_counter() {
         assert_eq!(parse_percent("(1/4) installing foo"), Some(25.0));
-    }
-
-    #[test]
-    fn detects_sudo_commands() {
-        assert!(needs_sudo("sudo apt install git"));
-        assert!(needs_sudo("sudo sh -c \"apt-get update\""));
-        assert!(!needs_sudo("flatpak install -y flathub x"));
     }
 
     #[cfg(unix)]

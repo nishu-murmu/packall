@@ -40,7 +40,7 @@ Native package names are verified against the distributions' own repository meta
 - **Native desktop app** — Tauri v2 + Rust core with a React 19 frontend; the catalogue works offline.
 - **Distro-aware installs** — detects Debian, Fedora, Arch and openSUSE families (including derivatives via `ID_LIKE`), then picks the best available method per app.
 - **Neovim-style navigation** — `/`, `j`/`k`, `h`/`l`, `Space`, `i`/`u`/`x`, `?`; the whole app runs from the home row.
-- **Background queue** — select apps, press Install, Update or Remove; work runs on a background thread with per-package status, live logs, progress and Cancel. Privileged steps go through `pkexec`.
+- **Background queue** — select apps, press Install, Update or Remove; work runs on a background thread with per-package status, live logs, progress and Cancel. Privileged steps use a private `SUDO_ASKPASS` helper; the password is collected in an in-app dialog, never stored on disk beyond the lifetime of the batch.
 - **Live system detection** — finds `apt`, `dnf`, `pacman`, `zypper`, `flatpak`, `snap` and `brew` on the host, and greys out methods whose tool is missing.
 - **Installed view** — scan what is already on the system and update or remove it from the same UI.
 

@@ -8,7 +8,7 @@ pkgdesc='Keyboard-driven graphical directory of essential Linux software (prebui
 arch=('x86_64')
 url='https://github.com/nishu-murmu/packall'
 license=('AGPL-3.0-only')
-depends=('webkit2gtk-4.1' 'gtk3' 'polkit')
+depends=('webkit2gtk-4.1' 'gtk3')
 optdepends=('flatpak: install Flatpak apps'
             'paru: install AUR packages'
             'yay: install AUR packages')

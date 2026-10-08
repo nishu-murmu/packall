@@ -31,6 +31,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "snap",
         command: "sudo snap install firefox",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install firefox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install firefox",
+      },
     ],
   },
   {
@@ -58,6 +66,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install chromium",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install chromium-browser",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install chromium-browser",
       },
     ],
   },
@@ -184,6 +200,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "apt",
         command: "sudo apt install torbrowser-launcher",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install torbrowser-launcher",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install torbrowser-launcher",
+      },
     ],
   },
   {
@@ -207,7 +231,7 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "flatpak install flathub org.signal.Signal",
       },
       {
-        method: "apt",
+        method: "manual",
         command: "Follow instructions at signal.org/download",
       },
       {
@@ -235,12 +259,12 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "flatpak install flathub org.telegram.desktop",
       },
       {
-        method: "apt",
-        command: "sudo snap install telegram-desktop",
-      },
-      {
         method: "aur",
         command: "yay -S telegram-desktop",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install telegram-desktop",
       },
     ],
   },
@@ -325,6 +349,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "apt",
         command: "sudo apt install thunderbird",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install thunderbird",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install thunderbird",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install thunderbird",
+      },
     ],
   },
   {
@@ -353,6 +389,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "yay -S element-desktop",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install element-desktop",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install element-desktop",
       },
     ],
   },
@@ -449,6 +493,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub io.neovim.nvim",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install neovim",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install neovim",
       },
     ],
   },
@@ -560,6 +612,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S podman",
       },
+      {
+        method: "zypper",
+        command: "sudo zypper install podman",
+      },
     ],
   },
   {
@@ -587,6 +643,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S git",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install git",
       },
     ],
   },
@@ -639,6 +699,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub org.libreoffice.LibreOffice",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install libreoffice",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install libreoffice",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install libreoffice",
       },
     ],
   },
@@ -718,6 +790,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "flatpak",
         command: "flatpak install flathub org.kde.okular",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install okular",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install okular",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install okular",
+      },
     ],
   },
   {
@@ -748,6 +832,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S steam",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install steam",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install steam",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install steam",
+      },
     ],
   },
   {
@@ -770,7 +866,7 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "flatpak install flathub net.lutris.Lutris",
       },
       {
-        method: "apt",
+        method: "manual",
         command: "Follow lutris.net download instructions",
       },
       {
@@ -830,6 +926,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S wine",
       },
+      {
+        method: "zypper",
+        command: "sudo zypper install wine",
+      },
     ],
   },
   {
@@ -859,6 +959,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install vlc",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install vlc",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install vlc",
       },
     ],
   },
@@ -890,6 +998,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S obs-studio",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install obs-studio",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install obs-studio",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install obs-studio",
+      },
     ],
   },
   {
@@ -915,6 +1035,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "flatpak",
         command: "flatpak install flathub org.audacityteam.Audacity",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install audacity",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install audacity",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install audacity",
+      },
     ],
   },
   {
@@ -939,6 +1071,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "apt",
         command: "sudo apt install kdenlive",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install kdenlive",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kdenlive",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install kdenlive",
       },
     ],
   },
@@ -969,6 +1113,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S handbrake",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install handbrake",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install handbrake",
+      },
     ],
   },
   {
@@ -996,7 +1148,7 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "Docker: docker run nextcloud",
       },
       {
-        method: "apt",
+        method: "manual",
         command: "Follow nextcloud.com/install guide",
       },
     ],
@@ -1105,6 +1257,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S p7zip",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install p7zip",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install p7zip",
       },
     ],
   },
@@ -1232,6 +1392,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S alacritty",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install alacritty",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install alacritty",
+      },
     ],
   },
   {
@@ -1261,6 +1429,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S kitty",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install kitty",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kitty",
+      },
     ],
   },
   {
@@ -1288,6 +1464,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S tmux",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install tmux",
       },
     ],
   },
@@ -1318,6 +1498,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S btop",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install btop",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install btop",
+      },
     ],
   },
   {
@@ -1341,6 +1529,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub org.gnome.Tweaks",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install gnome-tweaks",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gnome-tweaks",
       },
     ],
   },
@@ -1367,6 +1563,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S timeshift",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install timeshift",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install timeshift",
+      },
     ],
   },
   {
@@ -1390,6 +1594,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub org.gnome.GParted",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install gparted",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gparted",
       },
     ],
   },
@@ -1420,6 +1632,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install keepassxc",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install keepassxc",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install keepassxc",
       },
     ],
   },
@@ -1474,6 +1694,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "aur",
         command: "yay -S virtualbox",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install VirtualBox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install VirtualBox",
+      },
     ],
   },
   {
@@ -1503,6 +1731,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S virt-manager",
       },
+      {
+        method: "zypper",
+        command: "sudo zypper install virt-manager",
+      },
     ],
   },
   {
@@ -1524,12 +1756,16 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "flatpak install flathub net.ankiweb.Anki",
       },
       {
-        method: "apt",
+        method: "manual",
         command: "Follow apps.ankiweb.net download instructions",
       },
       {
         method: "aur",
         command: "yay -S anki",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install anki-woodrow",
       },
     ],
   },
@@ -1554,6 +1790,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub org.stellarium.Stellarium",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install stellarium",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install stellarium",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install stellarium",
       },
     ],
   },
@@ -1580,6 +1828,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub org.inkscape.Inkscape",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install inkscape",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install inkscape",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install inkscape",
       },
     ],
   },
@@ -1611,6 +1871,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "snap",
         command: "sudo snap install blender",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install blender",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install blender",
+      },
     ],
   },
   {
@@ -1639,6 +1907,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install krita",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install krita",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install krita",
       },
     ],
   },
@@ -1669,6 +1945,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "apt",
         command: "sudo apt install gimp",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install gimp",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gimp",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install gimp",
       },
     ],
   },
@@ -1748,6 +2036,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "apt",
         command: "sudo apt install fastfetch",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install fastfetch",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fastfetch",
+      },
     ],
   },
   {
@@ -1776,6 +2072,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "apt",
         command: "sudo apt install flameshot",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install flameshot",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install flameshot",
       },
     ],
   },
@@ -1885,6 +2189,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S librewolf",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install librewolf",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install librewolf",
+      },
     ],
   },
   {
@@ -1912,6 +2224,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S waterfox",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install waterfox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install waterfox",
       },
     ],
   },
@@ -1941,6 +2261,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S google-chrome",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install google-chrome",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install google-chrome",
+      },
     ],
   },
   {
@@ -1968,6 +2296,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S helium",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install helium",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install helium",
       },
     ],
   },
@@ -1997,6 +2333,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ungoogled-chromium",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ungoogled-chromium",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ungoogled-chromium",
+      },
     ],
   },
   {
@@ -2024,6 +2368,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S konqueror",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install konqueror",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install konqueror",
       },
     ],
   },
@@ -2053,6 +2405,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S falkon",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install falkon",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install falkon",
+      },
     ],
   },
   {
@@ -2080,6 +2440,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S gnome-web",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install gnome-web",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gnome-web",
       },
     ],
   },
@@ -2109,6 +2477,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S qutebrowser",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install qutebrowser",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install qutebrowser",
+      },
     ],
   },
   {
@@ -2136,6 +2512,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S nyxt",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install nyxt",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install nyxt",
       },
     ],
   },
@@ -2165,6 +2549,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S floorp",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install floorp",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install floorp",
+      },
     ],
   },
   {
@@ -2192,6 +2584,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S mullvad-browser",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install mullvad-browser",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install mullvad-browser",
       },
     ],
   },
@@ -2221,6 +2621,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S microsoft-edge",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install microsoft-edge",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install microsoft-edge",
+      },
     ],
   },
   {
@@ -2248,6 +2656,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S opera",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install opera",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install opera",
       },
     ],
   },
@@ -2277,6 +2693,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S syncthing",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install syncthing",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install syncthing",
+      },
     ],
   },
   {
@@ -2304,6 +2728,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S qbittorrent",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install qbittorrent",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install qbittorrent",
       },
     ],
   },
@@ -2333,6 +2765,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S transmission",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install transmission",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install transmission",
+      },
     ],
   },
   {
@@ -2360,6 +2800,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S localsend",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install localsend",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install localsend",
       },
     ],
   },
@@ -2389,6 +2837,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S filezilla",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install filezilla",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install filezilla",
+      },
     ],
   },
   {
@@ -2416,6 +2872,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S dropbox",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install dropbox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install dropbox",
       },
     ],
   },
@@ -2529,6 +2993,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S vscodium",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install vscodium",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install vscodium",
+      },
     ],
   },
   {
@@ -2556,6 +3028,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S intellij-idea",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install intellij-idea",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install intellij-idea",
       },
     ],
   },
@@ -2585,6 +3065,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S pycharm",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install pycharm",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install pycharm",
+      },
     ],
   },
   {
@@ -2612,6 +3100,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S clion",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install clion",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install clion",
       },
     ],
   },
@@ -2641,6 +3137,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S arduino-ide",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install arduino-ide",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install arduino-ide",
+      },
     ],
   },
   {
@@ -2668,6 +3172,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S sublime-text",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install sublime-text",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install sublime-text",
       },
     ],
   },
@@ -2697,6 +3209,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S kate",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install kate",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kate",
+      },
     ],
   },
   {
@@ -2724,6 +3244,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S geany",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install geany",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install geany",
       },
     ],
   },
@@ -2753,6 +3281,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S vim",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install vim",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install vim",
+      },
     ],
   },
   {
@@ -2780,6 +3316,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S helix",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install helix",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install helix",
       },
     ],
   },
@@ -2809,6 +3353,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S micro",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install micro",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install micro",
+      },
     ],
   },
   {
@@ -2836,6 +3388,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S emacs",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install emacs",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install emacs",
       },
     ],
   },
@@ -2977,6 +3537,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ollama",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ollama",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ollama",
+      },
     ],
   },
   {
@@ -3004,6 +3572,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S llama-cpp",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install llama-cpp",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install llama-cpp",
       },
     ],
   },
@@ -3061,6 +3637,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S darktable",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install darktable",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install darktable",
+      },
     ],
   },
   {
@@ -3089,6 +3673,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S freecad",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install freecad",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install freecad",
+      },
     ],
   },
   {
@@ -3116,6 +3708,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S kicad",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install kicad",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kicad",
       },
     ],
   },
@@ -3173,6 +3773,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S godot-engine",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install godot-engine",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install godot-engine",
+      },
     ],
   },
   {
@@ -3200,6 +3808,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S kolourpaint",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install kolourpaint",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kolourpaint",
       },
     ],
   },
@@ -3369,6 +3985,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S tailscale",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install tailscale",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install tailscale",
+      },
     ],
   },
   {
@@ -3396,6 +4020,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S wireguard",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install wireguard",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install wireguard",
       },
     ],
   },
@@ -3425,6 +4057,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S openvpn",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install openvpn",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install openvpn",
+      },
     ],
   },
   {
@@ -3452,6 +4092,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S nmap",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install nmap",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install nmap",
       },
     ],
   },
@@ -3481,6 +4129,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S openssh",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install openssh",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install openssh",
+      },
     ],
   },
   {
@@ -3509,6 +4165,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S remmina",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install remmina",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install remmina",
+      },
     ],
   },
   {
@@ -3536,6 +4200,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S zsh",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install zsh",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install zsh",
       },
     ],
   },
@@ -3593,6 +4265,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S fish",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install fish",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fish",
+      },
     ],
   },
   {
@@ -3620,6 +4300,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S starship",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install starship",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install starship",
       },
     ],
   },
@@ -3649,6 +4337,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S wezterm",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install wezterm",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install wezterm",
+      },
     ],
   },
   {
@@ -3676,6 +4372,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S foot",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install foot",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install foot",
       },
     ],
   },
@@ -3705,6 +4409,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ptyxis",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ptyxis",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ptyxis",
+      },
     ],
   },
   {
@@ -3732,6 +4444,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S mpv",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install mpv",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install mpv",
       },
     ],
   },
@@ -3761,6 +4481,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S celluloid",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install celluloid",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install celluloid",
+      },
     ],
   },
   {
@@ -3788,6 +4516,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S strawberry",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install strawberry",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install strawberry",
       },
     ],
   },
@@ -3817,6 +4553,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S spotify",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install spotify",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install spotify",
+      },
     ],
   },
   {
@@ -3844,6 +4588,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S ffmpeg",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install ffmpeg",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ffmpeg",
       },
     ],
   },
@@ -3873,6 +4625,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S stremio",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install stremio",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install stremio",
+      },
     ],
   },
   {
@@ -3900,6 +4660,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S kodi",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install kodi",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kodi",
       },
     ],
   },
@@ -3929,6 +4697,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S haruna",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install haruna",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install haruna",
+      },
     ],
   },
   {
@@ -3956,6 +4732,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S shortwave",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install shortwave",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install shortwave",
       },
     ],
   },
@@ -3985,6 +4769,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S parabolic",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install parabolic",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install parabolic",
+      },
     ],
   },
   {
@@ -4012,6 +4804,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S kde-partition-manager",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install kde-partition-manager",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kde-partition-manager",
       },
     ],
   },
@@ -4041,6 +4841,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S kde-connect",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install kde-connect",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kde-connect",
+      },
     ],
   },
   {
@@ -4068,6 +4876,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S bleachbit",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install bleachbit",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install bleachbit",
       },
     ],
   },
@@ -4097,6 +4913,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S dconf-editor",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install dconf-editor",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install dconf-editor",
+      },
     ],
   },
   {
@@ -4124,6 +4948,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S borgbackup",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install borgbackup",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install borgbackup",
       },
     ],
   },
@@ -4153,6 +4985,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S restic",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install restic",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install restic",
+      },
     ],
   },
   {
@@ -4180,6 +5020,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S flatpak",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install flatpak",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install flatpak",
       },
     ],
   },
@@ -4209,6 +5057,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S filelight",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install filelight",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install filelight",
+      },
     ],
   },
   {
@@ -4236,6 +5092,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S conky",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install conky",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install conky",
       },
     ],
   },
@@ -4265,6 +5129,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S fsearch",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install fsearch",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fsearch",
+      },
     ],
   },
   {
@@ -4292,6 +5164,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S cpu-x",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install cpu-x",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install cpu-x",
       },
     ],
   },
@@ -4321,6 +5201,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S mission-center",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install mission-center",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install mission-center",
+      },
     ],
   },
   {
@@ -4348,6 +5236,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S openrgb",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install openrgb",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install openrgb",
       },
     ],
   },
@@ -4377,6 +5273,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S git-lfs",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install git-lfs",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install git-lfs",
+      },
     ],
   },
   {
@@ -4404,6 +5308,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S lazygit",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install lazygit",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install lazygit",
       },
     ],
   },
@@ -4433,6 +5345,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S podman-desktop",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install podman-desktop",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install podman-desktop",
+      },
     ],
   },
   {
@@ -4460,6 +5380,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S incus",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install incus",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install incus",
       },
     ],
   },
@@ -4489,6 +5417,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S kubectl",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install kubectl",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install kubectl",
+      },
     ],
   },
   {
@@ -4516,6 +5452,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S vagrant",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install vagrant",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install vagrant",
       },
     ],
   },
@@ -4545,6 +5489,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S gnome-boxes",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install gnome-boxes",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gnome-boxes",
+      },
     ],
   },
   {
@@ -4572,6 +5524,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S dbeaver",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install dbeaver",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install dbeaver",
       },
     ],
   },
@@ -4601,6 +5561,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S meld",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install meld",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install meld",
+      },
     ],
   },
   {
@@ -4628,6 +5596,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S wireshark",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install wireshark",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install wireshark",
       },
     ],
   },
@@ -4741,6 +5717,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S imhex",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install imhex",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install imhex",
+      },
     ],
   },
   {
@@ -4768,6 +5752,18 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S cmake",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install cmake",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install cmake",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install cmake --classic",
       },
     ],
   },
@@ -4797,6 +5793,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S prism-launcher",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install prism-launcher",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install prism-launcher",
+      },
     ],
   },
   {
@@ -4824,6 +5828,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S retroarch",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install retroarch",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install retroarch",
       },
     ],
   },
@@ -4853,6 +5865,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S mangohud",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install mangohud",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install mangohud",
+      },
     ],
   },
   {
@@ -4880,6 +5900,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S gamemode",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install gamemode",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gamemode",
       },
     ],
   },
@@ -4909,6 +5937,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S antimicrox",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install antimicrox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install antimicrox",
+      },
     ],
   },
   {
@@ -4936,6 +5972,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S goverlay",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install goverlay",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install goverlay",
       },
     ],
   },
@@ -5021,6 +6065,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S zathura",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install zathura",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install zathura",
+      },
     ],
   },
   {
@@ -5049,6 +6101,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S xournal",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install xournal",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install xournal",
+      },
     ],
   },
   {
@@ -5076,6 +6136,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S zotero",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install zotero",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install zotero",
       },
     ],
   },
@@ -5133,6 +6201,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S gnupg",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install gnupg",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install gnupg",
+      },
     ],
   },
   {
@@ -5161,6 +6237,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S firejail",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install firejail",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install firejail",
+      },
     ],
   },
   {
@@ -5188,6 +6272,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S clamav",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install clamav",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install clamav",
       },
     ],
   },
@@ -5245,6 +6337,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S python-3",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install python3",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install python3",
+      },
     ],
   },
   {
@@ -5272,6 +6372,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S node-js",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install nodejs",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install nodejs",
       },
     ],
   },
@@ -5301,6 +6409,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S go",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install go",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install go",
+      },
     ],
   },
   {
@@ -5328,6 +6444,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S rust",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install rust",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install rust",
       },
     ],
   },
@@ -5357,6 +6481,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ruby",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ruby",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ruby",
+      },
     ],
   },
   {
@@ -5384,6 +6516,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S php",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install php",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install php",
       },
     ],
   },
@@ -5413,6 +6553,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S openjdk",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install java-latest-openjdk",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install java-21-openjdk",
+      },
     ],
   },
   {
@@ -5440,6 +6588,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S deno",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install deno",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install deno",
       },
     ],
   },
@@ -5496,6 +6652,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S npm",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install npm",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install npm",
       },
     ],
   },
@@ -5609,6 +6773,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S htop",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install htop",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install htop",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install htop",
+      },
     ],
   },
   {
@@ -5636,6 +6812,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S eza",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install eza",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install eza",
       },
     ],
   },
@@ -5665,6 +6849,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S bat",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install bat",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install bat",
+      },
     ],
   },
   {
@@ -5692,6 +6884,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S fzf",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install fzf",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fzf",
       },
     ],
   },
@@ -5721,6 +6921,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ripgrep",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ripgrep",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ripgrep",
+      },
     ],
   },
   {
@@ -5748,6 +6956,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S zoxide",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install zoxide",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install zoxide",
       },
     ],
   },
@@ -5777,6 +6993,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S tldr",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install tldr",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install tldr",
+      },
     ],
   },
   {
@@ -5804,6 +7028,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S wget",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install wget",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install wget",
       },
     ],
   },
@@ -5833,6 +7065,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S curl",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install curl",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install curl",
+      },
     ],
   },
   {
@@ -5860,6 +7100,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S aria2",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install aria2",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install aria2",
       },
     ],
   },
@@ -5889,6 +7137,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S yazi",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install yazi",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install yazi",
+      },
     ],
   },
   {
@@ -5916,6 +7172,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S ranger",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install ranger",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ranger",
       },
     ],
   },
@@ -5945,6 +7209,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S ncdu",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install ncdu",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install ncdu",
+      },
     ],
   },
   {
@@ -5973,6 +7245,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S fd",
       },
+      {
+        method: "dnf",
+        command: "sudo dnf install fd-find",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fd",
+      },
     ],
   },
   {
@@ -6000,6 +7280,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S zellij",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install zellij",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install zellij",
       },
     ],
   },
@@ -6056,6 +7344,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S rsync",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install rsync",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install rsync",
       },
     ],
   },
