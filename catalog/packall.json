@@ -114,6 +114,14 @@
         {
           "method": "snap",
           "command": "sudo snap install firefox"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install firefox"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install firefox"
         }
       ]
     },
@@ -142,6 +150,14 @@
         {
           "method": "snap",
           "command": "sudo snap install chromium"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install chromium-browser"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install chromium-browser"
         }
       ]
     },
@@ -267,6 +283,14 @@
         {
           "method": "apt",
           "command": "sudo apt install torbrowser-launcher"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install torbrowser-launcher"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install torbrowser-launcher"
         }
       ]
     },
@@ -291,7 +315,7 @@
           "command": "flatpak install flathub org.signal.Signal"
         },
         {
-          "method": "apt",
+          "method": "manual",
           "command": "Follow instructions at signal.org/download"
         },
         {
@@ -319,12 +343,12 @@
           "command": "flatpak install flathub org.telegram.desktop"
         },
         {
-          "method": "apt",
-          "command": "sudo snap install telegram-desktop"
-        },
-        {
           "method": "aur",
           "command": "yay -S telegram-desktop"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install telegram-desktop"
         }
       ]
     },
@@ -408,6 +432,18 @@
         {
           "method": "apt",
           "command": "sudo apt install thunderbird"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install thunderbird"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install thunderbird"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install thunderbird"
         }
       ]
     },
@@ -437,6 +473,14 @@
         {
           "method": "aur",
           "command": "yay -S element-desktop"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install element-desktop"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install element-desktop"
         }
       ]
     },
@@ -533,6 +577,14 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub io.neovim.nvim"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install neovim"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install neovim"
         }
       ]
     },
@@ -643,6 +695,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S podman"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install podman"
         }
       ]
     },
@@ -671,6 +727,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S git"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install git"
         }
       ]
     },
@@ -723,6 +783,18 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.libreoffice.LibreOffice"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install libreoffice"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install libreoffice"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install libreoffice"
         }
       ]
     },
@@ -801,6 +873,18 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.kde.okular"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install okular"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install okular"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install okular"
         }
       ]
     },
@@ -831,6 +915,18 @@
         {
           "method": "aur",
           "command": "yay -S steam"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install steam"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install steam"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install steam"
         }
       ]
     },
@@ -854,7 +950,7 @@
           "command": "flatpak install flathub net.lutris.Lutris"
         },
         {
-          "method": "apt",
+          "method": "manual",
           "command": "Follow lutris.net download instructions"
         },
         {
@@ -913,6 +1009,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S wine"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install wine"
         }
       ]
     },
@@ -943,6 +1043,14 @@
         {
           "method": "snap",
           "command": "sudo snap install vlc"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install vlc"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install vlc"
         }
       ]
     },
@@ -973,6 +1081,18 @@
         {
           "method": "aur",
           "command": "yay -S obs-studio"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install obs-studio"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install obs-studio"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install obs-studio"
         }
       ]
     },
@@ -998,6 +1118,18 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.audacityteam.Audacity"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install audacity"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install audacity"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install audacity"
         }
       ]
     },
@@ -1023,6 +1155,18 @@
         {
           "method": "apt",
           "command": "sudo apt install kdenlive"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kdenlive"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kdenlive"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install kdenlive"
         }
       ]
     },
@@ -1052,6 +1196,14 @@
         {
           "method": "aur",
           "command": "yay -S handbrake"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install handbrake"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install handbrake"
         }
       ]
     },
@@ -1080,7 +1232,7 @@
           "command": "Docker: docker run nextcloud"
         },
         {
-          "method": "apt",
+          "method": "manual",
           "command": "Follow nextcloud.com/install guide"
         }
       ]
@@ -1189,6 +1341,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S p7zip"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install p7zip"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install p7zip"
         }
       ]
     },
@@ -1315,6 +1475,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S alacritty"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install alacritty"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install alacritty"
         }
       ]
     },
@@ -1344,6 +1512,14 @@
         {
           "method": "aur",
           "command": "yay -S kitty"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kitty"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kitty"
         }
       ]
     },
@@ -1372,6 +1548,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S tmux"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install tmux"
         }
       ]
     },
@@ -1401,6 +1581,14 @@
         {
           "method": "aur",
           "command": "yay -S btop"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install btop"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install btop"
         }
       ]
     },
@@ -1425,6 +1613,14 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.gnome.Tweaks"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gnome-tweaks"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gnome-tweaks"
         }
       ]
     },
@@ -1450,6 +1646,14 @@
         {
           "method": "aur",
           "command": "yay -S timeshift"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install timeshift"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install timeshift"
         }
       ]
     },
@@ -1474,6 +1678,14 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.gnome.GParted"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gparted"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gparted"
         }
       ]
     },
@@ -1504,6 +1716,14 @@
         {
           "method": "snap",
           "command": "sudo snap install keepassxc"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install keepassxc"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install keepassxc"
         }
       ]
     },
@@ -1557,6 +1777,14 @@
         {
           "method": "aur",
           "command": "yay -S virtualbox"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install VirtualBox"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install VirtualBox"
         }
       ]
     },
@@ -1586,6 +1814,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S virt-manager"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install virt-manager"
         }
       ]
     },
@@ -1608,12 +1840,16 @@
           "command": "flatpak install flathub net.ankiweb.Anki"
         },
         {
-          "method": "apt",
+          "method": "manual",
           "command": "Follow apps.ankiweb.net download instructions"
         },
         {
           "method": "aur",
           "command": "yay -S anki"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install anki-woodrow"
         }
       ]
     },
@@ -1638,6 +1874,18 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.stellarium.Stellarium"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install stellarium"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install stellarium"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install stellarium"
         }
       ]
     },
@@ -1664,6 +1912,18 @@
         {
           "method": "flatpak",
           "command": "flatpak install flathub org.inkscape.Inkscape"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install inkscape"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install inkscape"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install inkscape"
         }
       ]
     },
@@ -1694,6 +1954,14 @@
         {
           "method": "snap",
           "command": "sudo snap install blender"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install blender"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install blender"
         }
       ]
     },
@@ -1723,6 +1991,14 @@
         {
           "method": "snap",
           "command": "sudo snap install krita"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install krita"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install krita"
         }
       ]
     },
@@ -1753,6 +2029,18 @@
         {
           "method": "apt",
           "command": "sudo apt install gimp"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gimp"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gimp"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install gimp"
         }
       ]
     },
@@ -1831,6 +2119,14 @@
         {
           "method": "apt",
           "command": "sudo apt install fastfetch"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install fastfetch"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install fastfetch"
         }
       ]
     },
@@ -1860,6 +2156,14 @@
         {
           "method": "apt",
           "command": "sudo apt install flameshot"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install flameshot"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install flameshot"
         }
       ]
     },
@@ -1968,6 +2272,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S librewolf"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install librewolf"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install librewolf"
         }
       ]
     },
@@ -1996,6 +2308,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S waterfox"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install waterfox"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install waterfox"
         }
       ]
     },
@@ -2024,6 +2344,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S google-chrome"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install google-chrome"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install google-chrome"
         }
       ]
     },
@@ -2052,6 +2380,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S helium"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install helium"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install helium"
         }
       ]
     },
@@ -2080,6 +2416,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ungoogled-chromium"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ungoogled-chromium"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ungoogled-chromium"
         }
       ]
     },
@@ -2108,6 +2452,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S konqueror"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install konqueror"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install konqueror"
         }
       ]
     },
@@ -2136,6 +2488,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S falkon"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install falkon"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install falkon"
         }
       ]
     },
@@ -2164,6 +2524,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S gnome-web"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gnome-web"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gnome-web"
         }
       ]
     },
@@ -2192,6 +2560,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S qutebrowser"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install qutebrowser"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install qutebrowser"
         }
       ]
     },
@@ -2220,6 +2596,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S nyxt"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install nyxt"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install nyxt"
         }
       ]
     },
@@ -2248,6 +2632,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S floorp"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install floorp"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install floorp"
         }
       ]
     },
@@ -2276,6 +2668,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S mullvad-browser"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install mullvad-browser"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install mullvad-browser"
         }
       ]
     },
@@ -2304,6 +2704,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S microsoft-edge"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install microsoft-edge"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install microsoft-edge"
         }
       ]
     },
@@ -2332,6 +2740,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S opera"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install opera"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install opera"
         }
       ]
     },
@@ -2360,6 +2776,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S syncthing"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install syncthing"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install syncthing"
         }
       ]
     },
@@ -2388,6 +2812,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S qbittorrent"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install qbittorrent"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install qbittorrent"
         }
       ]
     },
@@ -2416,6 +2848,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S transmission"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install transmission"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install transmission"
         }
       ]
     },
@@ -2444,6 +2884,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S localsend"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install localsend"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install localsend"
         }
       ]
     },
@@ -2472,6 +2920,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S filezilla"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install filezilla"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install filezilla"
         }
       ]
     },
@@ -2500,6 +2956,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S dropbox"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install dropbox"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install dropbox"
         }
       ]
     },
@@ -2612,6 +3076,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S vscodium"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install vscodium"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install vscodium"
         }
       ]
     },
@@ -2640,6 +3112,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S intellij-idea"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install intellij-idea"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install intellij-idea"
         }
       ]
     },
@@ -2668,6 +3148,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S pycharm"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install pycharm"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install pycharm"
         }
       ]
     },
@@ -2696,6 +3184,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S clion"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install clion"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install clion"
         }
       ]
     },
@@ -2724,6 +3220,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S arduino-ide"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install arduino-ide"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install arduino-ide"
         }
       ]
     },
@@ -2752,6 +3256,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S sublime-text"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install sublime-text"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install sublime-text"
         }
       ]
     },
@@ -2780,6 +3292,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kate"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kate"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kate"
         }
       ]
     },
@@ -2808,6 +3328,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S geany"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install geany"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install geany"
         }
       ]
     },
@@ -2836,6 +3364,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S vim"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install vim"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install vim"
         }
       ]
     },
@@ -2864,6 +3400,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S helix"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install helix"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install helix"
         }
       ]
     },
@@ -2892,6 +3436,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S micro"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install micro"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install micro"
         }
       ]
     },
@@ -2920,6 +3472,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S emacs"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install emacs"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install emacs"
         }
       ]
     },
@@ -3060,6 +3620,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ollama"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ollama"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ollama"
         }
       ]
     },
@@ -3088,6 +3656,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S llama-cpp"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install llama-cpp"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install llama-cpp"
         }
       ]
     },
@@ -3144,6 +3720,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S darktable"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install darktable"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install darktable"
         }
       ]
     },
@@ -3172,6 +3756,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S freecad"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install freecad"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install freecad"
         }
       ]
     },
@@ -3200,6 +3792,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kicad"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kicad"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kicad"
         }
       ]
     },
@@ -3256,6 +3856,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S godot-engine"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install godot-engine"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install godot-engine"
         }
       ]
     },
@@ -3284,6 +3892,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kolourpaint"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kolourpaint"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kolourpaint"
         }
       ]
     },
@@ -3452,6 +4068,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S tailscale"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install tailscale"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install tailscale"
         }
       ]
     },
@@ -3480,6 +4104,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S wireguard"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install wireguard"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install wireguard"
         }
       ]
     },
@@ -3508,6 +4140,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S openvpn"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install openvpn"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install openvpn"
         }
       ]
     },
@@ -3536,6 +4176,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S nmap"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install nmap"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install nmap"
         }
       ]
     },
@@ -3564,6 +4212,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S openssh"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install openssh"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install openssh"
         }
       ]
     },
@@ -3592,6 +4248,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S remmina"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install remmina"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install remmina"
         }
       ]
     },
@@ -3620,6 +4284,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S zsh"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install zsh"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install zsh"
         }
       ]
     },
@@ -3676,6 +4348,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S fish"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install fish"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install fish"
         }
       ]
     },
@@ -3704,6 +4384,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S starship"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install starship"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install starship"
         }
       ]
     },
@@ -3732,6 +4420,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S wezterm"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install wezterm"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install wezterm"
         }
       ]
     },
@@ -3760,6 +4456,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S foot"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install foot"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install foot"
         }
       ]
     },
@@ -3788,6 +4492,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ptyxis"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ptyxis"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ptyxis"
         }
       ]
     },
@@ -3816,6 +4528,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S mpv"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install mpv"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install mpv"
         }
       ]
     },
@@ -3844,6 +4564,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S celluloid"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install celluloid"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install celluloid"
         }
       ]
     },
@@ -3872,6 +4600,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S strawberry"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install strawberry"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install strawberry"
         }
       ]
     },
@@ -3900,6 +4636,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S spotify"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install spotify"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install spotify"
         }
       ]
     },
@@ -3928,6 +4672,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ffmpeg"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ffmpeg"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ffmpeg"
         }
       ]
     },
@@ -3956,6 +4708,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S stremio"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install stremio"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install stremio"
         }
       ]
     },
@@ -3984,6 +4744,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kodi"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kodi"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kodi"
         }
       ]
     },
@@ -4012,6 +4780,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S haruna"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install haruna"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install haruna"
         }
       ]
     },
@@ -4040,6 +4816,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S shortwave"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install shortwave"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install shortwave"
         }
       ]
     },
@@ -4068,6 +4852,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S parabolic"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install parabolic"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install parabolic"
         }
       ]
     },
@@ -4096,6 +4888,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kde-partition-manager"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kde-partition-manager"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kde-partition-manager"
         }
       ]
     },
@@ -4124,6 +4924,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kde-connect"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kde-connect"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kde-connect"
         }
       ]
     },
@@ -4152,6 +4960,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S bleachbit"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install bleachbit"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install bleachbit"
         }
       ]
     },
@@ -4180,6 +4996,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S dconf-editor"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install dconf-editor"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install dconf-editor"
         }
       ]
     },
@@ -4208,6 +5032,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S borgbackup"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install borgbackup"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install borgbackup"
         }
       ]
     },
@@ -4236,6 +5068,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S restic"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install restic"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install restic"
         }
       ]
     },
@@ -4264,6 +5104,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S flatpak"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install flatpak"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install flatpak"
         }
       ]
     },
@@ -4292,6 +5140,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S filelight"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install filelight"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install filelight"
         }
       ]
     },
@@ -4320,6 +5176,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S conky"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install conky"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install conky"
         }
       ]
     },
@@ -4348,6 +5212,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S fsearch"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install fsearch"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install fsearch"
         }
       ]
     },
@@ -4376,6 +5248,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S cpu-x"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install cpu-x"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install cpu-x"
         }
       ]
     },
@@ -4404,6 +5284,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S mission-center"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install mission-center"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install mission-center"
         }
       ]
     },
@@ -4432,6 +5320,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S openrgb"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install openrgb"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install openrgb"
         }
       ]
     },
@@ -4460,6 +5356,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S git-lfs"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install git-lfs"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install git-lfs"
         }
       ]
     },
@@ -4488,6 +5392,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S lazygit"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install lazygit"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install lazygit"
         }
       ]
     },
@@ -4516,6 +5428,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S podman-desktop"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install podman-desktop"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install podman-desktop"
         }
       ]
     },
@@ -4544,6 +5464,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S incus"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install incus"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install incus"
         }
       ]
     },
@@ -4572,6 +5500,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S kubectl"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install kubectl"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install kubectl"
         }
       ]
     },
@@ -4600,6 +5536,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S vagrant"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install vagrant"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install vagrant"
         }
       ]
     },
@@ -4628,6 +5572,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S gnome-boxes"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gnome-boxes"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gnome-boxes"
         }
       ]
     },
@@ -4656,6 +5608,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S dbeaver"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install dbeaver"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install dbeaver"
         }
       ]
     },
@@ -4684,6 +5644,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S meld"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install meld"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install meld"
         }
       ]
     },
@@ -4712,6 +5680,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S wireshark"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install wireshark"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install wireshark"
         }
       ]
     },
@@ -4824,6 +5800,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S imhex"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install imhex"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install imhex"
         }
       ]
     },
@@ -4852,6 +5836,18 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S cmake"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install cmake"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install cmake"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install cmake --classic"
         }
       ]
     },
@@ -4880,6 +5876,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S prism-launcher"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install prism-launcher"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install prism-launcher"
         }
       ]
     },
@@ -4908,6 +5912,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S retroarch"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install retroarch"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install retroarch"
         }
       ]
     },
@@ -4936,6 +5948,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S mangohud"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install mangohud"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install mangohud"
         }
       ]
     },
@@ -4964,6 +5984,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S gamemode"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gamemode"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gamemode"
         }
       ]
     },
@@ -4992,6 +6020,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S antimicrox"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install antimicrox"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install antimicrox"
         }
       ]
     },
@@ -5020,6 +6056,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S goverlay"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install goverlay"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install goverlay"
         }
       ]
     },
@@ -5104,6 +6148,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S zathura"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install zathura"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install zathura"
         }
       ]
     },
@@ -5132,6 +6184,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S xournal"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install xournal"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install xournal"
         }
       ]
     },
@@ -5160,6 +6220,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S zotero"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install zotero"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install zotero"
         }
       ]
     },
@@ -5216,6 +6284,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S gnupg"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install gnupg"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install gnupg"
         }
       ]
     },
@@ -5244,6 +6320,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S firejail"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install firejail"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install firejail"
         }
       ]
     },
@@ -5272,6 +6356,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S clamav"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install clamav"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install clamav"
         }
       ]
     },
@@ -5328,6 +6420,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S python-3"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install python3"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install python3"
         }
       ]
     },
@@ -5356,6 +6456,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S node-js"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install nodejs"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install nodejs"
         }
       ]
     },
@@ -5384,6 +6492,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S go"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install go"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install go"
         }
       ]
     },
@@ -5412,6 +6528,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S rust"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install rust"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install rust"
         }
       ]
     },
@@ -5440,6 +6564,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ruby"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ruby"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ruby"
         }
       ]
     },
@@ -5468,6 +6600,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S php"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install php"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install php"
         }
       ]
     },
@@ -5496,6 +6636,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S openjdk"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install java-latest-openjdk"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install java-21-openjdk"
         }
       ]
     },
@@ -5524,6 +6672,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S deno"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install deno"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install deno"
         }
       ]
     },
@@ -5580,6 +6736,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S npm"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install npm"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install npm"
         }
       ]
     },
@@ -5692,6 +6856,18 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S htop"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install htop"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install htop"
+        },
+        {
+          "method": "snap",
+          "command": "sudo snap install htop"
         }
       ]
     },
@@ -5720,6 +6896,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S eza"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install eza"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install eza"
         }
       ]
     },
@@ -5748,6 +6932,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S bat"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install bat"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install bat"
         }
       ]
     },
@@ -5776,6 +6968,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S fzf"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install fzf"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install fzf"
         }
       ]
     },
@@ -5804,6 +7004,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ripgrep"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ripgrep"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ripgrep"
         }
       ]
     },
@@ -5832,6 +7040,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S zoxide"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install zoxide"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install zoxide"
         }
       ]
     },
@@ -5860,6 +7076,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S tldr"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install tldr"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install tldr"
         }
       ]
     },
@@ -5888,6 +7112,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S wget"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install wget"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install wget"
         }
       ]
     },
@@ -5916,6 +7148,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S curl"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install curl"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install curl"
         }
       ]
     },
@@ -5944,6 +7184,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S aria2"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install aria2"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install aria2"
         }
       ]
     },
@@ -5972,6 +7220,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S yazi"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install yazi"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install yazi"
         }
       ]
     },
@@ -6000,6 +7256,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ranger"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ranger"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ranger"
         }
       ]
     },
@@ -6028,6 +7292,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S ncdu"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install ncdu"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install ncdu"
         }
       ]
     },
@@ -6056,6 +7328,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S fd"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install fd-find"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install fd"
         }
       ]
     },
@@ -6084,6 +7364,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S zellij"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install zellij"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install zellij"
         }
       ]
     },
@@ -6140,6 +7428,14 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S rsync"
+        },
+        {
+          "method": "dnf",
+          "command": "sudo dnf install rsync"
+        },
+        {
+          "method": "zypper",
+          "command": "sudo zypper install rsync"
         }
       ]
     }

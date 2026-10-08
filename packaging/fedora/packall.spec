@@ -19,7 +19,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
 Requires:       webkit2gtk4.1
 Requires:       gtk3
-Requires:       polkit
 Recommends:     flatpak
 
 %description

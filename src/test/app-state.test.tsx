@@ -16,6 +16,8 @@ import type { BatchAction } from "@/lib/types"
 const invokeMock = vi.fn()
 const toastSuccess = vi.fn()
 const toastError = vi.fn()
+const toastInfo = vi.fn()
+const toastLoading = vi.fn()
 
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: (...args: unknown[]) => invokeMock(...args),
@@ -29,6 +31,8 @@ vi.mock("sonner", () => ({
   toast: {
     success: (...args: unknown[]) => toastSuccess(...args),
     error: (...args: unknown[]) => toastError(...args),
+    info: (...args: unknown[]) => toastInfo(...args),
+    loading: (...args: unknown[]) => toastLoading(...args),
   },
 }))
 
