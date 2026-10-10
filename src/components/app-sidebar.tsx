@@ -44,8 +44,8 @@ export function AppSidebar() {
       {/* Brand + collapse */}
       <div className="flex items-center justify-between gap-2 border-b border-border/50 p-3">
         <div className="flex items-center gap-2.5">
-          <Logo className="size-8" />
-          <span className="text-base font-extrabold tracking-tight">Packall</span>
+          <Logo size="md" />
+          <span className="text-base font-extrabold tracking-tight">packall</span>
         </div>
         <Button
           variant="ghost"

@@ -1,13 +1,26 @@
 import { cn } from "@/lib/utils"
 
-/** Packall app icon — the same artwork as the marketing site. */
-export function Logo({ className }: { className?: string }) {
+/** Packall block logo — matches the marketing site's ▚ glyph. */
+export function Logo({
+  className,
+  size = "md",
+}: {
+  className?: string
+  size?: "sm" | "md" | "lg" | "xl"
+}) {
+  const sizeClass = {
+    sm: "text-lg",
+    md: "text-2xl",
+    lg: "text-3xl",
+    xl: "text-5xl",
+  }[size]
+
   return (
-    <img
-      src="/logo.svg"
-      alt="Packall"
-      draggable={false}
-      className={cn("size-8 shrink-0 select-none", className)}
-    />
+    <span
+      aria-hidden="true"
+      className={cn("shrink-0 select-none text-primary", sizeClass, className)}
+    >
+      ▚
+    </span>
   )
 }

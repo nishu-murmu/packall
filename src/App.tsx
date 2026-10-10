@@ -41,8 +41,8 @@ function AppContent() {
             )}
             {!sidebarOpen && (
               <div className="flex items-center gap-2">
-                <Logo className="size-7" />
-                <span className="text-sm font-bold tracking-tight">Packall</span>
+                <Logo size="sm" />
+                <span className="text-sm font-bold tracking-tight">packall</span>
               </div>
             )}
           </div>

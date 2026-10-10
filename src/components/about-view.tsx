@@ -38,7 +38,7 @@ export function AboutView() {
         {/* Subtle decorative glow circle */}
         <div className="pointer-events-none absolute -top-12 size-72 rounded-full bg-primary/15 blur-3xl" />
 
-        <Logo className="relative size-20 drop-shadow-xl" />
+        <Logo size="xl" className="relative drop-shadow-xl" />
         <div className="relative">
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text">
             Packall
