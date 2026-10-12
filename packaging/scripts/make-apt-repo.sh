@@ -13,7 +13,7 @@ dist="$out/dists/stable/main/binary-amd64"
 mkdir -p "$pool" "$dist"
 cp "$debs"/*.deb "$pool/"
 
-( cd "$out" && dpkg-scanpackages --arch amd64 pool/main > "$dist/Packages" )
+( cd "$out" && dpkg-scanpackages --arch amd64 pool/main > dists/stable/main/binary-amd64/Packages )
 gzip -9kf "$dist/Packages"
 
 apt-ftparchive \
