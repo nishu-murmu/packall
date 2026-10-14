@@ -413,6 +413,59 @@ func TestBootstrapPerFamily(t *testing.T) {
 	}
 }
 
+func TestBootstrapAURHelper(t *testing.T) {
+	got := Bootstrap(catalog.AUR, Arch, nil)
+	if len(got) != 4 {
+		t.Fatalf("AUR bootstrap = %v, want 4 steps", got)
+	}
+	if !strings.Contains(got[0], "base-devel") {
+		t.Errorf("step 1 should install base-devel: %q", got[0])
+	}
+	if !strings.Contains(got[1], "git clone") || !strings.Contains(got[1], "aur.archlinux.org/yay.git") {
+		t.Errorf("step 2 should clone yay: %q", got[1])
+	}
+	if !strings.Contains(got[2], "makepkg -si --noconfirm") {
+		t.Errorf("step 3 should build with makepkg: %q", got[2])
+	}
+	if !strings.Contains(got[3], "rm -rf") {
+		t.Errorf("step 4 should clean up: %q", got[3])
+	}
+
+	// Paru can also be bootstrapped.
+	got = Bootstrap(catalog.Paru, Arch, nil)
+	if len(got) == 0 || !strings.Contains(got[1], "paru.git") {
+		t.Errorf("paru bootstrap should clone paru: %v", got)
+	}
+
+	// AUR bootstrap only works on Arch-family systems.
+	if got := Bootstrap(catalog.AUR, Debian, nil); got != nil {
+		t.Errorf("AUR on debian = %v, want nil", got)
+	}
+}
+
+func TestMissingUniversalDetectsAURHelper(t *testing.T) {
+	aurOnly := &catalog.Entry{
+		ID:      "aur-only",
+		Install: []catalog.Option{opt(catalog.AUR, "paru -S something")},
+	}
+	got := MissingUniversal(aurOnly, Context{
+		Family:   Arch,
+		Managers: []Manager{mgr("pacman"), mgr("paru", false), mgr("yay", false)},
+	})
+	if got != catalog.AUR {
+		t.Errorf("= %q, want aur", got)
+	}
+
+	// With a helper available, MissingUniversal stays quiet.
+	got = MissingUniversal(aurOnly, Context{
+		Family:   Arch,
+		Managers: []Manager{mgr("pacman"), mgr("paru")},
+	})
+	if got != "" {
+		t.Errorf("= %q, want no prompt when paru is available", got)
+	}
+}
+
 // ----------------------------------------------------------------- invariants
 
 func TestCatalogueIsWellFormed(t *testing.T) {

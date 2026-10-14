@@ -324,16 +324,20 @@ export function isSupportedOnHost(software: SoftwareEntry, ctx: PickContext): bo
 }
 
 /**
- * When nothing is directly installable but a universal option (Flatpak, then
- * Snap) exists whose tool is missing, say which tool would unlock it. The UI
- * can then offer to install that tool first.
+ * When nothing is directly installable but a universal option (Flatpak, Snap)
+ * or an AUR helper exists whose tool is missing, say which tool would unlock
+ * it. The UI can then offer to install that tool first.
  */
 export function missingUniversalFor(
   software: SoftwareEntry,
   ctx: PickContext
-): "flatpak" | "snap" | null {
+): "flatpak" | "snap" | "aur" | null {
   if (pickOption(software, "install", ctx) !== null) return null
   const has = (m: InstallMethod) => software.install.some((o) => o.method === m && parseOption(o).automatable)
+  const hasAUR = () => software.install.some((o) =>
+    (o.method === "aur" || o.method === "paru" || o.method === "yay") && parseOption(o).automatable
+  )
+  if (hasAUR() && !isMethodAvailable("aur", ctx.managers)) return "aur"
   if (has("flatpak") && !isMethodAvailable("flatpak", ctx.managers)) return "flatpak"
   if (has("snap") && !isMethodAvailable("snap", ctx.managers)) return "snap"
   return null
@@ -365,6 +369,25 @@ export function bootstrapCommands(
   const post = ["sudo systemctl enable --now snapd.socket"]
   if (family === "arch" || family === "fedora") post.push("sudo ln -sf /var/lib/snapd/snap /snap")
   return [install, ...post]
+}
+
+/**
+ * Commands that install an AUR helper (yay or paru) from source via
+ * git clone + makepkg. Only works on Arch-family systems.
+ */
+export function bootstrapAURCommands(
+  helper: "yay" | "paru" = "yay",
+  distro: DistroInfo | null
+): string[] {
+  const family = familyFromDistro(distro)
+  if (family !== "arch") return []
+  const dir = `/tmp/packall-bootstrap-${helper}`
+  return [
+    "sudo pacman -S --needed --noconfirm git base-devel",
+    `rm -rf ${dir} && git clone https://aur.archlinux.org/${helper}.git ${dir}`,
+    `cd ${dir} && makepkg -si --noconfirm`,
+    `rm -rf ${dir}`,
+  ]
 }
 
 /** A synthetic "available" manager entry, so a just-bootstrapped tool counts as present. */

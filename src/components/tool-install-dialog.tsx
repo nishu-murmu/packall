@@ -21,6 +21,11 @@ const INFO = {
     blurb:
       "Snap is a universal package system from Canonical. Some of the apps you picked are only available through it, but it is not installed yet.",
   },
+  aur: {
+    name: "yay (AUR helper)",
+    blurb:
+      "Some of the apps you picked are only available from the Arch User Repository (AUR), which requires a helper like yay or paru. Neither is installed yet.",
+  },
 } as const
 
 /**

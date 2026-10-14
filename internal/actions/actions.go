@@ -487,6 +487,20 @@ func MissingUniversal(e *catalog.Entry, ctx Context) catalog.Method {
 		}
 		return false
 	}
+	hasAUR := func() bool {
+		for _, o := range e.Install {
+			switch o.Method {
+			case catalog.AUR, catalog.Paru, catalog.Yay:
+				if ParseOption(o).Automatable {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	if hasAUR() && !MethodAvailable(catalog.AUR, ctx.Managers) {
+		return catalog.AUR
+	}
 	if has(catalog.Flatpak) && !MethodAvailable(catalog.Flatpak, ctx.Managers) {
 		return catalog.Flatpak
 	}
@@ -496,9 +510,27 @@ func MissingUniversal(e *catalog.Entry, ctx Context) catalog.Method {
 	return ""
 }
 
-// Bootstrap returns the commands that install Flatpak or Snap itself, using the
-// family's native manager.
+// MissingTools collects every tool that would need to be bootstrapped before the
+// given entries can be installed. It returns at most one entry per tool.
+func MissingTools(entries []*catalog.Entry, ctx Context) []catalog.Method {
+	seen := map[catalog.Method]bool{}
+	var out []catalog.Method
+	for _, e := range entries {
+		if m := MissingUniversal(e, ctx); m != "" && !seen[m] {
+			seen[m] = true
+			out = append(out, m)
+		}
+	}
+	return out
+}
+
+// Bootstrap returns the commands that install Flatpak, Snap, or an AUR helper
+// itself, using the family's native manager.
 func Bootstrap(tool catalog.Method, family Family, managers []Manager) []string {
+	if tool == catalog.AUR || tool == catalog.Paru || tool == catalog.Yay {
+		return bootstrapAUR(tool, family)
+	}
+
 	pkg := "flatpak"
 	if tool == catalog.Snap {
 		pkg = "snapd"
@@ -534,6 +566,34 @@ func Bootstrap(tool catalog.Method, family Family, managers []Manager) []string 
 		out = append(out, "sudo ln -sf /var/lib/snapd/snap /snap")
 	}
 	return out
+}
+
+// bootstrapAUR returns the commands that install an AUR helper from source.
+// The helper is built via git clone + makepkg, which is the standard way to
+// bootstrap any AUR package before a helper exists.
+func bootstrapAUR(tool catalog.Method, family Family) []string {
+	if family != Arch {
+		return nil
+	}
+
+	helper := "yay"
+	if tool == catalog.Paru {
+		helper = "paru"
+	}
+
+	dir := "/tmp/packall-bootstrap-" + helper
+	return []string{
+		"sudo pacman -S --needed --noconfirm git base-devel",
+		"rm -rf " + dir + " && git clone https://aur.archlinux.org/" + helper + ".git " + dir,
+		"cd " + dir + " && makepkg -si --noconfirm",
+		"rm -rf " + dir,
+	}
+}
+
+// PreferredAURHelper returns which AUR helper to bootstrap when none is present.
+// The caller gets a consistent default rather than picking one arbitrarily.
+func PreferredAURHelper() catalog.Method {
+	return catalog.Yay
 }
 
 // MatchesFamily reports whether an entry has an option a family can install
