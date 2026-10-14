@@ -2,6 +2,25 @@ import type { Batch, Job, JobEvent } from "./types"
 
 const MAX_LOG_LINES = 400
 
+const ERROR_HINTS: Array<{ pattern: RegExp; hint: string }> = [
+  {
+    pattern: /symbol lookup error:.*undefined symbol/i,
+    hint: "A system library mismatch was detected. Run `sudo pacman -Syu` (Arch) or update your system to fix it.",
+  },
+  {
+    pattern: /Package.*was not found in the pkg-config search path/i,
+    hint: "A required system library is missing. Check the project README for your distro's build dependencies.",
+  },
+]
+
+function friendlyError(log: string[]): string | undefined {
+  const tail = log.slice(-20).join("\n")
+  for (const { pattern, hint } of ERROR_HINTS) {
+    if (pattern.test(tail)) return hint
+  }
+  return undefined
+}
+
 function updateJob(batch: Batch, jobId: string, fn: (job: Job) => Job): Batch {
   return { ...batch, jobs: batch.jobs.map((j) => (j.id === jobId ? fn(j) : j)) }
 }
@@ -26,8 +45,9 @@ export function applyJobEvent(batch: Batch, ev: JobEvent): Batch {
       return updateJob(batch, ev.job_id, (j) => {
         if (ev.success) return { ...j, status: "success", percent: 100 }
         if (ev.cancelled) return { ...j, status: "cancelled", percent: null }
+        const hint = friendlyError(j.log)
         const lastLine = [...j.log].reverse().find((l) => l.trim() && !l.startsWith("$ "))
-        return { ...j, status: "failed", percent: null, error: lastLine ?? "Command failed" }
+        return { ...j, status: "failed", percent: null, error: hint ?? lastLine ?? "Command failed" }
       })
 
     case "batch_done":

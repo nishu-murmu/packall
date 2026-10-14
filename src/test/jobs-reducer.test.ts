@@ -35,6 +35,16 @@ describe("applyJobEvent", () => {
     expect(b.jobs[0]).toMatchObject({ status: "failed", error: "E: Unable to locate package x" })
   })
 
+  it("shows a friendly hint for symbol lookup errors", () => {
+    let b = applyJobEvent(batch(), ev({ kind: "started" }))
+    b = applyJobEvent(b, ev({ line: "$ flatpak remote-add --user --if-not-exists flathub ..." }))
+    b = applyJobEvent(b, ev({ line: "flatpak: symbol lookup error: /usr/lib/libaccountsservice.so.1: undefined symbol: g_once_init_leave_pointer" }))
+    b = applyJobEvent(b, ev({ kind: "finished", success: false }))
+    expect(b.jobs[0].status).toBe("failed")
+    expect(b.jobs[0].error).toContain("system library mismatch")
+    expect(b.jobs[0].error).toContain("pacman -Syu")
+  })
+
   it("marks cancelled jobs", () => {
     const b = applyJobEvent(batch(), ev({ kind: "finished", success: false, cancelled: true }))
     expect(b.jobs[0].status).toBe("cancelled")
