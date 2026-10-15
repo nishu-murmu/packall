@@ -69,13 +69,44 @@ jobs:
             | Fedora, RHEL, openSUSE | `Packall-*.x86_64.rpm` | `sudo dnf install ./Packall-*.rpm` |
             | Any Linux (x86_64) | `Packall_*_amd64.AppImage` | `chmod +x Packall_*.AppImage && ./Packall_*.AppImage` |
 
+            ### Terminal app (TUI + CLI)
+
+            | File | Install |
+            |---|---|
+            | `packall-linux-amd64.tar.gz` | Extract and move to your PATH (see below) |
+
+            ```
+            tar xzf packall-linux-amd64.tar.gz
+            install -Dm755 packall-linux-amd64 ~/.local/bin/packall
+            ```
+
             Verify downloads with `sha256sum -c SHA256SUMS.txt`.
           releaseDraft: false
           prerelease: false
           args: --bundles deb,rpm,appimage
 
+  tui:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+      - name: Build TUI binary
+        run: |
+          ver="${GITHUB_REF_NAME#v}"
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
+            go build -ldflags "-s -w -X main.version=${ver}" \
+            -o packall-linux-amd64 ./cmd/packall
+          tar czf packall-linux-amd64.tar.gz packall-linux-amd64
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$GITHUB_REF_NAME" packall-linux-amd64.tar.gz --clobber
+
   checksums:
-    needs: build
+    needs: [build, tui]
     runs-on: ubuntu-latest
     steps:
       - name: Publish SHA256SUMS
@@ -84,7 +115,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           mkdir assets && cd assets
-          gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --pattern '*.rpm' --pattern '*.AppImage'
+          gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --pattern '*.rpm' --pattern '*.AppImage' --pattern '*.tar.gz'
           sha256sum * > SHA256SUMS.txt
           cat SHA256SUMS.txt
           gh release upload "$GITHUB_REF_NAME" SHA256SUMS.txt --clobber

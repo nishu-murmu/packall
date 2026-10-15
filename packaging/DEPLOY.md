@@ -9,6 +9,7 @@ the operator's runbook.
 | Channel | Reaches | Automated on tag? | Needs |
 |---|---|---|---|
 | GitHub release (`.deb`, `.rpm`, AppImage) | everyone | ✅ `build` + `checksums` | nothing |
+| TUI binary (`.tar.gz`) | everyone | ✅ `tui` + `checksums` | nothing |
 | AUR `packall-bin`, `packall` | Arch, Manjaro, EndeavourOS | ✅ `aur` | 3 secrets |
 | APT repo (GitHub Pages) | Debian, Ubuntu, Mint, Pop!_OS | ✅ `repos` | Pages on, GPG key optional |
 | RPM repo (GitHub Pages) | Fedora, RHEL, openSUSE | ✅ `repos` | same as above |
