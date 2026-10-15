@@ -17,8 +17,6 @@
 
 ---
 
-## Install
-
 ### Desktop app (GUI)
 
 ```bash
