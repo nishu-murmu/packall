@@ -17,6 +17,9 @@
   detection is re-run so the newly installed tool is picked up immediately.
 - **AUR prompt in Tauri desktop app** — the install dialog now shows an
   AUR-specific message when an AUR helper needs to be set up.
+- **TUI release binary** — the release workflow now builds a standalone Go
+  binary (`packall-linux-amd64.tar.gz`) and attaches it to every GitHub
+  release alongside the GUI packages.
 
 ### Changed
 

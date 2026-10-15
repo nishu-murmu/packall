@@ -77,7 +77,17 @@ On Arch, AppImages need FUSE 2 first: `sudo pacman -S fuse2`.
 
 ### Terminal app (TUI)
 
-The TUI is not published as a release file yet, so build it from source. You need Go 1.24 or newer (on Arch: `sudo pacman -S go`).
+Download the latest release binary:
+
+```bash
+curl -fL -o packall.tar.gz "$(curl -s https://api.github.com/repos/nishu-murmu/packall/releases/latest | grep -o 'https://[^"]*packall-linux-amd64\.tar\.gz' | head -1)"
+tar xzf packall.tar.gz
+install -Dm755 packall-linux-amd64 ~/.local/bin/packall
+```
+
+Make sure `~/.local/bin` is on your `PATH` (most distros include it by default).
+
+Or build from source (Go 1.24+):
 
 ```bash
 git clone https://github.com/nishu-murmu/packall.git

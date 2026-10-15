@@ -9,6 +9,7 @@ workflow (`.github/workflows/release.yml`) automates most of it when you push a
 | `.deb` (Debian, Ubuntu, Mint, Pop!_OS) | `tauri.conf.json` → `bundle.linux.deb` | Built by `tauri-action`, attached to the GitHub release, mirrored in the APT repo |
 | `.rpm` (Fedora, RHEL, openSUSE) | `tauri.conf.json` → `bundle.linux.rpm`, `packaging/fedora/packall.spec` | Built by `tauri-action`; spec is for COPR / Fedora review |
 | AppImage (any distro) | built by Tauri | GitHub release asset |
+| TUI binary (any distro) | `cmd/packall` (Go) | Built by `tui` job, attached to the GitHub release |
 | AUR `packall-bin` | `packaging/aur/packall-bin/PKGBUILD` | Repackages the release `.deb`; pushed by the `aur` job |
 | AUR `packall` | `packaging/aur/packall/PKGBUILD` | Builds from source; pushed by the `aur` job |
 | APT repo | `packaging/scripts/make-apt-repo.sh` | GitHub Pages (`gh-pages`) |
