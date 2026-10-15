@@ -60,8 +60,6 @@ cp ../packaging/aur/packall-bin/PKGBUILD . && updpkgsums && makepkg --printsrcin
 git add . && git commit -m "Initial import" && git push
 ```
 
-Users: `paru -S packall-bin`.
-
 ## 2. APT repository (Debian, Ubuntu, Mint, Pop!_OS) — automated
 
 1. Create a signing key and export it:

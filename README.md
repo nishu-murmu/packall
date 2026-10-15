@@ -48,14 +48,48 @@ Native package names are verified against the distributions' own repository meta
 
 ## Install
 
+Packall comes in two versions that share the same catalogue. Pick the one you want:
+
+| | Desktop app (GUI) | Terminal app (TUI) |
+|---|---|---|
+| Interface | Window with mouse and keyboard | Keyboard only, runs in your terminal |
+| How you get it | Prebuilt packages from Releases | Build from source with Go |
+
+### Desktop app (GUI)
+
+Download from the [Releases](https://github.com/nishu-murmu/packall/releases) page, or use the commands below.
+
 | Distro | Command |
 |---|---|
-| Arch / Manjaro / EndeavourOS | `paru -S packall-bin` |
 | Debian / Ubuntu / Mint | `sudo apt install ./Packall_*_amd64.deb` |
 | Fedora / RHEL / openSUSE | `sudo dnf install ./Packall-*.rpm` |
-| Any distro | Download the `.AppImage`, `chmod +x`, run |
+| Any x86_64 Linux (AppImage) | See below |
 
-Packages are on the [Releases](https://github.com/nishu-murmu/packall/releases) page. Maintainers: see [`packaging/`](packaging/README.md) for AUR, APT, RPM and release automation.
+AppImage with `curl`:
+
+```bash
+curl -fL -o Packall.AppImage "$(curl -s https://api.github.com/repos/nishu-murmu/packall/releases/latest | grep -o 'https://[^"]*\.AppImage' | head -1)"
+chmod +x Packall.AppImage
+./Packall.AppImage
+```
+
+On Arch, AppImages need FUSE 2 first: `sudo pacman -S fuse2`.
+
+### Terminal app (TUI)
+
+The TUI is not published as a release file yet, so build it from source. You need Go 1.24 or newer (on Arch: `sudo pacman -S go`).
+
+```bash
+git clone https://github.com/nishu-murmu/packall.git
+cd packall
+go build -o packall ./cmd/packall
+./packall                 # interactive interface
+./packall list            # command-line subcommands also work
+```
+
+To put it on your `PATH`, run `go install ./cmd/packall` from the repo, which installs to `$(go env GOPATH)/bin`.
+
+Maintainers: see [`packaging/`](packaging/README.md) for APT, RPM and release automation.
 
 ---
 

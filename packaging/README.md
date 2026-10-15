@@ -40,9 +40,6 @@ workflow (`.github/workflows/release.yml`) automates most of it when you push a
 ## Install commands for users
 
 ```bash
-# Arch / Manjaro / EndeavourOS
-paru -S packall-bin          # or: yay -S packall-bin
-
 # Debian / Ubuntu (APT repo)
 curl -fsSL https://nishu-murmu.github.io/packall/packall.gpg | sudo tee /usr/share/keyrings/packall.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/packall.gpg] https://nishu-murmu.github.io/packall stable main" | sudo tee /etc/apt/sources.list.d/packall.list
