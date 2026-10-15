@@ -106,7 +106,18 @@ npm run test:rust               # cargo test
 npm run build:tauri             # bundles into src-tauri/target/release/bundle/
 ```
 
-Building the desktop app needs the [Rust toolchain](https://www.rust-lang.org/tools/install) plus the usual Tauri native libraries (`libwebkit2gtk-4.1-dev`, `build-essential`, `libssl-dev`, `libayatana-appindicator3-dev`, `librsvg2-dev` on Debian/Ubuntu).
+Building the desktop app needs the [Rust toolchain](https://www.rust-lang.org/tools/install) plus the usual Tauri native libraries:
+
+```bash
+# Debian / Ubuntu / Mint
+sudo apt install libwebkit2gtk-4.1-dev build-essential libssl-dev libayatana-appindicator3-dev librsvg2-dev
+
+# Arch / Manjaro / EndeavourOS
+sudo pacman -S webkit2gtk-4.1 base-devel curl wget file openssl appmenu-gtk-module gtk3 libappindicator-gtk3 librsvg
+
+# Fedora / RHEL
+sudo dnf install webkit2gtk4.1-devel openssl-devel curl wget file libappindicator-gtk3-devel librsvg2-devel
+```
 
 Source layout: [`src/`](src) is the React frontend (`lib/` holds the catalogue, state and keybindings), [`src-tauri/src/`](src-tauri/src) is the Rust core (system detection, job worker).
 
