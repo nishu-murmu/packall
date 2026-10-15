@@ -236,6 +236,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.syncLog()
 		}
 		m.events = nil
+		// A bootstrap batch installed a new tool; re-probe so the host picks it up.
+		if m.batch != nil && m.batch.NeedsRefresh {
+			m.host = distro.Refresh()
+			m.refilter()
+		}
 		// What is installed has changed, so the Installed view is stale.
 		return m, scanCmd()
 

@@ -323,8 +323,12 @@ func (m Model) renderDetail(e *catalog.Entry, width int, verbose bool) string {
 	if chosen == nil {
 		b.WriteString(m.styles.Skipped.Render("  nothing here can install it") + "\n")
 		if want := actions.MissingUniversal(e, ctx); want != "" {
+			hint := string(want)
+			if want == catalog.AUR {
+				hint = "an AUR helper (yay or paru)"
+			}
 			b.WriteString(m.styles.Subtitle.Render(
-				"  install "+string(want)+" first and it becomes available") + "\n")
+				"  install "+hint+" first, or press i to set it up automatically") + "\n")
 		}
 	} else {
 		for _, c := range actions.Build(actions.Install, *chosen, m.host.Managers) {

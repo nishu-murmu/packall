@@ -63,18 +63,32 @@ func TestNewBatchMarksUnsupportedEntriesSkipped(t *testing.T) {
 	}}
 
 	b := NewBatch(actions.Install, entries(t, "firefox"), bare)
-	if len(b.Jobs) != 1 {
-		t.Fatalf("got %d jobs, want the entry kept", len(b.Jobs))
+
+	// Firefox has a Flatpak option, so a bootstrap job is prepended to set up
+	// Flatpak first. The entry itself is then resolved against the augmented
+	// context and is no longer skipped.
+	if len(b.Jobs) < 1 {
+		t.Fatalf("got %d jobs, want at least the entry kept", len(b.Jobs))
 	}
-	if b.Jobs[0].Status != runner.Skipped {
-		t.Errorf("status = %q, want skipped", b.Jobs[0].Status)
+	if !b.NeedsRefresh {
+		t.Error("a batch with bootstrap jobs should need a refresh")
 	}
-	if b.Jobs[0].Err == nil {
+
+	// Without any bootstrap, the entry should be skipped. Test that with an
+	// update action (bootstrap only triggers for installs).
+	b2 := NewBatch(actions.Update, entries(t, "firefox"), bare)
+	if len(b2.Jobs) != 1 {
+		t.Fatalf("got %d jobs, want the entry kept", len(b2.Jobs))
+	}
+	if b2.Jobs[0].Status != runner.Skipped {
+		t.Errorf("status = %q, want skipped", b2.Jobs[0].Status)
+	}
+	if b2.Jobs[0].Err == nil {
 		t.Error("a skipped job needs a reason the UI can show")
 	}
 
 	// A skipped job is never handed to the runner.
-	jobs, index := b.Runnable()
+	jobs, index := b2.Runnable()
 	if len(jobs) != 0 || len(index) != 0 {
 		t.Errorf("Runnable = %v / %v, want nothing to run", jobs, index)
 	}
@@ -318,6 +332,41 @@ func TestFailuresListsWhatWentWrong(t *testing.T) {
 type errString string
 
 func (e errString) Error() string { return string(e) }
+
+func TestNewBatchBootstrapsAURHelper(t *testing.T) {
+	// An AUR-only entry on an Arch host with no AUR helper installed.
+	aurOnly := &catalog.Entry{
+		ID:      "aur-test",
+		Name:    "AUR Test",
+		Install: []catalog.Option{{Method: catalog.AUR, Command: "paru -S test-pkg"}},
+	}
+	ctx := actions.Context{
+		Family:   actions.Arch,
+		Managers: []actions.Manager{{ID: "pacman", Available: true}},
+	}
+	b := NewBatch(actions.Install, []*catalog.Entry{aurOnly}, ctx)
+
+	if len(b.Jobs) < 2 {
+		t.Fatalf("got %d jobs, want a bootstrap + the entry", len(b.Jobs))
+	}
+	if !b.NeedsRefresh {
+		t.Error("a batch with a bootstrap job needs a refresh")
+	}
+	if b.Jobs[0].ID != "bootstrap:yay" {
+		t.Errorf("first job = %q, want bootstrap:yay", b.Jobs[0].ID)
+	}
+	if !strings.Contains(strings.Join(b.Jobs[0].Command, " "), "git clone") {
+		t.Error("AUR bootstrap must clone from AUR")
+	}
+	if !strings.Contains(strings.Join(b.Jobs[0].Command, " "), "base-devel") {
+		t.Error("AUR bootstrap must install base-devel")
+	}
+	// The entry should NOT be skipped — it's resolved against the augmented
+	// context that assumes yay will be available after bootstrap.
+	if b.Jobs[1].Status == runner.Skipped {
+		t.Error("the AUR entry should not be skipped when a bootstrap is planned")
+	}
+}
 
 func TestNewPackageBatchUsesTheScannedManager(t *testing.T) {
 	pkgs := []actions.Package{

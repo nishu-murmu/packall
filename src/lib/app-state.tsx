@@ -23,6 +23,7 @@ import {
   buildCommands,
   buildSystemPackageCommands,
   bootstrapCommands,
+  bootstrapAURCommands,
   missingUniversalFor,
   syntheticManager,
   matchesDistroFilter,
@@ -53,8 +54,8 @@ interface AppState {
   jobsPanelOpen: boolean
   removeConfirmOpen: boolean
   passwordPromptOpen: boolean
-  /** Prompt asking to install a missing Flatpak/Snap runtime. */
-  toolPrompt: { tool: "flatpak" | "snap"; count: number } | null
+  /** Prompt asking to install a missing Flatpak/Snap runtime or AUR helper. */
+  toolPrompt: { tool: "flatpak" | "snap" | "aur"; count: number } | null
   busyIds: Set<string>
   /** Navigable ids in the System Packages view (set by that view). */
   systemNavIds: string[]
@@ -127,7 +128,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [jobsPanelOpen, setJobsPanelOpen] = React.useState(false)
   const [removeConfirmOpen, setRemoveConfirmOpen] = React.useState(false)
   const [passwordPromptOpen, setPasswordPromptOpen] = React.useState(false)
-  const [toolPrompt, setToolPrompt] = React.useState<{ tool: "flatpak" | "snap"; count: number } | null>(null)
+  const [toolPrompt, setToolPrompt] = React.useState<{ tool: "flatpak" | "snap" | "aur"; count: number } | null>(null)
   const toolResolver = React.useRef<((ok: boolean) => void) | null>(null)
   const [systemNavIds, setSystemNavIds] = React.useState<string[]>([])
   const passwordResolver = React.useRef<((ok: boolean) => void) | null>(null)
@@ -400,7 +401,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const askInstallTool = React.useCallback(
-    (tool: "flatpak" | "snap", count: number) =>
+    (tool: "flatpak" | "snap" | "aur", count: number) =>
       new Promise<boolean>((resolve) => {
         toolResolver.current = resolve
         setToolPrompt({ tool, count })
@@ -422,9 +423,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       // If some apps can only come from a Flatpak/Snap runtime that is not
       // installed, offer to install that runtime first, then treat it as present.
       let effectiveManagers = packageManagers
-      let bootstrapTool: "flatpak" | "snap" | null = null
+      let bootstrapTool: "flatpak" | "snap" | "aur" | null = null
       if (action === "install") {
-        const needed = new Map<"flatpak" | "snap", number>()
+        const needed = new Map<"flatpak" | "snap" | "aur", number>()
         for (const id of targets) {
           const sw = SOFTWARE_MAP[id]
           if (!sw || installed.has(id)) continue
@@ -432,10 +433,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
           if (miss) needed.set(miss, (needed.get(miss) ?? 0) + 1)
         }
         if (needed.size > 0) {
-          const tool = needed.has("flatpak") ? "flatpak" : "snap"
+          const tool: "flatpak" | "snap" | "aur" =
+            needed.has("flatpak") ? "flatpak" : needed.has("aur") ? "aur" : "snap"
           if (await askInstallTool(tool, needed.get(tool) ?? 0)) {
             bootstrapTool = tool
-            effectiveManagers = [...packageManagers, syntheticManager(tool)]
+            const synthId = tool === "aur" ? "yay" : tool
+            effectiveManagers = [...packageManagers, syntheticManager(synthId)]
           }
         }
       }
@@ -487,19 +490,22 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       // Prepend a one-off job that installs the chosen runtime, so it exists
       // before the apps that need it run.
       if (bootstrapTool && specs.length > 0) {
-        const setupCommands = bootstrapCommands(bootstrapTool, distroInfo, packageManagers)
+        const setupCommands = bootstrapTool === "aur"
+          ? bootstrapAURCommands("yay", distroInfo)
+          : bootstrapCommands(bootstrapTool, distroInfo, packageManagers)
         if (setupCommands.length > 0) {
           const setupId = `__setup_${bootstrapTool}__`
+          const toolName = bootstrapTool === "flatpak" ? "Flatpak" : bootstrapTool === "aur" ? "yay (AUR helper)" : "Snap"
           jobs.unshift({
             id: setupId,
-            name: `Install ${bootstrapTool === "flatpak" ? "Flatpak" : "Snap"}`,
+            name: `Install ${toolName}`,
             action,
             status: "queued",
             percent: null,
             method: "manual",
             log: [],
           })
-          specs.unshift({ id: setupId, name: `Install ${bootstrapTool}`, commands: setupCommands })
+          specs.unshift({ id: setupId, name: `Install ${toolName}`, commands: setupCommands })
         }
       }
 

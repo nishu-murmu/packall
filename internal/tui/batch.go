@@ -48,6 +48,9 @@ type Batch struct {
 	Finished bool
 	// Cancelled records that the user stopped it rather than it completing.
 	Cancelled bool
+	// NeedsRefresh is set when the batch bootstrapped a new tool and the host
+	// detection should be re-run afterwards so the tool is picked up.
+	NeedsRefresh bool
 
 	Started time.Time
 	Ended   time.Time
@@ -56,13 +59,48 @@ type Batch struct {
 // NewBatch plans a batch: it resolves each entry to the commands this host
 // needs. Entries nothing on this host can handle are recorded as skipped
 // rather than dropped, so the user can see why.
+//
+// When a missing tool (Flatpak, Snap, or an AUR helper) would unlock entries
+// that are otherwise uninstallable, a bootstrap job is prepended so the tool
+// is set up before the entries that need it.
 func NewBatch(action actions.Action, entries []*catalog.Entry, ctx actions.Context) *Batch {
 	b := &Batch{Action: action, Active: -1, Started: time.Now()}
+
+	// When installing, detect tools that would unlock otherwise-uninstallable
+	// entries and prepend bootstrap jobs. The entries themselves are then
+	// resolved against an augmented context that assumes the tool will exist
+	// after its bootstrap job finishes.
+	augmented := ctx
+	if action == actions.Install {
+		missing := actions.MissingTools(entries, ctx)
+		for _, tool := range missing {
+			label := string(tool)
+			bootstrapTool := tool
+			if tool == catalog.AUR {
+				bootstrapTool = actions.PreferredAURHelper()
+				label = string(bootstrapTool) + " (AUR helper)"
+			}
+			cmds := actions.Bootstrap(bootstrapTool, ctx.Family, ctx.Managers)
+			if len(cmds) == 0 {
+				continue
+			}
+			b.Jobs = append(b.Jobs, Job{
+				ID:      "bootstrap:" + string(bootstrapTool),
+				Label:   "Set up " + label,
+				Method:  bootstrapTool,
+				Command: cmds,
+				Status:  runner.Queued,
+				Percent: -1,
+			})
+			b.NeedsRefresh = true
+			augmented.Managers = withManager(augmented.Managers, string(bootstrapTool))
+		}
+	}
 
 	for _, e := range entries {
 		job := Job{ID: e.ID, Label: e.Name, Status: runner.Queued, Percent: -1}
 
-		cmds := actions.For(e, action, ctx)
+		cmds := actions.For(e, action, augmented)
 		if cmds.Option == nil || len(cmds.Commands) == 0 {
 			job.Status = runner.Skipped
 			job.Err = fmt.Errorf("nothing on this host can %s %s", action, e.Name)
@@ -73,6 +111,19 @@ func NewBatch(action actions.Action, entries []*catalog.Entry, ctx actions.Conte
 		b.Jobs = append(b.Jobs, job)
 	}
 	return b
+}
+
+// withManager returns a copy of managers with the given id marked available.
+func withManager(managers []actions.Manager, id string) []actions.Manager {
+	out := make([]actions.Manager, len(managers))
+	copy(out, managers)
+	for i := range out {
+		if out[i].ID == id {
+			out[i].Available = true
+			return out
+		}
+	}
+	return append(out, actions.Manager{ID: id, Available: true})
 }
 
 // Runnable returns the jobs the runner should execute, and a mapping from each
