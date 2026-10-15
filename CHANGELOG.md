@@ -20,6 +20,9 @@
 - **TUI release binary** — the release workflow now builds a standalone Go
   binary (`packall-linux-amd64.tar.gz`) and attaches it to every GitHub
   release alongside the GUI packages.
+- **Symbol lookup error handling** — detects dynamic linker errors and shows
+  a friendly suggestion to install the missing library.
+- **Logo** — added the Packall logo to the README.
 
 ### Changed
 
@@ -29,6 +32,9 @@
   ("install an AUR helper (yay or paru)").
 - TypeScript `missingUniversalFor` now returns `"aur"` alongside `"flatpak"`
   and `"snap"`.
+- Simplified the README to focus on the `install.sh` one-liner and essential
+  information.
+- Split install docs into separate GUI and TUI sections.
 
 ## 0.1.0
 
