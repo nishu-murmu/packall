@@ -1,0 +1,23 @@
+Architectures: amd64
+Codename: stable
+Components: main
+Date: Thu, 15 Oct 2026 12:55:46 +0000
+Label: Packall
+Origin: Packall
+Suite: stable
+MD5Sum:
+ 37d1ec509c010f1eab1d6ff0487c35f7              138 Release
+ acc9594f7ad05daff7c21a4cf0cd4d0e              718 main/binary-amd64/Packages
+ 1b4acc8d06493145679d70e2f98db444              483 main/binary-amd64/Packages.gz
+SHA1:
+ debae262830fc8c0fb26724c771199315d64f13a              138 Release
+ 54c38ebc66490d06a36299b98439c9bbc3607c69              718 main/binary-amd64/Packages
+ 1d792d760d20ec1e0035ed394a17acd9b0cbde6a              483 main/binary-amd64/Packages.gz
+SHA256:
+ 91f6af23b6078921ff6f0ed91529468841ae3e9830159bb5ec755f496099d8e6              138 Release
+ 4e1b5e129a38962ecb231fc2da369bc8cdbefc1f8161b7e338d85890a5513c06              718 main/binary-amd64/Packages
+ 602447dbd88eee9c6496e05f73d24e944e5645e96d53498cfca0dcf200533345              483 main/binary-amd64/Packages.gz
+SHA512:
+ 104e194e3d1346874024f7ebc71c97e26d3d3a6da249d4c672a0e86a7164e6d9597ad2f2dd1a41b41ff7598447c411987cc3c526a6f9888b3243def6f2292894              138 Release
+ af3bfa71785f0523a7ece76bb41c95a8a42c60d52891e5376c6ede932863713ed7b1aed1cbdd1124a498200bbef9a05b8e48ed538f573e38da6429c0beb3fb68              718 main/binary-amd64/Packages
+ 460a95528c0b3b52733361ec979af23fc7eda4057ecf9060987766ae2b11e2396aa929963bd207aa344f576f33ae90ba1feeb512ed484680f203aee562549f71              483 main/binary-amd64/Packages.gz

@@ -1,0 +1,17 @@
+Package: packall
+Version: 0.1.0
+Architecture: amd64
+Maintainer: packall
+Installed-Size: 14678
+Depends: libwebkit2gtk-4.1-0, libgtk-3-0, policykit-1 | polkitd, libwebkit2gtk-4.1-0, libgtk-3-0
+Filename: pool/main/Packall_0.1.0_amd64.deb
+Size: 4280374
+MD5sum: 7b7fd1b7f91bf698c5a2f769034c83b3
+SHA1: 41659cc7c2a59678b5df94039a24440b38d6d341
+SHA256: fb970f75c56ee0b5b9a2109bcc6a3611ce999be70e92c2cd77b0020af63a2489
+Section: utils
+Priority: optional
+Homepage: https://github.com/nishu-murmu/packall
+Description: A graphical directory of essential Linux software
+ Packall is a graphical directory that categorizes and helps you install essential Linux software. Navigate the entire app with Neovim-style keyboard shortcuts.
+
