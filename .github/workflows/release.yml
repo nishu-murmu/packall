@@ -61,15 +61,17 @@ jobs:
           releaseBody: |
             Packall ${{ github.ref_name }} — free and open source (AGPL-3.0). See [CHANGELOG.md](https://github.com/nishu-murmu/packall/blob/main/CHANGELOG.md).
 
-            ## Download
+            ## Install
 
-            | Your system | File | Install |
-            |---|---|---|
-            | Debian, Ubuntu, Mint, Pop!_OS | `Packall_*_amd64.deb` | `sudo apt install ./Packall_*_amd64.deb` |
-            | Fedora, RHEL, openSUSE | `Packall-*.x86_64.rpm` | `sudo dnf install ./Packall-*.rpm` |
-            | Any Linux (x86_64) | `Packall_*_amd64.AppImage` | `chmod +x Packall_*.AppImage && ./Packall_*.AppImage` |
+            ```bash
+            # Desktop app (GUI)
+            curl -fsSL https://packall-website.pages.dev/install.sh | sh
 
-            Verify downloads with `sha256sum -c SHA256SUMS.txt`.
+            # Terminal app (TUI)
+            curl -fsSL https://packall-website.pages.dev/install.sh | sh -s -- --tui
+            ```
+
+            Or download packages directly from the assets below. Verify with `sha256sum -c SHA256SUMS.txt`.
           releaseDraft: false
           prerelease: false
           args: --bundles deb,rpm,appimage
