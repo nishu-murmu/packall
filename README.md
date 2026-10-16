@@ -36,7 +36,7 @@ git clone https://github.com/nishu-murmu/packall.git && cd packall
 go build -o packall ./cmd/packall && ./packall
 ```
 
-Manual downloads are on the [Releases](https://github.com/nishu-murmu/packall/releases) page (.deb, .rpm, AppImage, TUI binary).
+Manual downloads are on the [Releases](https://github.com/nishu-murmu/packall/releases) page (AppImage, TUI tarball).
 
 ---
 
@@ -66,7 +66,7 @@ npm run test:rust                   # cargo test
 go test ./...                       # Go tests
 ```
 
-See [`packaging/`](packaging/README.md) for release automation and distro packaging.
+See the [releases page](https://github.com/nishu-murmu/packall/releases) for prebuilt binaries.
 
 ---
 
