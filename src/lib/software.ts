@@ -2179,7 +2179,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub librewolf",
+        command: "flatpak install flathub io.gitlab.librewolf-community",
       },
       {
         method: "apt",
@@ -2215,7 +2215,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub waterfox",
+        command: "flatpak install flathub net.waterfox.waterfox",
       },
       {
         method: "apt",
@@ -2251,7 +2251,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub google-chrome",
+        command: "flatpak install flathub com.google.Chrome",
       },
       {
         method: "apt",
@@ -2286,10 +2286,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub helium",
-      },
-      {
         method: "apt",
         command: "sudo apt install helium",
       },
@@ -2323,7 +2319,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub ungoogled-chromium",
+        command: "flatpak install flathub io.github.ungoogled_software.ungoogled_chromium",
       },
       {
         method: "apt",
@@ -2359,7 +2355,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub konqueror",
+        command: "flatpak install flathub org.kde.konqueror",
       },
       {
         method: "apt",
@@ -2395,7 +2391,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub falkon",
+        command: "flatpak install flathub org.kde.falkon",
       },
       {
         method: "apt",
@@ -2431,7 +2427,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub gnome-web",
+        command: "flatpak install flathub org.gnome.Epiphany",
       },
       {
         method: "apt",
@@ -2467,7 +2463,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub qutebrowser",
+        command: "flatpak install flathub org.qutebrowser.qutebrowser",
       },
       {
         method: "apt",
@@ -2502,10 +2498,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub nyxt",
-      },
-      {
         method: "apt",
         command: "sudo apt install nyxt",
       },
@@ -2539,7 +2531,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub floorp",
+        command: "flatpak install flathub one.ablaze.floorp",
       },
       {
         method: "apt",
@@ -2574,10 +2566,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub mullvad-browser",
-      },
-      {
         method: "apt",
         command: "sudo apt install mullvad-browser",
       },
@@ -2611,7 +2599,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub microsoft-edge",
+        command: "flatpak install flathub com.microsoft.Edge",
       },
       {
         method: "apt",
@@ -2647,7 +2635,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub opera",
+        command: "flatpak install flathub com.opera.Opera",
       },
       {
         method: "apt",
@@ -2682,10 +2670,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub syncthing",
-      },
-      {
         method: "apt",
         command: "sudo apt install syncthing",
       },
@@ -2719,7 +2703,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub qbittorrent",
+        command: "flatpak install flathub org.qbittorrent.qBittorrent",
       },
       {
         method: "apt",
@@ -2755,7 +2739,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub transmission",
+        command: "flatpak install flathub com.transmissionbt.Transmission",
       },
       {
         method: "apt",
@@ -2791,7 +2775,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub localsend",
+        command: "flatpak install flathub org.localsend.localsend_app",
       },
       {
         method: "apt",
@@ -2827,7 +2811,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub filezilla",
+        command: "flatpak install flathub org.filezillaproject.Filezilla",
       },
       {
         method: "apt",
@@ -2863,7 +2847,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub dropbox",
+        command: "flatpak install flathub com.dropbox.Client",
       },
       {
         method: "apt",
@@ -2898,10 +2882,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub ab-download-manager",
-      },
-      {
         method: "apt",
         command: "sudo apt install ab-download-manager",
       },
@@ -2926,10 +2906,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub free-download-manager",
-      },
-      {
         method: "apt",
         command: "sudo apt install free-download-manager",
       },
@@ -2953,10 +2929,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "cursor",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub cursor",
-      },
       {
         method: "apt",
         command: "sudo apt install cursor",
@@ -2983,7 +2955,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub vscodium",
+        command: "flatpak install flathub com.vscodium.codium",
       },
       {
         method: "apt",
@@ -3019,7 +2991,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub intellij-idea",
+        command: "flatpak install flathub com.jetbrains.IntelliJ-IDEA-Community",
       },
       {
         method: "apt",
@@ -3055,7 +3027,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub pycharm",
+        command: "flatpak install flathub com.jetbrains.PyCharm-Community",
       },
       {
         method: "apt",
@@ -3091,7 +3063,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub clion",
+        command: "flatpak install flathub com.jetbrains.CLion",
       },
       {
         method: "apt",
@@ -3127,7 +3099,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub arduino-ide",
+        command: "flatpak install flathub cc.arduino.IDE2",
       },
       {
         method: "apt",
@@ -3163,7 +3135,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub sublime-text",
+        command: "flatpak install flathub com.sublimetext.three",
       },
       {
         method: "apt",
@@ -3199,7 +3171,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kate",
+        command: "flatpak install flathub org.kde.kate",
       },
       {
         method: "apt",
@@ -3235,7 +3207,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub geany",
+        command: "flatpak install flathub org.geany.Geany",
       },
       {
         method: "apt",
@@ -3270,10 +3242,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub vim",
-      },
-      {
         method: "apt",
         command: "sudo apt install vim",
       },
@@ -3305,10 +3273,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "helix",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub helix",
-      },
       {
         method: "apt",
         command: "sudo apt install helix",
@@ -3342,10 +3306,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub micro",
-      },
-      {
         method: "apt",
         command: "sudo apt install micro",
       },
@@ -3377,10 +3337,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "emacs",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub emacs",
-      },
       {
         method: "apt",
         command: "sudo apt install emacs",
@@ -3414,10 +3370,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub opencode",
-      },
-      {
         method: "apt",
         command: "sudo apt install opencode",
       },
@@ -3441,10 +3393,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "openai-codex",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub openai-codex",
-      },
       {
         method: "apt",
         command: "sudo apt install openai-codex",
@@ -3470,10 +3418,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub gemini-cli",
-      },
-      {
         method: "apt",
         command: "sudo apt install gemini-cli",
       },
@@ -3498,10 +3442,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub claude-code",
-      },
-      {
         method: "apt",
         command: "sudo apt install claude-code",
       },
@@ -3525,10 +3465,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ollama",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ollama",
-      },
       {
         method: "apt",
         command: "sudo apt install ollama",
@@ -3561,10 +3497,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "llama-cpp",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub llama-cpp",
-      },
       {
         method: "apt",
         command: "sudo apt install llama-cpp",
@@ -3599,7 +3531,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub jan",
+        command: "flatpak install flathub ai.jan.Jan",
       },
       {
         method: "apt",
@@ -3627,7 +3559,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub darktable",
+        command: "flatpak install flathub org.darktable.Darktable",
       },
       {
         method: "apt",
@@ -3663,7 +3595,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub freecad",
+        command: "flatpak install flathub org.freecad.FreeCAD",
       },
       {
         method: "apt",
@@ -3699,7 +3631,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kicad",
+        command: "flatpak install flathub org.kicad.KiCad",
       },
       {
         method: "apt",
@@ -3735,7 +3667,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub ultimaker-cura",
+        command: "flatpak install flathub com.ultimaker.cura",
       },
       {
         method: "apt",
@@ -3763,7 +3695,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub godot-engine",
+        command: "flatpak install flathub org.godotengine.Godot",
       },
       {
         method: "apt",
@@ -3799,7 +3731,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kolourpaint",
+        command: "flatpak install flathub org.kde.kolourpaint",
       },
       {
         method: "apt",
@@ -3834,10 +3766,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub orcaslicer",
-      },
-      {
         method: "apt",
         command: "sudo apt install orcaslicer",
       },
@@ -3862,10 +3790,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub davinci-resolve",
-      },
-      {
         method: "apt",
         command: "sudo apt install davinci-resolve",
       },
@@ -3889,10 +3813,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ivpn",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ivpn",
-      },
       {
         method: "apt",
         command: "sudo apt install ivpn",
@@ -3919,7 +3839,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub proton-vpn",
+        command: "flatpak install flathub com.protonvpn.www",
       },
       {
         method: "apt",
@@ -3947,7 +3867,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub mullvad-vpn",
+        command: "flatpak install flathub net.mullvad.MullvadVPN",
       },
       {
         method: "apt",
@@ -3973,10 +3893,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "tailscale",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub tailscale",
-      },
       {
         method: "apt",
         command: "sudo apt install tailscale",
@@ -4010,10 +3926,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub wireguard",
-      },
-      {
         method: "apt",
         command: "sudo apt install wireguard",
       },
@@ -4045,10 +3957,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "openvpn",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub openvpn",
-      },
       {
         method: "apt",
         command: "sudo apt install openvpn",
@@ -4082,10 +3990,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub nmap",
-      },
-      {
         method: "apt",
         command: "sudo apt install nmap",
       },
@@ -4117,10 +4021,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "openssh",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub openssh",
-      },
       {
         method: "apt",
         command: "sudo apt install openssh",
@@ -4155,7 +4055,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub remmina",
+        command: "flatpak install flathub org.remmina.Remmina",
       },
       {
         method: "apt",
@@ -4190,10 +4090,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub zsh",
-      },
-      {
         method: "apt",
         command: "sudo apt install zsh",
       },
@@ -4226,10 +4122,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub oh-my-zsh",
-      },
-      {
         method: "apt",
         command: "sudo apt install oh-my-zsh",
       },
@@ -4253,10 +4145,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "fish",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub fish",
-      },
       {
         method: "apt",
         command: "sudo apt install fish",
@@ -4289,10 +4177,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "starship",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub starship",
-      },
       {
         method: "apt",
         command: "sudo apt install starship",
@@ -4327,7 +4211,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub wezterm",
+        command: "flatpak install flathub org.wezfurlong.wezterm",
       },
       {
         method: "apt",
@@ -4362,10 +4246,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub foot",
-      },
-      {
         method: "apt",
         command: "sudo apt install foot",
       },
@@ -4397,10 +4277,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ptyxis",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ptyxis",
-      },
       {
         method: "apt",
         command: "sudo apt install ptyxis",
@@ -4435,7 +4311,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub mpv",
+        command: "flatpak install flathub io.mpv.Mpv",
       },
       {
         method: "apt",
@@ -4471,7 +4347,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub celluloid",
+        command: "flatpak install flathub io.github.celluloid_player.Celluloid",
       },
       {
         method: "apt",
@@ -4507,7 +4383,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub strawberry",
+        command: "flatpak install flathub org.strawberrymusicplayer.strawberry",
       },
       {
         method: "apt",
@@ -4543,7 +4419,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub spotify",
+        command: "flatpak install flathub com.spotify.Client",
       },
       {
         method: "apt",
@@ -4578,10 +4454,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub ffmpeg",
-      },
-      {
         method: "apt",
         command: "sudo apt install ffmpeg",
       },
@@ -4615,7 +4487,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub stremio",
+        command: "flatpak install flathub com.stremio.Stremio",
       },
       {
         method: "apt",
@@ -4651,7 +4523,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kodi",
+        command: "flatpak install flathub tv.kodi.Kodi",
       },
       {
         method: "apt",
@@ -4687,7 +4559,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub haruna",
+        command: "flatpak install flathub org.kde.haruna",
       },
       {
         method: "apt",
@@ -4723,7 +4595,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub shortwave",
+        command: "flatpak install flathub de.haeckerfelix.Shortwave",
       },
       {
         method: "apt",
@@ -4759,7 +4631,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub parabolic",
+        command: "flatpak install flathub org.nickvision.tubeconverter",
       },
       {
         method: "apt",
@@ -4795,7 +4667,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kde-partition-manager",
+        command: "flatpak install flathub org.kde.partitionmanager",
       },
       {
         method: "apt",
@@ -4831,7 +4703,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub kde-connect",
+        command: "flatpak install flathub org.kde.kdeconnect",
       },
       {
         method: "apt",
@@ -4867,7 +4739,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub bleachbit",
+        command: "flatpak install flathub org.bleachbit.BleachBit",
       },
       {
         method: "apt",
@@ -4903,7 +4775,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub dconf-editor",
+        command: "flatpak install flathub ca.desrt.dconf-editor",
       },
       {
         method: "apt",
@@ -4938,10 +4810,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub borgbackup",
-      },
-      {
         method: "apt",
         command: "sudo apt install borgbackup",
       },
@@ -4974,10 +4842,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub restic",
-      },
-      {
         method: "apt",
         command: "sudo apt install restic",
       },
@@ -5006,13 +4870,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     tags: [
       "system",
       "linux",
-      "flatpak",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub flatpak",
-      },
       {
         method: "apt",
         command: "sudo apt install flatpak",
@@ -5047,7 +4906,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub filelight",
+        command: "flatpak install flathub org.kde.filelight",
       },
       {
         method: "apt",
@@ -5082,10 +4941,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub conky",
-      },
-      {
         method: "apt",
         command: "sudo apt install conky",
       },
@@ -5119,7 +4974,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub fsearch",
+        command: "flatpak install flathub io.github.cboxdoerfer.FSearch",
       },
       {
         method: "apt",
@@ -5154,10 +5009,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub cpu-x",
-      },
-      {
         method: "apt",
         command: "sudo apt install cpu-x",
       },
@@ -5191,7 +5042,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub mission-center",
+        command: "flatpak install flathub io.missioncenter.MissionCenter",
       },
       {
         method: "apt",
@@ -5226,10 +5077,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub openrgb",
-      },
-      {
         method: "apt",
         command: "sudo apt install openrgb",
       },
@@ -5262,10 +5109,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub git-lfs",
-      },
-      {
         method: "apt",
         command: "sudo apt install git-lfs",
       },
@@ -5297,10 +5140,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "lazygit",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub lazygit",
-      },
       {
         method: "apt",
         command: "sudo apt install lazygit",
@@ -5335,7 +5174,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub podman-desktop",
+        command: "flatpak install flathub io.podman_desktop.PodmanDesktop",
       },
       {
         method: "apt",
@@ -5370,10 +5209,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub incus",
-      },
-      {
         method: "apt",
         command: "sudo apt install incus",
       },
@@ -5406,10 +5241,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub kubectl",
-      },
-      {
         method: "apt",
         command: "sudo apt install kubectl",
       },
@@ -5441,10 +5272,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "vagrant",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub vagrant",
-      },
       {
         method: "apt",
         command: "sudo apt install vagrant",
@@ -5479,7 +5306,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub gnome-boxes",
+        command: "flatpak install flathub org.gnome.Boxes",
       },
       {
         method: "apt",
@@ -5515,7 +5342,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub dbeaver",
+        command: "flatpak install flathub io.dbeaver.DBeaverCommunity",
       },
       {
         method: "apt",
@@ -5551,7 +5378,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub meld",
+        command: "flatpak install flathub org.gnome.meld",
       },
       {
         method: "apt",
@@ -5587,7 +5414,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub wireshark",
+        command: "flatpak install flathub org.wireshark.Wireshark",
       },
       {
         method: "apt",
@@ -5623,7 +5450,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub bruno",
+        command: "flatpak install flathub com.usebruno.Bruno",
       },
       {
         method: "apt",
@@ -5651,7 +5478,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub hoppscotch",
+        command: "flatpak install flathub io.hoppscotch.Hoppscotch",
       },
       {
         method: "apt",
@@ -5678,10 +5505,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub yaak",
-      },
-      {
         method: "apt",
         command: "sudo apt install yaak",
       },
@@ -5707,7 +5530,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub imhex",
+        command: "flatpak install flathub net.werwolv.ImHex",
       },
       {
         method: "apt",
@@ -5741,10 +5564,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "cmake",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub cmake",
-      },
       {
         method: "apt",
         command: "sudo apt install cmake",
@@ -5783,7 +5602,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub prism-launcher",
+        command: "flatpak install flathub org.prismlauncher.PrismLauncher",
       },
       {
         method: "apt",
@@ -5819,7 +5638,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub retroarch",
+        command: "flatpak install flathub org.libretro.RetroArch",
       },
       {
         method: "apt",
@@ -5855,7 +5674,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub mangohud",
+        command: "flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud",
       },
       {
         method: "apt",
@@ -5890,10 +5709,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub gamemode",
-      },
-      {
         method: "apt",
         command: "sudo apt install gamemode",
       },
@@ -5927,7 +5742,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub antimicrox",
+        command: "flatpak install flathub io.github.antimicrox.antimicrox",
       },
       {
         method: "apt",
@@ -5963,7 +5778,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub goverlay",
+        command: "flatpak install flathub io.github.benjamimgois.goverlay",
       },
       {
         method: "apt",
@@ -5999,7 +5814,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub logseq",
+        command: "flatpak install flathub com.logseq.Logseq",
       },
       {
         method: "apt",
@@ -6027,7 +5842,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub joplin",
+        command: "flatpak install flathub net.cozic.joplin_desktop",
       },
       {
         method: "apt",
@@ -6053,10 +5868,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "zathura",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub zathura",
-      },
       {
         method: "apt",
         command: "sudo apt install zathura",
@@ -6091,7 +5902,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub xournal",
+        command: "flatpak install flathub com.github.xournalpp.xournalpp",
       },
       {
         method: "apt",
@@ -6127,7 +5938,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub zotero",
+        command: "flatpak install flathub org.zotero.Zotero",
       },
       {
         method: "apt",
@@ -6162,10 +5973,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub trilium-notes",
-      },
-      {
         method: "apt",
         command: "sudo apt install trilium-notes",
       },
@@ -6189,10 +5996,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "gnupg",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub gnupg",
-      },
       {
         method: "apt",
         command: "sudo apt install gnupg",
@@ -6226,10 +6029,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub firejail",
-      },
-      {
         method: "apt",
         command: "sudo apt install firejail",
       },
@@ -6261,10 +6060,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "clamav",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub clamav",
-      },
       {
         method: "apt",
         command: "sudo apt install clamav",
@@ -6299,7 +6094,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "flatpak",
-        command: "flatpak install flathub ente-auth",
+        command: "flatpak install flathub io.ente.auth",
       },
       {
         method: "apt",
@@ -6325,10 +6120,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "python-3",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub python-3",
-      },
       {
         method: "apt",
         command: "sudo apt install python-3",
@@ -6362,10 +6153,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub node-js",
-      },
-      {
         method: "apt",
         command: "sudo apt install node-js",
       },
@@ -6397,10 +6184,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "go",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub go",
-      },
       {
         method: "apt",
         command: "sudo apt install go",
@@ -6434,10 +6217,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub rust",
-      },
-      {
         method: "apt",
         command: "sudo apt install rust",
       },
@@ -6469,10 +6248,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ruby",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ruby",
-      },
       {
         method: "apt",
         command: "sudo apt install ruby",
@@ -6506,10 +6281,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub php",
-      },
-      {
         method: "apt",
         command: "sudo apt install php",
       },
@@ -6541,10 +6312,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "openjdk",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub openjdk",
-      },
       {
         method: "apt",
         command: "sudo apt install openjdk",
@@ -6578,10 +6345,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub deno",
-      },
-      {
         method: "apt",
         command: "sudo apt install deno",
       },
@@ -6614,10 +6377,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub bun",
-      },
-      {
         method: "apt",
         command: "sudo apt install bun",
       },
@@ -6641,10 +6400,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "npm",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub npm",
-      },
       {
         method: "apt",
         command: "sudo apt install npm",
@@ -6678,10 +6433,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub pnpm",
-      },
-      {
         method: "apt",
         command: "sudo apt install pnpm",
       },
@@ -6705,10 +6456,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "yarn",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub yarn",
-      },
       {
         method: "apt",
         command: "sudo apt install yarn",
@@ -6734,10 +6481,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub uv",
-      },
-      {
         method: "apt",
         command: "sudo apt install uv",
       },
@@ -6761,10 +6504,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "htop",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub htop",
-      },
       {
         method: "apt",
         command: "sudo apt install htop",
@@ -6802,10 +6541,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub eza",
-      },
-      {
         method: "apt",
         command: "sudo apt install eza",
       },
@@ -6837,10 +6572,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "bat",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub bat",
-      },
       {
         method: "apt",
         command: "sudo apt install bat",
@@ -6874,10 +6605,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub fzf",
-      },
-      {
         method: "apt",
         command: "sudo apt install fzf",
       },
@@ -6909,10 +6636,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ripgrep",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ripgrep",
-      },
       {
         method: "apt",
         command: "sudo apt install ripgrep",
@@ -6946,10 +6669,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub zoxide",
-      },
-      {
         method: "apt",
         command: "sudo apt install zoxide",
       },
@@ -6981,10 +6700,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "tldr",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub tldr",
-      },
       {
         method: "apt",
         command: "sudo apt install tldr",
@@ -7018,10 +6733,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub wget",
-      },
-      {
         method: "apt",
         command: "sudo apt install wget",
       },
@@ -7053,10 +6764,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "curl",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub curl",
-      },
       {
         method: "apt",
         command: "sudo apt install curl",
@@ -7090,10 +6797,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub aria2",
-      },
-      {
         method: "apt",
         command: "sudo apt install aria2",
       },
@@ -7125,10 +6828,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "yazi",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub yazi",
-      },
       {
         method: "apt",
         command: "sudo apt install yazi",
@@ -7162,10 +6861,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub ranger",
-      },
-      {
         method: "apt",
         command: "sudo apt install ranger",
       },
@@ -7197,10 +6892,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ncdu",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub ncdu",
-      },
       {
         method: "apt",
         command: "sudo apt install ncdu",
@@ -7234,10 +6925,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub fd",
-      },
-      {
         method: "apt",
         command: "sudo apt install fd",
       },
@@ -7269,10 +6956,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "zellij",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub zellij",
-      },
       {
         method: "apt",
         command: "sudo apt install zellij",
@@ -7306,10 +6989,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub superfile",
-      },
-      {
         method: "apt",
         command: "sudo apt install superfile",
       },
@@ -7333,10 +7012,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "rsync",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub rsync",
-      },
       {
         method: "apt",
         command: "sudo apt install rsync",

@@ -9,6 +9,7 @@ import type {
   ActionExecutionResult,
   BatchAction,
   DistroInfo,
+  InstallMethod,
   InstallStep,
   MultiStepActionResult,
   DistroFilter,
@@ -82,7 +83,7 @@ interface AppState {
   /** One-click entry point: starts at once, except removals which ask first. */
   requestBatch: (action: BatchAction) => Promise<void>
   /** Start `action` for every queued item (or `ids` when given) in the background. */
-  runBatch: (action: BatchAction, ids?: string[]) => Promise<void>
+  runBatch: (action: BatchAction, ids?: string[], forceMethod?: InstallMethod | null) => Promise<void>
   cancelBatch: (batchId: string) => Promise<void>
   dismissBatch: (batchId: string) => void
   refreshSystemPackages: (opts?: { notify?: boolean }) => Promise<void>
@@ -416,9 +417,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const startBatch = React.useCallback(
-    async (action: BatchAction, targets: string[]) => {
+    async (action: BatchAction, targets: string[], forceMethod?: InstallMethod | null) => {
 
-      const baseCtx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages }
+      const baseCtx: PickContext = { distro: distroInfo, managers: packageManagers, systemPackages, forceMethod }
 
       // If some apps can only come from a Flatpak/Snap runtime that is not
       // installed, offer to install that runtime first, then treat it as present.
@@ -443,7 +444,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      const ctx: PickContext = { distro: distroInfo, managers: effectiveManagers, systemPackages }
+      const ctx: PickContext = { distro: distroInfo, managers: effectiveManagers, systemPackages, forceMethod }
       const jobs: Job[] = []
       const specs: { id: string; name: string; commands: string[] }[] = []
 
@@ -564,7 +565,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   )
 
   const runBatch = React.useCallback(
-    async (action: BatchAction, ids?: string[]) => {
+    async (action: BatchAction, ids?: string[], forceMethod?: InstallMethod | null) => {
       const requested = ids ?? Array.from(selectedQueue)
       // Ignore anything that is already running or being started: repeated
       // clicks must not start the same job twice.
@@ -579,7 +580,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       }
       targets.forEach((id) => startingIds.current.add(id))
       try {
-        await startBatch(action, targets)
+        await startBatch(action, targets, forceMethod)
       } finally {
         targets.forEach((id) => startingIds.current.delete(id))
       }
