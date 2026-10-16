@@ -23,15 +23,15 @@ const NATIVE_METHODS: Record<Exclude<DistroFamily, "other">, InstallMethod[]> = 
 }
 
 /** Methods that run on any distro as long as the tool is installed. */
-const UNIVERSAL_METHODS: InstallMethod[] = ["flatpak", "snap", "appimage"]
+const UNIVERSAL_METHODS: InstallMethod[] = ["flatpak", "snap", "appimage", "script"]
 
 /** Order in which methods are tried for each distro family. */
 const METHOD_PRIORITY: Record<DistroFamily, InstallMethod[]> = {
-  arch: ["pacman", "aur", "paru", "yay", "flatpak", "snap"],
-  debian: ["apt", "flatpak", "snap"],
-  fedora: ["dnf", "flatpak", "snap"],
-  suse: ["zypper", "flatpak", "snap"],
-  other: ["flatpak", "snap", "pacman", "apt", "dnf", "zypper", "aur", "paru", "yay", "brew"],
+  arch: ["pacman", "aur", "paru", "yay", "flatpak", "script", "snap"],
+  debian: ["apt", "flatpak", "script", "snap"],
+  fedora: ["dnf", "flatpak", "script", "snap"],
+  suse: ["zypper", "flatpak", "script", "snap"],
+  other: ["flatpak", "script", "snap", "pacman", "apt", "dnf", "zypper", "aur", "paru", "yay", "brew"],
 }
 
 export const DISTRO_FILTERS: { id: DistroFilter; label: string; hint: string }[] = [
@@ -98,6 +98,8 @@ function toolFor(method: InstallMethod): string[] {
 }
 
 export function isMethodAvailable(method: InstallMethod, managers: PackageManagerInfo[]): boolean {
+  // Vendor install scripts only need a shell and curl, which every desktop has.
+  if (method === "script") return true
   const tools = toolFor(method)
   if (tools.length === 0) return false
   // No detection data (web preview / backend unavailable): assume everything works.

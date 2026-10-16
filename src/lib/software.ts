@@ -20,8 +20,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S firefox",
+      },
+      {
         method: "apt",
         command: "sudo apt install firefox",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install firefox",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install MozillaFirefox",
       },
       {
         method: "flatpak",
@@ -30,14 +42,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install firefox",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install firefox",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install firefox",
       },
     ],
   },
@@ -56,8 +60,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S chromium",
+      },
+      {
         method: "apt",
         command: "sudo apt install chromium-browser",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install chromium",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install chromium",
       },
       {
         method: "flatpak",
@@ -66,14 +82,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "snap",
         command: "sudo snap install chromium",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install chromium-browser",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install chromium-browser",
       },
     ],
   },
@@ -93,8 +101,46 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S brave-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.brave.Browser",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install brave",
+      },
+      {
+        method: "script",
+        command: "curl -fsS https://dl.brave.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsS https://dl.brave.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsS https://dl.brave.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsS https://dl.brave.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsS https://dl.brave.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsS https://dl.brave.com/install.sh | sh",
+          },
+        ],
       },
       {
         method: "apt",
@@ -123,10 +169,6 @@ export const SOFTWARE: SoftwareEntry[] = [
         ],
         notes: "Official repository installation with automatic background updates",
       },
-      {
-        method: "snap",
-        command: "sudo snap install brave",
-      },
     ],
   },
   {
@@ -144,12 +186,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "deb",
-        command: "Download .deb from vivaldi.com",
+        method: "pacman",
+        command: "sudo pacman -S vivaldi",
       },
       {
-        method: "aur",
-        command: "yay -S vivaldi",
+        method: "flatpak",
+        command: "flatpak install flathub com.vivaldi.Vivaldi",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install vivaldi",
+      },
+      {
+        method: "deb",
+        command: "Download .deb from vivaldi.com",
       },
     ],
   },
@@ -168,12 +218,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub app.zen_browser.zen",
+        method: "aur",
+        command: "paru -S zen-browser-bin",
       },
       {
-        method: "aur",
-        command: "yay -S zen-browser-bin",
+        method: "flatpak",
+        command: "flatpak install flathub app.zen_browser.zen",
       },
     ],
   },
@@ -193,8 +243,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.torproject.torbrowser-launcher",
+        method: "pacman",
+        command: "sudo pacman -S torbrowser-launcher",
       },
       {
         method: "apt",
@@ -207,6 +257,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install torbrowser-launcher",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.torproject.torbrowser-launcher",
       },
     ],
   },
@@ -227,16 +281,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S signal-desktop",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub org.signal.Signal",
       },
       {
-        method: "manual",
-        command: "Follow instructions at signal.org/download",
+        method: "snap",
+        command: "sudo snap install signal-desktop",
       },
       {
-        method: "aur",
-        command: "yay -S signal-desktop",
+        method: "manual",
+        command: "Follow instructions at signal.org/download",
       },
     ],
   },
@@ -255,12 +313,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.telegram.desktop",
+        method: "pacman",
+        command: "sudo pacman -S telegram-desktop",
       },
       {
-        method: "aur",
-        command: "yay -S telegram-desktop",
+        method: "zypper",
+        command: "sudo zypper install telegram-desktop",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.telegram.desktop",
       },
       {
         method: "snap",
@@ -284,16 +346,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S discord",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.discordapp.Discord",
       },
       {
-        method: "deb",
-        command: "Download .deb from discord.com",
+        method: "snap",
+        command: "sudo snap install discord",
       },
       {
-        method: "aur",
-        command: "yay -S discord",
+        method: "deb",
+        command: "Download .deb from discord.com",
       },
     ],
   },
@@ -313,16 +379,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S slack-desktop",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.slack.Slack",
       },
       {
-        method: "deb",
-        command: "Download .deb from slack.com/downloads",
-      },
-      {
         method: "snap",
         command: "sudo snap install slack",
+      },
+      {
+        method: "deb",
+        command: "Download .deb from slack.com/downloads",
       },
     ],
   },
@@ -342,8 +412,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.mozilla.Thunderbird",
+        method: "pacman",
+        command: "sudo pacman -S thunderbird",
       },
       {
         method: "apt",
@@ -355,7 +425,11 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "zypper",
-        command: "sudo zypper install thunderbird",
+        command: "sudo zypper install MozillaThunderbird",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.mozilla.thunderbird",
       },
       {
         method: "snap",
@@ -379,24 +453,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S element-desktop",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub im.riot.Riot",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install element-desktop",
-      },
-      {
-        method: "aur",
-        command: "yay -S element-desktop",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install element-desktop",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install element-desktop",
       },
     ],
   },
@@ -416,6 +478,18 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     featured: true,
     install: [
+      {
+        method: "aur",
+        command: "paru -S visual-studio-code-bin",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.visualstudio.code",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install code --classic",
+      },
       {
         method: "apt",
         command: "wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && echo \"deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main\" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null && rm -f packages.microsoft.gpg && sudo apt update && sudo apt install -y code",
@@ -444,20 +518,8 @@ export const SOFTWARE: SoftwareEntry[] = [
         notes: "Official Microsoft apt repository",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.visualstudio.code",
-      },
-      {
         method: "deb",
         command: "Download .deb from code.visualstudio.com",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install code --classic",
-      },
-      {
-        method: "aur",
-        command: "yay -S visual-studio-code-bin",
       },
     ],
   },
@@ -483,16 +545,8 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S neovim",
       },
       {
-        method: "aur",
-        command: "paru -S neovim",
-      },
-      {
         method: "apt",
         command: "sudo apt install neovim",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub io.neovim.nvim",
       },
       {
         method: "dnf",
@@ -501,6 +555,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install neovim",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub io.neovim.nvim",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install nvim --classic",
       },
     ],
   },
@@ -520,8 +582,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "aur",
-        command: "yay -S zed",
+        method: "pacman",
+        command: "sudo pacman -S zed",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub dev.zed.Zed",
+      },
+      {
+        method: "script",
+        command: "curl -f https://zed.dev/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -f https://zed.dev/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -f https://zed.dev/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -f https://zed.dev/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -f https://zed.dev/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -f https://zed.dev/install.sh | sh",
+          },
+        ],
       },
       {
         method: "manual",
@@ -543,6 +639,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       "deployment",
     ],
     install: [
+      {
+        method: "dnf",
+        command: "sudo dnf install moby-engine",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install docker",
+      },
       {
         method: "apt",
         command: "sudo apt-get update && sudo apt-get install -y ca-certificates curl gnupg && sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg && echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null && sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io && sudo usermod -aG docker $USER",
@@ -579,10 +683,6 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S docker docker-compose && sudo systemctl enable --now docker",
       },
-      {
-        method: "aur",
-        command: "yay -S docker",
-      },
     ],
   },
   {
@@ -601,16 +701,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S podman",
+      },
+      {
         method: "apt",
         command: "sudo apt install podman",
       },
       {
         method: "dnf",
         command: "sudo dnf install podman",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S podman",
       },
       {
         method: "zypper",
@@ -633,16 +733,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S git",
+      },
+      {
         method: "apt",
         command: "sudo apt install git",
       },
       {
         method: "dnf",
         command: "sudo dnf install git",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S git",
       },
       {
         method: "zypper",
@@ -665,6 +765,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       "rest",
     ],
     install: [
+      {
+        method: "aur",
+        command: "paru -S postman-bin",
+      },
       {
         method: "flatpak",
         command: "flatpak install flathub com.getpostman.Postman",
@@ -693,12 +797,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
-        method: "apt",
-        command: "sudo apt install libreoffice",
+        method: "pacman",
+        command: "sudo pacman -S libreoffice-fresh",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.libreoffice.LibreOffice",
+        method: "apt",
+        command: "sudo apt install libreoffice",
       },
       {
         method: "dnf",
@@ -707,6 +811,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install libreoffice",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.libreoffice.LibreOffice",
       },
       {
         method: "snap",
@@ -729,8 +837,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S onlyoffice-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub org.onlyoffice.desktopeditors",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install onlyoffice-desktopeditors",
       },
       {
         method: "deb",
@@ -754,16 +870,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S obsidian",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub md.obsidian.Obsidian",
       },
       {
-        method: "deb",
-        command: "Download .deb from obsidian.md",
+        method: "snap",
+        command: "sudo snap install obsidian --classic",
       },
       {
-        method: "aur",
-        command: "yay -S obsidian",
+        method: "deb",
+        command: "Download .deb from obsidian.md",
       },
     ],
   },
@@ -783,12 +903,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install okular",
+        method: "pacman",
+        command: "sudo pacman -S okular",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.okular",
+        method: "apt",
+        command: "sudo apt install okular",
       },
       {
         method: "dnf",
@@ -797,6 +917,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install okular",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.okular",
       },
       {
         method: "snap",
@@ -821,24 +945,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S steam",
+      },
+      {
         method: "apt",
-        command: "sudo apt install steam",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub com.valvesoftware.Steam",
-      },
-      {
-        method: "aur",
-        command: "yay -S steam",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install steam",
+        command: "sudo apt install steam-installer",
       },
       {
         method: "zypper",
         command: "sudo zypper install steam",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.valvesoftware.Steam",
       },
       {
         method: "snap",
@@ -862,16 +982,28 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S lutris",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install lutris",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install lutris",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install lutris",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub net.lutris.Lutris",
       },
       {
         method: "manual",
         command: "Follow lutris.net download instructions",
-      },
-      {
-        method: "aur",
-        command: "yay -S lutris",
       },
     ],
   },
@@ -891,12 +1023,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.heroicgameslauncher.hgl",
+        method: "aur",
+        command: "paru -S heroic-games-launcher-bin",
       },
       {
-        method: "aur",
-        command: "yay -S heroic-games-launcher-bin",
+        method: "flatpak",
+        command: "flatpak install flathub com.heroicgameslauncher.hgl",
       },
     ],
   },
@@ -915,16 +1047,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S wine",
+      },
+      {
         method: "apt",
         command: "sudo apt install wine",
       },
       {
         method: "dnf",
         command: "sudo dnf install wine",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S wine",
       },
       {
         method: "zypper",
@@ -949,16 +1081,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S vlc",
+      },
+      {
         method: "apt",
         command: "sudo apt install vlc",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.videolan.VLC",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install vlc",
       },
       {
         method: "dnf",
@@ -967,6 +1095,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install vlc",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.videolan.VLC",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install vlc",
       },
     ],
   },
@@ -987,16 +1123,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.obsproject.Studio",
+        method: "pacman",
+        command: "sudo pacman -S obs-studio",
       },
       {
         method: "apt",
         command: "sudo apt install obs-studio",
-      },
-      {
-        method: "aur",
-        command: "yay -S obs-studio",
       },
       {
         method: "dnf",
@@ -1005,6 +1137,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install obs-studio",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.obsproject.Studio",
       },
       {
         method: "snap",
@@ -1028,12 +1164,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install audacity",
+        method: "pacman",
+        command: "sudo pacman -S audacity",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.audacityteam.Audacity",
+        method: "apt",
+        command: "sudo apt install audacity",
       },
       {
         method: "dnf",
@@ -1042,6 +1178,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install audacity",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.audacityteam.Audacity",
       },
       {
         method: "snap",
@@ -1065,8 +1205,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.kdenlive",
+        method: "pacman",
+        command: "sudo pacman -S kdenlive",
       },
       {
         method: "apt",
@@ -1079,6 +1219,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install kdenlive",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.kdenlive",
       },
       {
         method: "snap",
@@ -1102,24 +1246,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub fr.handbrake.ghb",
+        method: "pacman",
+        command: "sudo pacman -S handbrake",
       },
       {
         method: "apt",
         command: "sudo apt install handbrake",
       },
       {
-        method: "aur",
-        command: "yay -S handbrake",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install handbrake",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install handbrake",
+        method: "flatpak",
+        command: "flatpak install flathub fr.handbrake.ghb",
       },
     ],
   },
@@ -1140,8 +1276,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S nextcloud-client",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install nextcloud-desktop",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install nextcloud-client",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install nextcloud-desktop",
+      },
+      {
         method: "flatpak",
-        command: "flatpak install flathub com.nextcloud.desktopclient",
+        command: "flatpak install flathub com.nextcloud.desktopclient.nextcloud",
       },
       {
         method: "manual",
@@ -1169,16 +1321,46 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S jellyfin-server jellyfin-web",
+      },
+      {
         method: "flatpak",
-        command: "flatpak install flathub com.jellyfin.JellyfinServer",
+        command: "flatpak install flathub org.jellyfin.JellyfinServer",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+          },
+        ],
       },
       {
         method: "manual",
         command: "Docker: docker run jellyfin/jellyfin",
-      },
-      {
-        method: "aur",
-        command: "yay -S jellyfin",
       },
     ],
   },
@@ -1198,12 +1380,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "manual",
-        command: "Docker: docker run vaultwarden/server",
+        method: "pacman",
+        command: "sudo pacman -S vaultwarden",
       },
       {
-        method: "aur",
-        command: "yay -S vaultwarden-bin",
+        method: "script",
+        command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+          },
+        ],
+      },
+      {
+        method: "manual",
+        command: "Docker: docker run vaultwarden/server",
       },
     ],
   },
@@ -1223,12 +1435,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "manual",
-        command: "Docker: docker run homeassistant/home-assistant",
+        method: "aur",
+        command: "paru -S home-assistant",
       },
       {
-        method: "aur",
-        command: "yay -S home-assistant",
+        method: "script",
+        command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+          },
+        ],
+      },
+      {
+        method: "manual",
+        command: "Docker: docker run homeassistant/home-assistant",
       },
     ],
   },
@@ -1247,24 +1489,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install p7zip-full",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.7zip.7zip",
-      },
-      {
         method: "pacman",
-        command: "sudo pacman -S p7zip",
+        command: "sudo pacman -S 7zip",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install 7zip",
       },
       {
         method: "dnf",
-        command: "sudo dnf install p7zip",
+        command: "sudo dnf install 7zip",
       },
       {
         method: "zypper",
-        command: "sudo zypper install p7zip",
+        command: "sudo zypper install 7zip",
       },
     ],
   },
@@ -1283,16 +1521,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S 1password",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.onepassword.OnePassword",
       },
       {
         method: "deb",
         command: "Download .deb from 1password.com/downloads",
-      },
-      {
-        method: "aur",
-        command: "yay -S 1password",
       },
     ],
   },
@@ -1312,12 +1550,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S bitwarden",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.bitwarden.desktop",
       },
       {
-        method: "aur",
-        command: "yay -S bitwarden",
+        method: "snap",
+        command: "sudo snap install bitwarden",
       },
     ],
   },
@@ -1336,12 +1578,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "deb",
-        command: "Download .deb from anydesk.com/downloads",
+        method: "aur",
+        command: "paru -S anydesk-bin",
       },
       {
-        method: "aur",
-        command: "yay -S anydesk",
+        method: "flatpak",
+        command: "flatpak install flathub com.anydesk.Anydesk",
+      },
+      {
+        method: "deb",
+        command: "Download .deb from anydesk.com/downloads",
       },
     ],
   },
@@ -1359,6 +1605,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       "security",
     ],
     install: [
+      {
+        method: "pacman",
+        command: "sudo pacman -S flatseal",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install flatseal",
+      },
       {
         method: "flatpak",
         command: "flatpak install flathub com.github.tchx84.Flatseal",
@@ -1381,16 +1635,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
-        method: "apt",
-        command: "sudo apt install alacritty",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.alacritty.Alacritty",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S alacritty",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install alacritty",
       },
       {
         method: "dnf",
@@ -1399,6 +1649,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install alacritty",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install alacritty --classic",
       },
     ],
   },
@@ -1418,16 +1672,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install kitty",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S kitty",
       },
       {
-        method: "aur",
-        command: "yay -S kitty",
+        method: "apt",
+        command: "sudo apt install kitty",
       },
       {
         method: "dnf",
@@ -1454,16 +1704,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S tmux",
+      },
+      {
         method: "apt",
         command: "sudo apt install tmux",
       },
       {
         method: "dnf",
         command: "sudo dnf install tmux",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S tmux",
       },
       {
         method: "zypper",
@@ -1487,16 +1737,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install btop",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S btop",
       },
       {
-        method: "aur",
-        command: "yay -S btop",
+        method: "apt",
+        command: "sudo apt install btop",
       },
       {
         method: "dnf",
@@ -1523,12 +1769,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install gnome-tweaks",
+        method: "pacman",
+        command: "sudo pacman -S gnome-tweaks",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gnome.Tweaks",
+        method: "apt",
+        command: "sudo apt install gnome-tweaks",
       },
       {
         method: "dnf",
@@ -1556,12 +1802,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install timeshift",
+        method: "pacman",
+        command: "sudo pacman -S timeshift",
       },
       {
-        method: "aur",
-        command: "yay -S timeshift",
+        method: "apt",
+        command: "sudo apt install timeshift",
       },
       {
         method: "dnf",
@@ -1588,12 +1834,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install gparted",
+        method: "pacman",
+        command: "sudo pacman -S gparted",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gnome.GParted",
+        method: "apt",
+        command: "sudo apt install gparted",
       },
       {
         method: "dnf",
@@ -1622,16 +1868,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S keepassxc",
+      },
+      {
         method: "apt",
         command: "sudo apt install keepassxc",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.keepassxc.KeePassXC",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install keepassxc",
       },
       {
         method: "dnf",
@@ -1640,6 +1882,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install keepassxc",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.keepassxc.KeePassXC",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install keepassxc",
       },
     ],
   },
@@ -1659,16 +1909,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S veracrypt",
+      },
+      {
         method: "deb",
         command: "Download .deb from veracrypt.fr",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub fr.veracrypt.veracrypt",
-      },
-      {
-        method: "aur",
-        command: "yay -S veracrypt",
       },
     ],
   },
@@ -1687,20 +1933,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S virtualbox virtualbox-host-modules-arch",
+      },
+      {
         method: "apt",
         command: "sudo apt install virtualbox",
       },
       {
-        method: "aur",
-        command: "yay -S virtualbox",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install VirtualBox",
-      },
-      {
         method: "zypper",
-        command: "sudo zypper install VirtualBox",
+        command: "sudo zypper install virtualbox",
       },
     ],
   },
@@ -1720,16 +1962,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S virt-manager",
+      },
+      {
         method: "apt",
         command: "sudo apt install virt-manager",
       },
       {
         method: "dnf",
         command: "sudo dnf install virt-manager",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S virt-manager",
       },
       {
         method: "zypper",
@@ -1752,20 +1994,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S anki",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install anki",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub net.ankiweb.Anki",
       },
       {
-        method: "manual",
-        command: "Follow apps.ankiweb.net download instructions",
-      },
-      {
-        method: "aur",
-        command: "yay -S anki",
-      },
-      {
         method: "snap",
         command: "sudo snap install anki-woodrow",
+      },
+      {
+        method: "manual",
+        command: "Follow apps.ankiweb.net download instructions",
       },
     ],
   },
@@ -1784,12 +2030,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install stellarium",
+        method: "pacman",
+        command: "sudo pacman -S stellarium",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.stellarium.Stellarium",
+        method: "apt",
+        command: "sudo apt install stellarium",
       },
       {
         method: "dnf",
@@ -1800,8 +2046,12 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo zypper install stellarium",
       },
       {
+        method: "flatpak",
+        command: "flatpak install flathub org.stellarium.Stellarium",
+      },
+      {
         method: "snap",
-        command: "sudo snap install stellarium",
+        command: "sudo snap install stellarium-daily",
       },
     ],
   },
@@ -1822,12 +2072,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
-        method: "apt",
-        command: "sudo apt install inkscape",
+        method: "pacman",
+        command: "sudo pacman -S inkscape",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.inkscape.Inkscape",
+        method: "apt",
+        command: "sudo apt install inkscape",
       },
       {
         method: "dnf",
@@ -1836,6 +2086,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install inkscape",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.inkscape.Inkscape",
       },
       {
         method: "snap",
@@ -1860,16 +2114,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S blender",
+      },
+      {
         method: "apt",
         command: "sudo apt install blender",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.blender.Blender",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install blender",
       },
       {
         method: "dnf",
@@ -1878,6 +2128,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install blender",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.blender.Blender",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install blender --classic",
       },
     ],
   },
@@ -1897,16 +2155,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S krita",
+      },
+      {
         method: "apt",
         command: "sudo apt install krita",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.krita",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install krita",
       },
       {
         method: "dnf",
@@ -1915,6 +2169,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install krita",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.krita",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install krita",
       },
     ],
   },
@@ -1939,10 +2201,6 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S gimp",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gimp.GIMP",
-      },
-      {
         method: "apt",
         command: "sudo apt install gimp",
       },
@@ -1953,6 +2211,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install gimp",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.gimp.GIMP",
       },
       {
         method: "snap",
@@ -1977,12 +2239,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     featured: true,
     install: [
       {
-        method: "aur",
-        command: "paru -S ghostty",
+        method: "pacman",
+        command: "sudo pacman -S ghostty",
       },
       {
-        method: "paru",
-        command: "paru -S ghostty-bin",
+        method: "zypper",
+        command: "sudo zypper install ghostty",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install ghostty --classic",
       },
     ],
   },
@@ -2033,16 +2299,22 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S fastfetch",
       },
       {
-        method: "apt",
-        command: "sudo apt install fastfetch",
-      },
-      {
         method: "dnf",
         command: "sudo dnf install fastfetch",
       },
       {
         method: "zypper",
         command: "sudo zypper install fastfetch",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install -y fastfetch || (sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch && sudo apt update && sudo apt install -y fastfetch)",
+        steps: [
+          {
+            title: "Install with apt",
+            command: "sudo apt install -y fastfetch || (sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch && sudo apt update && sudo apt install -y fastfetch)",
+          },
+        ],
       },
     ],
   },
@@ -2066,10 +2338,6 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S flameshot",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.flameshot.Flameshot",
-      },
-      {
         method: "apt",
         command: "sudo apt install flameshot",
       },
@@ -2080,6 +2348,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install flameshot",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.flameshot.Flameshot",
       },
     ],
   },
@@ -2099,10 +2371,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     featured: true,
     install: [
-      {
-        method: "pacman",
-        command: "sudo pacman -S heroic-games-launcher-bin",
-      },
       {
         method: "aur",
         command: "paru -S heroic-games-launcher-bin",
@@ -2130,7 +2398,7 @@ export const SOFTWARE: SoftwareEntry[] = [
     install: [
       {
         method: "aur",
-        command: "paru -S protonup-qt",
+        command: "paru -S protonup-qt-bin",
       },
       {
         method: "flatpak",
@@ -2158,6 +2426,18 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S calibre",
       },
       {
+        method: "apt",
+        command: "sudo apt install calibre",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install calibre",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install calibre",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.calibre_ebook.calibre",
       },
@@ -2178,24 +2458,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.gitlab.librewolf-community",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install librewolf",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S librewolf",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install librewolf",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install librewolf",
+        method: "flatpak",
+        command: "flatpak install flathub io.gitlab.librewolf-community",
       },
     ],
   },
@@ -2214,24 +2482,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S waterfox-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub net.waterfox.waterfox",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install waterfox",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S waterfox",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install waterfox",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install waterfox",
       },
     ],
   },
@@ -2250,24 +2506,32 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S google-chrome",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.google.Chrome",
       },
       {
         method: "apt",
-        command: "sudo apt install google-chrome",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S google-chrome",
+        command: "wget -qO /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo apt install -y /tmp/google-chrome.deb",
+        steps: [
+          {
+            title: "Install with apt",
+            command: "wget -qO /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo apt install -y /tmp/google-chrome.deb",
+          },
+        ],
       },
       {
         method: "dnf",
-        command: "sudo dnf install google-chrome",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install google-chrome",
+        command: "sudo dnf install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm",
+        steps: [
+          {
+            title: "Install with dnf",
+            command: "sudo dnf install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm",
+          },
+        ],
       },
     ],
   },
@@ -2286,20 +2550,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install helium",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S helium",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install helium",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install helium",
+        method: "aur",
+        command: "paru -S helium-browser-bin",
       },
     ],
   },
@@ -2318,24 +2570,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S ungoogled-chromium-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub io.github.ungoogled_software.ungoogled_chromium",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install ungoogled-chromium",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S ungoogled-chromium",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install ungoogled-chromium",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install ungoogled-chromium",
       },
     ],
   },
@@ -2354,12 +2594,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install konqueror",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S konqueror",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install konqueror",
       },
       {
         method: "dnf",
@@ -2386,16 +2626,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.falkon",
+        method: "pacman",
+        command: "sudo pacman -S falkon",
       },
       {
         method: "apt",
         command: "sudo apt install falkon",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S falkon",
       },
       {
         method: "dnf",
@@ -2404,6 +2640,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install falkon",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.falkon",
       },
     ],
   },
@@ -2422,24 +2662,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gnome.Epiphany",
+        method: "pacman",
+        command: "sudo pacman -S epiphany",
       },
       {
         method: "apt",
-        command: "sudo apt install gnome-web",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S gnome-web",
+        command: "sudo apt install epiphany-browser",
       },
       {
         method: "dnf",
-        command: "sudo dnf install gnome-web",
+        command: "sudo dnf install epiphany",
       },
       {
         method: "zypper",
-        command: "sudo zypper install gnome-web",
+        command: "sudo zypper install epiphany",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.gnome.Epiphany",
       },
     ],
   },
@@ -2458,12 +2698,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install qutebrowser",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S qutebrowser",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install qutebrowser",
       },
       {
         method: "dnf",
@@ -2490,20 +2730,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install nyxt",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S nyxt",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install nyxt",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install nyxt",
       },
       {
         method: "flatpak",
@@ -2526,24 +2754,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S floorp-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub one.ablaze.floorp",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install floorp",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S floorp",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install floorp",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install floorp",
       },
     ],
   },
@@ -2562,20 +2778,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install mullvad-browser",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S mullvad-browser",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install mullvad-browser",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install mullvad-browser",
+        method: "aur",
+        command: "paru -S mullvad-browser-bin",
       },
       {
         method: "flatpak",
@@ -2598,24 +2802,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S microsoft-edge-stable-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.microsoft.Edge",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install microsoft-edge",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S microsoft-edge",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install microsoft-edge",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install microsoft-edge",
       },
     ],
   },
@@ -2634,24 +2826,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S opera",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.opera.Opera",
       },
       {
-        method: "apt",
-        command: "sudo apt install opera",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S opera",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install opera",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install opera",
+        method: "snap",
+        command: "sudo snap install opera",
       },
     ],
   },
@@ -2670,12 +2854,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install syncthing",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S syncthing",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install syncthing",
       },
       {
         method: "dnf",
@@ -2702,16 +2886,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.qbittorrent.qBittorrent",
+        method: "pacman",
+        command: "sudo pacman -S qbittorrent",
       },
       {
         method: "apt",
         command: "sudo apt install qbittorrent",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S qbittorrent",
       },
       {
         method: "dnf",
@@ -2720,6 +2900,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install qbittorrent",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.qbittorrent.qBittorrent",
       },
     ],
   },
@@ -2738,24 +2922,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.transmissionbt.Transmission",
+        method: "pacman",
+        command: "sudo pacman -S transmission-gtk",
       },
       {
         method: "apt",
-        command: "sudo apt install transmission",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S transmission",
+        command: "sudo apt install transmission-gtk",
       },
       {
         method: "dnf",
-        command: "sudo dnf install transmission",
+        command: "sudo dnf install transmission-gtk",
       },
       {
         method: "zypper",
-        command: "sudo zypper install transmission",
+        command: "sudo zypper install transmission-gtk",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.transmissionbt.Transmission",
       },
     ],
   },
@@ -2774,24 +2958,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S localsend-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub org.localsend.localsend_app",
       },
       {
-        method: "apt",
-        command: "sudo apt install localsend",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S localsend",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install localsend",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install localsend",
+        method: "snap",
+        command: "sudo snap install localsend",
       },
     ],
   },
@@ -2810,16 +2986,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.filezillaproject.Filezilla",
+        method: "pacman",
+        command: "sudo pacman -S filezilla",
       },
       {
         method: "apt",
         command: "sudo apt install filezilla",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S filezilla",
       },
       {
         method: "dnf",
@@ -2828,6 +3000,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install filezilla",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.filezillaproject.Filezilla",
       },
     ],
   },
@@ -2846,24 +3022,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.dropbox.Client",
+        method: "aur",
+        command: "paru -S dropbox",
       },
       {
         method: "apt",
-        command: "sudo apt install dropbox",
+        command: "sudo apt install nautilus-dropbox",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S dropbox",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install dropbox",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install dropbox",
+        method: "flatpak",
+        command: "flatpak install flathub com.dropbox.Client",
       },
     ],
   },
@@ -2882,12 +3050,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ab-download-manager",
+        method: "aur",
+        command: "paru -S ab-download-manager-bin",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S ab-download-manager",
+        method: "script",
+        command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+          },
+        ],
       },
     ],
   },
@@ -2906,12 +3100,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install free-download-manager",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S free-download-manager",
+        method: "aur",
+        command: "paru -S freedownloadmanager",
       },
       {
         method: "flatpak",
@@ -2934,12 +3124,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install cursor",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S cursor",
+        method: "aur",
+        command: "paru -S cursor-bin",
       },
     ],
   },
@@ -2958,24 +3144,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S vscodium-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.vscodium.codium",
       },
       {
-        method: "apt",
-        command: "sudo apt install vscodium",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S vscodium",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install vscodium",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install vscodium",
+        method: "snap",
+        command: "sudo snap install codium --classic",
       },
     ],
   },
@@ -2994,24 +3172,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S intellij-idea-oss",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.jetbrains.IntelliJ-IDEA-Community",
       },
       {
-        method: "apt",
-        command: "sudo apt install intellij-idea",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S intellij-idea",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install intellij-idea",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install intellij-idea",
+        method: "snap",
+        command: "sudo snap install intellij-idea-community --classic",
       },
     ],
   },
@@ -3030,24 +3200,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.jetbrains.PyCharm-Community",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install pycharm",
-      },
-      {
         method: "pacman",
-        command: "sudo pacman -S pycharm",
+        command: "sudo pacman -S pycharm-community-edition",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install pycharm",
+        method: "flatpak",
+        command: "flatpak install flathub com.jetbrains.PyCharm-Professional",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install pycharm",
+        method: "snap",
+        command: "sudo snap install pycharm-community --classic",
       },
     ],
   },
@@ -3066,24 +3228,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S clion",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.jetbrains.CLion",
       },
       {
-        method: "apt",
-        command: "sudo apt install clion",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S clion",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install clion",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install clion",
+        method: "snap",
+        command: "sudo snap install clion --classic",
       },
     ],
   },
@@ -3102,24 +3256,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S arduino-ide-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub cc.arduino.IDE2",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install arduino-ide",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S arduino-ide",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install arduino-ide",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install arduino-ide",
       },
     ],
   },
@@ -3138,20 +3280,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install sublime-text",
+        method: "aur",
+        command: "paru -S sublime-text-4",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S sublime-text",
+        method: "flatpak",
+        command: "flatpak install flathub com.sublimehq.SublimeText",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install sublime-text",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install sublime-text",
+        method: "snap",
+        command: "sudo snap install sublime-text --classic",
       },
     ],
   },
@@ -3170,16 +3308,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.kate",
+        method: "pacman",
+        command: "sudo pacman -S kate",
       },
       {
         method: "apt",
         command: "sudo apt install kate",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S kate",
       },
       {
         method: "dnf",
@@ -3188,6 +3322,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install kate",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.kate",
       },
     ],
   },
@@ -3206,16 +3344,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.geany.Geany",
+        method: "pacman",
+        command: "sudo pacman -S geany",
       },
       {
         method: "apt",
         command: "sudo apt install geany",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S geany",
       },
       {
         method: "dnf",
@@ -3224,6 +3358,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install geany",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.geany.Geany",
       },
     ],
   },
@@ -3242,16 +3380,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install vim",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S vim",
       },
       {
+        method: "apt",
+        command: "sudo apt install vim",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install vim",
+        command: "sudo dnf install vim-enhanced",
       },
       {
         method: "zypper",
@@ -3274,10 +3412,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install helix",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S helix",
       },
@@ -3288,6 +3422,14 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install helix",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.helix_editor.Helix",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install helix --classic",
       },
     ],
   },
@@ -3306,12 +3448,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install micro",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S micro",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install micro",
       },
       {
         method: "dnf",
@@ -3319,7 +3461,11 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "zypper",
-        command: "sudo zypper install micro",
+        command: "sudo zypper install micro-editor",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install micro --classic",
       },
     ],
   },
@@ -3338,12 +3484,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install emacs",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S emacs",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install emacs",
       },
       {
         method: "dnf",
@@ -3352,6 +3498,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install emacs",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.gnu.emacs",
       },
     ],
   },
@@ -3370,12 +3520,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install opencode",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S opencode",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://opencode.ai/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://opencode.ai/install | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://opencode.ai/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://opencode.ai/install | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://opencode.ai/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://opencode.ai/install | bash",
+          },
+        ],
       },
     ],
   },
@@ -3394,12 +3570,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install openai-codex",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S openai-codex",
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @openai/codex",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @openai/codex",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @openai/codex",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @openai/codex",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @openai/codex",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @openai/codex",
+          },
+        ],
       },
     ],
   },
@@ -3418,12 +3620,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install gemini-cli",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S gemini-cli",
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @google/gemini-cli",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @google/gemini-cli",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @google/gemini-cli",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @google/gemini-cli",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @google/gemini-cli",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @google/gemini-cli",
+          },
+        ],
       },
     ],
   },
@@ -3442,12 +3670,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install claude-code",
+        method: "aur",
+        command: "paru -S claude-code",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S claude-code",
+        method: "script",
+        command: "curl -fsSL https://claude.ai/install.sh | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://claude.ai/install.sh | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://claude.ai/install.sh | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://claude.ai/install.sh | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://claude.ai/install.sh | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://claude.ai/install.sh | bash",
+          },
+        ],
       },
     ],
   },
@@ -3466,10 +3720,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ollama",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ollama",
       },
@@ -3480,6 +3730,36 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install ollama",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://ollama.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://ollama.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://ollama.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://ollama.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://ollama.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://ollama.com/install.sh | sh",
+          },
+        ],
       },
     ],
   },
@@ -3498,20 +3778,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install llama-cpp",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S llama-cpp",
       },
       {
         method: "dnf",
         command: "sudo dnf install llama-cpp",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install llama-cpp",
       },
     ],
   },
@@ -3530,16 +3802,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S jan-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub ai.jan.Jan",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install jan",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S jan",
       },
     ],
   },
@@ -3558,16 +3826,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.darktable.Darktable",
+        method: "pacman",
+        command: "sudo pacman -S darktable",
       },
       {
         method: "apt",
         command: "sudo apt install darktable",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S darktable",
       },
       {
         method: "dnf",
@@ -3576,6 +3840,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install darktable",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.darktable.Darktable",
       },
     ],
   },
@@ -3594,14 +3862,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.freecad.FreeCAD",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install freecad",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S freecad",
       },
@@ -3611,7 +3871,11 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "zypper",
-        command: "sudo zypper install freecad",
+        command: "sudo zypper install FreeCAD",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.freecad.FreeCAD",
       },
     ],
   },
@@ -3630,16 +3894,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kicad.KiCad",
+        method: "pacman",
+        command: "sudo pacman -S kicad",
       },
       {
         method: "apt",
         command: "sudo apt install kicad",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S kicad",
       },
       {
         method: "dnf",
@@ -3648,6 +3908,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install kicad",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kicad.KiCad",
       },
     ],
   },
@@ -3666,16 +3930,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S cura-bin",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install cura",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.ultimaker.cura",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install ultimaker-cura",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S ultimaker-cura",
       },
     ],
   },
@@ -3694,24 +3958,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.godotengine.Godot",
+        method: "pacman",
+        command: "sudo pacman -S godot",
       },
       {
         method: "apt",
-        command: "sudo apt install godot-engine",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S godot-engine",
+        command: "sudo apt install godot3",
       },
       {
         method: "dnf",
-        command: "sudo dnf install godot-engine",
+        command: "sudo dnf install godot",
       },
       {
         method: "zypper",
-        command: "sudo zypper install godot-engine",
+        command: "sudo zypper install godot",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.godotengine.Godot",
       },
     ],
   },
@@ -3730,16 +3994,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.kolourpaint",
+        method: "pacman",
+        command: "sudo pacman -S kolourpaint",
       },
       {
         method: "apt",
         command: "sudo apt install kolourpaint",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S kolourpaint",
       },
       {
         method: "dnf",
@@ -3748,6 +4008,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install kolourpaint",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.kolourpaint",
       },
     ],
   },
@@ -3766,12 +4030,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install orcaslicer",
+        method: "aur",
+        command: "paru -S orca-slicer-bin",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S orcaslicer",
+        method: "flatpak",
+        command: "flatpak install flathub com.orcaslicer.OrcaSlicer",
       },
     ],
   },
@@ -3790,12 +4054,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install davinci-resolve",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S davinci-resolve",
+        method: "aur",
+        command: "paru -S davinci-resolve",
       },
     ],
   },
@@ -3814,12 +4074,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ivpn",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S ivpn",
+        method: "aur",
+        command: "paru -S ivpn",
       },
     ],
   },
@@ -3838,16 +4094,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S proton-vpn-gtk-app",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.protonvpn.www",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install proton-vpn",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S proton-vpn",
       },
     ],
   },
@@ -3866,12 +4118,28 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install mullvad-vpn",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S mullvad-vpn",
+      },
+      {
+        method: "apt",
+        command: "sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc && echo \"deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$(dpkg --print-architecture)] https://repository.mullvad.net/deb/stable stable main\" | sudo tee /etc/apt/sources.list.d/mullvad.list && sudo apt update && sudo apt install -y mullvad-vpn",
+        steps: [
+          {
+            title: "Install with apt",
+            command: "sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc && echo \"deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$(dpkg --print-architecture)] https://repository.mullvad.net/deb/stable stable main\" | sudo tee /etc/apt/sources.list.d/mullvad.list && sudo apt update && sudo apt install -y mullvad-vpn",
+          },
+        ],
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo && sudo dnf install -y mullvad-vpn",
+        steps: [
+          {
+            title: "Install with dnf",
+            command: "sudo dnf config-manager addrepo --from-repofile=https://repository.mullvad.net/rpm/stable/mullvad.repo && sudo dnf install -y mullvad-vpn",
+          },
+        ],
       },
     ],
   },
@@ -3890,20 +4158,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install tailscale",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S tailscale",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install tailscale",
-      },
-      {
         method: "zypper",
         command: "sudo zypper install tailscale",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://tailscale.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://tailscale.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://tailscale.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://tailscale.com/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://tailscale.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://tailscale.com/install.sh | sh",
+          },
+        ],
       },
     ],
   },
@@ -3922,20 +4212,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install wireguard",
+        method: "pacman",
+        command: "sudo pacman -S wireguard-tools",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S wireguard",
+        method: "apt",
+        command: "sudo apt install wireguard-tools",
       },
       {
         method: "dnf",
-        command: "sudo dnf install wireguard",
+        command: "sudo dnf install wireguard-tools",
       },
       {
         method: "zypper",
-        command: "sudo zypper install wireguard",
+        command: "sudo zypper install wireguard-tools",
       },
     ],
   },
@@ -3954,12 +4244,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install openvpn",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S openvpn",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install openvpn",
       },
       {
         method: "dnf",
@@ -3986,12 +4276,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install nmap",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S nmap",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install nmap",
       },
       {
         method: "dnf",
@@ -4018,16 +4308,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install openssh",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S openssh",
       },
       {
+        method: "apt",
+        command: "sudo apt install openssh-server",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install openssh",
+        command: "sudo dnf install openssh-server openssh-clients",
       },
       {
         method: "zypper",
@@ -4050,16 +4340,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.remmina.Remmina",
+        method: "pacman",
+        command: "sudo pacman -S remmina",
       },
       {
         method: "apt",
         command: "sudo apt install remmina",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S remmina",
       },
       {
         method: "dnf",
@@ -4068,6 +4354,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install remmina",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.remmina.Remmina",
       },
     ],
   },
@@ -4086,12 +4376,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install zsh",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S zsh",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install zsh",
       },
       {
         method: "dnf",
@@ -4118,12 +4408,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install oh-my-zsh",
+        method: "aur",
+        command: "paru -S oh-my-zsh-git",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S oh-my-zsh",
+        method: "script",
+        command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+          },
+        ],
       },
     ],
   },
@@ -4142,12 +4458,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install fish",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S fish",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install fish",
       },
       {
         method: "dnf",
@@ -4174,20 +4490,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install starship",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S starship",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install starship",
-      },
-      {
         method: "zypper",
         command: "sudo zypper install starship",
+      },
+      {
+        method: "script",
+        command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+          },
+        ],
       },
     ],
   },
@@ -4206,24 +4544,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.wezfurlong.wezterm",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install wezterm",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S wezterm",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install wezterm",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install wezterm",
+        method: "flatpak",
+        command: "flatpak install flathub org.wezfurlong.wezterm",
       },
     ],
   },
@@ -4242,12 +4568,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install foot",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S foot",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install foot",
       },
       {
         method: "dnf",
@@ -4277,10 +4603,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "ptyxis",
     ],
     install: [
-      {
-        method: "apt",
-        command: "sudo apt install ptyxis",
-      },
       {
         method: "pacman",
         command: "sudo pacman -S ptyxis",
@@ -4314,16 +4636,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.mpv.Mpv",
+        method: "pacman",
+        command: "sudo pacman -S mpv",
       },
       {
         method: "apt",
         command: "sudo apt install mpv",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S mpv",
       },
       {
         method: "dnf",
@@ -4332,6 +4650,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install mpv",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub io.mpv.Mpv",
       },
     ],
   },
@@ -4350,16 +4672,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.github.celluloid_player.Celluloid",
+        method: "pacman",
+        command: "sudo pacman -S celluloid",
       },
       {
         method: "apt",
         command: "sudo apt install celluloid",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S celluloid",
       },
       {
         method: "dnf",
@@ -4368,6 +4686,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install celluloid",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub io.github.celluloid_player.Celluloid",
       },
     ],
   },
@@ -4386,16 +4708,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.strawberrymusicplayer.strawberry",
+        method: "pacman",
+        command: "sudo pacman -S strawberry",
       },
       {
         method: "apt",
         command: "sudo apt install strawberry",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S strawberry",
       },
       {
         method: "dnf",
@@ -4404,6 +4722,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install strawberry",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.strawberrymusicplayer.strawberry",
       },
     ],
   },
@@ -4422,24 +4744,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S spotify-launcher",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.spotify.Client",
       },
       {
-        method: "apt",
-        command: "sudo apt install spotify",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S spotify",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install spotify",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install spotify",
+        method: "snap",
+        command: "sudo snap install spotify",
       },
     ],
   },
@@ -4458,20 +4772,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ffmpeg",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ffmpeg",
       },
       {
+        method: "apt",
+        command: "sudo apt install ffmpeg",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install ffmpeg",
+        command: "sudo dnf install ffmpeg-free",
       },
       {
         method: "zypper",
-        command: "sudo zypper install ffmpeg",
+        command: "sudo zypper install ffmpeg-7",
       },
     ],
   },
@@ -4490,24 +4804,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S stremio",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.stremio.Stremio",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install stremio",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S stremio",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install stremio",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install stremio",
       },
     ],
   },
@@ -4526,24 +4828,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub tv.kodi.Kodi",
+        method: "pacman",
+        command: "sudo pacman -S kodi",
       },
       {
         method: "apt",
         command: "sudo apt install kodi",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S kodi",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install kodi",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install kodi",
+        method: "flatpak",
+        command: "flatpak install flathub tv.kodi.Kodi",
       },
     ],
   },
@@ -4562,16 +4856,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.haruna",
+        method: "pacman",
+        command: "sudo pacman -S haruna",
       },
       {
         method: "apt",
         command: "sudo apt install haruna",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S haruna",
       },
       {
         method: "dnf",
@@ -4580,6 +4870,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install haruna",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.haruna",
       },
     ],
   },
@@ -4598,24 +4892,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub de.haeckerfelix.Shortwave",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install shortwave",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S shortwave",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install shortwave",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install shortwave",
+        method: "flatpak",
+        command: "flatpak install flathub de.haeckerfelix.Shortwave",
       },
     ],
   },
@@ -4634,24 +4916,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S parabolic",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub org.nickvision.tubeconverter",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install parabolic",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S parabolic",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install parabolic",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install parabolic",
       },
     ],
   },
@@ -4670,20 +4940,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install kde-partition-manager",
+        method: "pacman",
+        command: "sudo pacman -S partitionmanager",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S kde-partition-manager",
+        method: "apt",
+        command: "sudo apt install partitionmanager",
       },
       {
         method: "dnf",
-        command: "sudo dnf install kde-partition-manager",
+        command: "sudo dnf install kde-partitionmanager",
       },
       {
         method: "zypper",
-        command: "sudo zypper install kde-partition-manager",
+        command: "sudo zypper install partitionmanager",
       },
     ],
   },
@@ -4702,12 +4972,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install kde-connect",
+        method: "pacman",
+        command: "sudo pacman -S kdeconnect",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S kde-connect",
+        method: "apt",
+        command: "sudo apt install kdeconnect",
       },
       {
         method: "dnf",
@@ -4715,7 +4985,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "zypper",
-        command: "sudo zypper install kde-connect",
+        command: "sudo zypper install kdeconnect-kde",
       },
     ],
   },
@@ -4734,16 +5004,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.bleachbit.BleachBit",
+        method: "pacman",
+        command: "sudo pacman -S bleachbit",
       },
       {
         method: "apt",
         command: "sudo apt install bleachbit",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S bleachbit",
       },
       {
         method: "dnf",
@@ -4752,6 +5018,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install bleachbit",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.bleachbit.BleachBit",
       },
     ],
   },
@@ -4770,16 +5040,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub ca.desrt.dconf-editor",
+        method: "pacman",
+        command: "sudo pacman -S dconf-editor",
       },
       {
         method: "apt",
         command: "sudo apt install dconf-editor",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S dconf-editor",
       },
       {
         method: "dnf",
@@ -4788,6 +5054,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install dconf-editor",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub ca.desrt.dconf-editor",
       },
     ],
   },
@@ -4806,12 +5076,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install borgbackup",
+        method: "pacman",
+        command: "sudo pacman -S borg",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S borgbackup",
+        method: "apt",
+        command: "sudo apt install borgbackup",
       },
       {
         method: "dnf",
@@ -4838,12 +5108,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install restic",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S restic",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install restic",
       },
       {
         method: "dnf",
@@ -4869,12 +5139,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install flatpak",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S flatpak",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install flatpak",
       },
       {
         method: "dnf",
@@ -4901,16 +5171,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.filelight",
+        method: "pacman",
+        command: "sudo pacman -S filelight",
       },
       {
         method: "apt",
         command: "sudo apt install filelight",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S filelight",
       },
       {
         method: "dnf",
@@ -4919,6 +5185,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install filelight",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.kde.filelight",
       },
     ],
   },
@@ -4937,12 +5207,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install conky",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S conky",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install conky-all",
       },
       {
         method: "dnf",
@@ -4969,14 +5239,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.github.cboxdoerfer.FSearch",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install fsearch",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S fsearch",
       },
@@ -4985,8 +5247,8 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo dnf install fsearch",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install fsearch",
+        method: "flatpak",
+        command: "flatpak install flathub io.github.cboxdoerfer.FSearch",
       },
     ],
   },
@@ -5005,12 +5267,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install cpu-x",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S cpu-x",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install cpu-x",
       },
       {
         method: "dnf",
@@ -5041,24 +5303,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.missioncenter.MissionCenter",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install mission-center",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S mission-center",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install mission-center",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install mission-center",
+        method: "flatpak",
+        command: "flatpak install flathub io.missioncenter.MissionCenter",
       },
     ],
   },
@@ -5077,10 +5327,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install openrgb",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S openrgb",
       },
@@ -5090,7 +5336,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "zypper",
-        command: "sudo zypper install openrgb",
+        command: "sudo zypper install OpenRGB",
       },
       {
         method: "flatpak",
@@ -5113,12 +5359,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install git-lfs",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S git-lfs",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install git-lfs",
       },
       {
         method: "dnf",
@@ -5145,20 +5391,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install lazygit",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S lazygit",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install lazygit",
-      },
-      {
         method: "zypper",
         command: "sudo zypper install lazygit",
+      },
+      {
+        method: "script",
+        command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+          },
+        ],
       },
     ],
   },
@@ -5177,24 +5445,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.podman_desktop.PodmanDesktop",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install podman-desktop",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S podman-desktop",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install podman-desktop",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install podman-desktop",
+        method: "flatpak",
+        command: "flatpak install flathub io.podman_desktop.PodmanDesktop",
       },
     ],
   },
@@ -5213,12 +5469,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install incus",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S incus",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install incus",
       },
       {
         method: "dnf",
@@ -5245,20 +5501,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install kubectl",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S kubectl",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install kubectl",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install kubectl",
+        method: "snap",
+        command: "sudo snap install kubectl --classic",
       },
     ],
   },
@@ -5277,20 +5525,22 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install vagrant",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S vagrant",
+        method: "aur",
+        command: "paru -S vagrant",
       },
       {
         method: "dnf",
         command: "sudo dnf install vagrant",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install vagrant",
+        method: "apt",
+        command: "wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo $VERSION_CODENAME) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list && sudo apt update && sudo apt install -y vagrant",
+        steps: [
+          {
+            title: "Install with apt",
+            command: "wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo $VERSION_CODENAME) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list && sudo apt update && sudo apt install -y vagrant",
+          },
+        ],
       },
     ],
   },
@@ -5309,16 +5559,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gnome.Boxes",
+        method: "pacman",
+        command: "sudo pacman -S gnome-boxes",
       },
       {
         method: "apt",
         command: "sudo apt install gnome-boxes",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S gnome-boxes",
       },
       {
         method: "dnf",
@@ -5327,6 +5573,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install gnome-boxes",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.gnome.Boxes",
       },
     ],
   },
@@ -5345,24 +5595,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.dbeaver.DBeaverCommunity",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install dbeaver",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S dbeaver",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install dbeaver",
+        method: "flatpak",
+        command: "flatpak install flathub io.dbeaver.DBeaverCommunity",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install dbeaver",
+        method: "snap",
+        command: "sudo snap install dbeaver-ce --classic",
       },
     ],
   },
@@ -5381,16 +5623,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.gnome.meld",
+        method: "pacman",
+        command: "sudo pacman -S meld",
       },
       {
         method: "apt",
         command: "sudo apt install meld",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S meld",
       },
       {
         method: "dnf",
@@ -5399,6 +5637,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install meld",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.gnome.meld",
       },
     ],
   },
@@ -5417,16 +5659,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.wireshark.Wireshark",
+        method: "pacman",
+        command: "sudo pacman -S wireshark-qt",
       },
       {
         method: "apt",
         command: "sudo apt install wireshark",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S wireshark",
       },
       {
         method: "dnf",
@@ -5435,6 +5673,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install wireshark",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.wireshark.Wireshark",
       },
     ],
   },
@@ -5453,16 +5695,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S bruno-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.usebruno.Bruno",
       },
       {
-        method: "apt",
-        command: "sudo apt install bruno",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S bruno",
+        method: "snap",
+        command: "sudo snap install bruno",
       },
     ],
   },
@@ -5481,12 +5723,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install hoppscotch",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S hoppscotch",
+        method: "aur",
+        command: "paru -S hoppscotch-bin",
       },
     ],
   },
@@ -5504,10 +5742,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "yaak",
     ],
     install: [
-      {
-        method: "apt",
-        command: "sudo apt install yaak",
-      },
       {
         method: "pacman",
         command: "sudo pacman -S yaak",
@@ -5529,24 +5763,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub net.werwolv.ImHex",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install imhex",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S imhex",
+        method: "aur",
+        command: "paru -S imhex-bin",
       },
       {
         method: "dnf",
         command: "sudo dnf install imhex",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install imhex",
+        method: "flatpak",
+        command: "flatpak install flathub net.werwolv.ImHex",
       },
     ],
   },
@@ -5565,12 +5791,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install cmake",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S cmake",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install cmake",
       },
       {
         method: "dnf",
@@ -5601,24 +5827,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.prismlauncher.PrismLauncher",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install prism-launcher",
-      },
-      {
         method: "pacman",
-        command: "sudo pacman -S prism-launcher",
+        command: "sudo pacman -S prismlauncher",
       },
       {
         method: "dnf",
-        command: "sudo dnf install prism-launcher",
+        command: "sudo dnf install prismlauncher",
       },
       {
         method: "zypper",
-        command: "sudo zypper install prism-launcher",
+        command: "sudo zypper install prismlauncher",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.prismlauncher.PrismLauncher",
       },
     ],
   },
@@ -5637,16 +5859,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.libretro.RetroArch",
+        method: "pacman",
+        command: "sudo pacman -S retroarch",
       },
       {
         method: "apt",
         command: "sudo apt install retroarch",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S retroarch",
       },
       {
         method: "dnf",
@@ -5655,6 +5873,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install retroarch",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.libretro.RetroArch",
       },
     ],
   },
@@ -5673,12 +5895,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install mangohud",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S mangohud",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install mangohud",
       },
       {
         method: "dnf",
@@ -5705,12 +5927,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install gamemode",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S gamemode",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install gamemode",
       },
       {
         method: "dnf",
@@ -5737,16 +5959,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.github.antimicrox.antimicrox",
+        method: "pacman",
+        command: "sudo pacman -S antimicrox",
       },
       {
         method: "apt",
         command: "sudo apt install antimicrox",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S antimicrox",
       },
       {
         method: "dnf",
@@ -5755,6 +5973,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install antimicrox",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub io.github.antimicrox.antimicrox",
       },
     ],
   },
@@ -5773,24 +5995,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.github.benjamimgois.goverlay",
+        method: "pacman",
+        command: "sudo pacman -S goverlay",
       },
       {
         method: "apt",
         command: "sudo apt install goverlay",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S goverlay",
-      },
-      {
         method: "dnf",
         command: "sudo dnf install goverlay",
       },
       {
-        method: "zypper",
-        command: "sudo zypper install goverlay",
+        method: "flatpak",
+        command: "flatpak install flathub io.github.benjamimgois.goverlay",
       },
     ],
   },
@@ -5809,16 +6027,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S logseq-desktop-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub com.logseq.Logseq",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install logseq",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S logseq",
       },
     ],
   },
@@ -5837,16 +6051,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S joplin-desktop",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub net.cozic.joplin_desktop",
       },
       {
-        method: "apt",
-        command: "sudo apt install joplin",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S joplin",
+        method: "snap",
+        command: "sudo snap install joplin-desktop",
       },
     ],
   },
@@ -5865,16 +6079,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "pacman",
+        command: "sudo pacman -S zathura zathura-pdf-mupdf",
+      },
+      {
         method: "apt",
         command: "sudo apt install zathura",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S zathura",
-      },
-      {
         method: "dnf",
-        command: "sudo dnf install zathura",
+        command: "sudo dnf install zathura zathura-pdf-mupdf",
       },
       {
         method: "zypper",
@@ -5901,24 +6115,24 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.github.xournalpp.xournalpp",
+        method: "pacman",
+        command: "sudo pacman -S xournalpp",
       },
       {
         method: "apt",
-        command: "sudo apt install xournal",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S xournal",
+        command: "sudo apt install xournalpp",
       },
       {
         method: "dnf",
-        command: "sudo dnf install xournal",
+        command: "sudo dnf install xournalpp",
       },
       {
         method: "zypper",
-        command: "sudo zypper install xournal",
+        command: "sudo zypper install xournalpp",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.github.xournalpp.xournalpp",
       },
     ],
   },
@@ -5937,24 +6151,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S zotero-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub org.zotero.Zotero",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install zotero",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S zotero",
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install zotero",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install zotero",
       },
     ],
   },
@@ -5973,12 +6175,8 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install trilium-notes",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S trilium-notes",
+        method: "aur",
+        command: "paru -S triliumnext-bin",
       },
       {
         method: "flatpak",
@@ -6001,20 +6199,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install gnupg",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S gnupg",
       },
       {
+        method: "apt",
+        command: "sudo apt install gnupg",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install gnupg",
+        command: "sudo dnf install gnupg2",
       },
       {
         method: "zypper",
-        command: "sudo zypper install gnupg",
+        command: "sudo zypper install gpg2",
       },
     ],
   },
@@ -6033,12 +6231,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install firejail",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S firejail",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install firejail",
       },
       {
         method: "dnf",
@@ -6065,12 +6263,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install clamav",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S clamav",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install clamav",
       },
       {
         method: "dnf",
@@ -6097,16 +6295,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
+        method: "aur",
+        command: "paru -S ente-auth-bin",
+      },
+      {
         method: "flatpak",
         command: "flatpak install flathub io.ente.auth",
-      },
-      {
-        method: "apt",
-        command: "sudo apt install ente-auth",
-      },
-      {
-        method: "pacman",
-        command: "sudo pacman -S ente-auth",
       },
     ],
   },
@@ -6125,12 +6319,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install python-3",
+        method: "pacman",
+        command: "sudo pacman -S python",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S python-3",
+        method: "apt",
+        command: "sudo apt install python3",
       },
       {
         method: "dnf",
@@ -6157,12 +6351,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install node-js",
+        method: "pacman",
+        command: "sudo pacman -S nodejs",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S node-js",
+        method: "apt",
+        command: "sudo apt install nodejs",
       },
       {
         method: "dnf",
@@ -6189,16 +6383,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install go",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S go",
       },
       {
+        method: "apt",
+        command: "sudo apt install golang-go",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install go",
+        command: "sudo dnf install golang",
       },
       {
         method: "zypper",
@@ -6221,20 +6415,50 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install rust",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S rust",
       },
       {
+        method: "apt",
+        command: "sudo apt install rustc cargo",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install rust",
+        command: "sudo dnf install rust cargo",
       },
       {
         method: "zypper",
         command: "sudo zypper install rust",
+      },
+      {
+        method: "script",
+        command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+          },
+        ],
       },
     ],
   },
@@ -6253,12 +6477,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ruby",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ruby",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install ruby",
       },
       {
         method: "dnf",
@@ -6285,20 +6509,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install php",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S php",
       },
       {
+        method: "apt",
+        command: "sudo apt install php-cli",
+      },
+      {
         method: "dnf",
-        command: "sudo dnf install php",
+        command: "sudo dnf install php-cli",
       },
       {
         method: "zypper",
-        command: "sudo zypper install php",
+        command: "sudo zypper install php8",
       },
     ],
   },
@@ -6317,20 +6541,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install openjdk",
+        method: "pacman",
+        command: "sudo pacman -S jdk-openjdk",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S openjdk",
+        method: "apt",
+        command: "sudo apt install default-jdk",
       },
       {
         method: "dnf",
-        command: "sudo dnf install java-latest-openjdk",
+        command: "sudo dnf install java-latest-openjdk-devel",
       },
       {
         method: "zypper",
-        command: "sudo zypper install java-21-openjdk",
+        command: "sudo zypper install java-21-openjdk-devel",
       },
     ],
   },
@@ -6349,20 +6573,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install deno",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S deno",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install deno",
-      },
-      {
         method: "zypper",
         command: "sudo zypper install deno",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+          },
+        ],
       },
     ],
   },
@@ -6381,12 +6627,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install bun",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S bun",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://bun.sh/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://bun.sh/install | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://bun.sh/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://bun.sh/install | bash",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://bun.sh/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://bun.sh/install | bash",
+          },
+        ],
       },
     ],
   },
@@ -6405,12 +6677,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install npm",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S npm",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install npm",
       },
       {
         method: "dnf",
@@ -6437,12 +6709,42 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install pnpm",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S pnpm",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install pnpm",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+          },
+        ],
       },
     ],
   },
@@ -6461,12 +6763,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install yarn",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S yarn",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install yarnpkg",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install yarnpkg",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install yarn",
       },
     ],
   },
@@ -6485,12 +6795,46 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install uv",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S uv",
+      },
+      {
+        method: "dnf",
+        command: "sudo dnf install uv",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install uv",
+      },
+      {
+        method: "script",
+        command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+          },
+        ],
       },
     ],
   },
@@ -6509,12 +6853,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install htop",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S htop",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install htop",
       },
       {
         method: "dnf",
@@ -6523,10 +6867,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install htop",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install htop",
       },
     ],
   },
@@ -6545,12 +6885,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install eza",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S eza",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install eza",
       },
       {
         method: "dnf",
@@ -6577,12 +6917,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install bat",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S bat",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install bat",
       },
       {
         method: "dnf",
@@ -6609,12 +6949,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install fzf",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S fzf",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install fzf",
       },
       {
         method: "dnf",
@@ -6641,12 +6981,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ripgrep",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ripgrep",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install ripgrep",
       },
       {
         method: "dnf",
@@ -6673,12 +7013,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install zoxide",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S zoxide",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install zoxide",
       },
       {
         method: "dnf",
@@ -6705,20 +7045,20 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install tldr",
+        method: "pacman",
+        command: "sudo pacman -S tealdeer",
       },
       {
-        method: "pacman",
-        command: "sudo pacman -S tldr",
+        method: "apt",
+        command: "sudo apt install tealdeer",
       },
       {
         method: "dnf",
-        command: "sudo dnf install tldr",
+        command: "sudo dnf install tealdeer",
       },
       {
         method: "zypper",
-        command: "sudo zypper install tldr",
+        command: "sudo zypper install tealdeer",
       },
     ],
   },
@@ -6737,12 +7077,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install wget",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S wget",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install wget",
       },
       {
         method: "dnf",
@@ -6769,12 +7109,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install curl",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S curl",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install curl",
       },
       {
         method: "dnf",
@@ -6801,12 +7141,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install aria2",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S aria2",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install aria2",
       },
       {
         method: "dnf",
@@ -6833,20 +7173,16 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install yazi",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S yazi",
       },
       {
-        method: "dnf",
-        command: "sudo dnf install yazi",
-      },
-      {
         method: "zypper",
         command: "sudo zypper install yazi",
+      },
+      {
+        method: "snap",
+        command: "sudo snap install yazi --classic",
       },
     ],
   },
@@ -6865,12 +7201,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ranger",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ranger",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install ranger",
       },
       {
         method: "dnf",
@@ -6897,12 +7233,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install ncdu",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S ncdu",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install ncdu",
       },
       {
         method: "dnf",
@@ -6929,12 +7265,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install fd",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S fd",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install fd-find",
       },
       {
         method: "dnf",
@@ -6960,10 +7296,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "zellij",
     ],
     install: [
-      {
-        method: "apt",
-        command: "sudo apt install zellij",
-      },
       {
         method: "pacman",
         command: "sudo pacman -S zellij",
@@ -6993,12 +7325,38 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install superfile",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S superfile",
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+          },
+        ],
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+          },
+        ],
       },
     ],
   },
@@ -7017,12 +7375,12 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "apt",
-        command: "sudo apt install rsync",
-      },
-      {
         method: "pacman",
         command: "sudo pacman -S rsync",
+      },
+      {
+        method: "apt",
+        command: "sudo apt install rsync",
       },
       {
         method: "dnf",

@@ -14,6 +14,7 @@ export const METHOD_LABELS: Record<InstallMethod, string> = {
   pacman: "pacman",
   zypper: "zypper",
   brew: "Homebrew",
+  script: "Install script",
 }
 
 export const METHOD_DESCRIPTIONS: Record<InstallMethod, string> = {
@@ -30,6 +31,7 @@ export const METHOD_DESCRIPTIONS: Record<InstallMethod, string> = {
   pacman: "Arch Linux official package manager",
   zypper: "openSUSE package manager",
   brew: "Homebrew package manager",
+  script: "Official installer script from the vendor",
 }
 
 export const METHOD_COLORS: Record<InstallMethod, string> = {
@@ -46,5 +48,6 @@ export const METHOD_COLORS: Record<InstallMethod, string> = {
   pacman: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/30",
   zypper: "bg-teal-500/15 text-teal-700 dark:text-teal-400 border-teal-500/30",
   brew: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30",
+  script: "bg-slate-500/15 text-slate-700 dark:text-slate-400 border-slate-500/30",
 }
 
