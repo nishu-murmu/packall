@@ -157,3 +157,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: site
           keep_files: true
+
+  publish:
+    needs: [checksums, repos]
+    if: always() && needs.checksums.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish release (mark as non-draft)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release edit "$GITHUB_REF_NAME" --draft=false
