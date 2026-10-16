@@ -2263,7 +2263,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub librewolf"
+          "command": "flatpak install flathub io.gitlab.librewolf-community"
         },
         {
           "method": "apt",
@@ -2299,7 +2299,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub waterfox"
+          "command": "flatpak install flathub net.waterfox.waterfox"
         },
         {
           "method": "apt",
@@ -2335,7 +2335,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub google-chrome"
+          "command": "flatpak install flathub com.google.Chrome"
         },
         {
           "method": "apt",
@@ -2370,10 +2370,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub helium"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install helium"
         },
@@ -2407,7 +2403,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub ungoogled-chromium"
+          "command": "flatpak install flathub io.github.ungoogled_software.ungoogled_chromium"
         },
         {
           "method": "apt",
@@ -2443,7 +2439,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub konqueror"
+          "command": "flatpak install flathub org.kde.konqueror"
         },
         {
           "method": "apt",
@@ -2479,7 +2475,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub falkon"
+          "command": "flatpak install flathub org.kde.falkon"
         },
         {
           "method": "apt",
@@ -2515,7 +2511,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub gnome-web"
+          "command": "flatpak install flathub org.gnome.Epiphany"
         },
         {
           "method": "apt",
@@ -2551,7 +2547,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub qutebrowser"
+          "command": "flatpak install flathub org.qutebrowser.qutebrowser"
         },
         {
           "method": "apt",
@@ -2586,10 +2582,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub nyxt"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install nyxt"
         },
@@ -2623,7 +2615,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub floorp"
+          "command": "flatpak install flathub one.ablaze.floorp"
         },
         {
           "method": "apt",
@@ -2658,10 +2650,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub mullvad-browser"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install mullvad-browser"
         },
@@ -2695,7 +2683,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub microsoft-edge"
+          "command": "flatpak install flathub com.microsoft.Edge"
         },
         {
           "method": "apt",
@@ -2731,7 +2719,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub opera"
+          "command": "flatpak install flathub com.opera.Opera"
         },
         {
           "method": "apt",
@@ -2766,10 +2754,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub syncthing"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install syncthing"
         },
@@ -2803,7 +2787,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub qbittorrent"
+          "command": "flatpak install flathub org.qbittorrent.qBittorrent"
         },
         {
           "method": "apt",
@@ -2839,7 +2823,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub transmission"
+          "command": "flatpak install flathub com.transmissionbt.Transmission"
         },
         {
           "method": "apt",
@@ -2875,7 +2859,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub localsend"
+          "command": "flatpak install flathub org.localsend.localsend_app"
         },
         {
           "method": "apt",
@@ -2911,7 +2895,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub filezilla"
+          "command": "flatpak install flathub org.filezillaproject.Filezilla"
         },
         {
           "method": "apt",
@@ -2947,7 +2931,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub dropbox"
+          "command": "flatpak install flathub com.dropbox.Client"
         },
         {
           "method": "apt",
@@ -2982,10 +2966,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub ab-download-manager"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install ab-download-manager"
         },
@@ -3010,10 +2990,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub free-download-manager"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install free-download-manager"
         },
@@ -3037,10 +3013,6 @@
         "cursor"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub cursor"
-        },
         {
           "method": "apt",
           "command": "sudo apt install cursor"
@@ -3067,7 +3039,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub vscodium"
+          "command": "flatpak install flathub com.vscodium.codium"
         },
         {
           "method": "apt",
@@ -3103,7 +3075,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub intellij-idea"
+          "command": "flatpak install flathub com.jetbrains.IntelliJ-IDEA-Community"
         },
         {
           "method": "apt",
@@ -3139,7 +3111,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub pycharm"
+          "command": "flatpak install flathub com.jetbrains.PyCharm-Community"
         },
         {
           "method": "apt",
@@ -3175,7 +3147,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub clion"
+          "command": "flatpak install flathub com.jetbrains.CLion"
         },
         {
           "method": "apt",
@@ -3211,7 +3183,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub arduino-ide"
+          "command": "flatpak install flathub cc.arduino.IDE2"
         },
         {
           "method": "apt",
@@ -3247,7 +3219,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub sublime-text"
+          "command": "flatpak install flathub com.sublimetext.three"
         },
         {
           "method": "apt",
@@ -3283,7 +3255,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kate"
+          "command": "flatpak install flathub org.kde.kate"
         },
         {
           "method": "apt",
@@ -3319,7 +3291,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub geany"
+          "command": "flatpak install flathub org.geany.Geany"
         },
         {
           "method": "apt",
@@ -3354,10 +3326,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub vim"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install vim"
         },
@@ -3389,10 +3357,6 @@
         "helix"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub helix"
-        },
         {
           "method": "apt",
           "command": "sudo apt install helix"
@@ -3426,10 +3390,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub micro"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install micro"
         },
@@ -3461,10 +3421,6 @@
         "emacs"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub emacs"
-        },
         {
           "method": "apt",
           "command": "sudo apt install emacs"
@@ -3498,10 +3454,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub opencode"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install opencode"
         },
@@ -3525,10 +3477,6 @@
         "openai-codex"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub openai-codex"
-        },
         {
           "method": "apt",
           "command": "sudo apt install openai-codex"
@@ -3554,10 +3502,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub gemini-cli"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install gemini-cli"
         },
@@ -3582,10 +3526,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub claude-code"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install claude-code"
         },
@@ -3609,10 +3549,6 @@
         "ollama"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ollama"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ollama"
@@ -3645,10 +3581,6 @@
         "llama-cpp"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub llama-cpp"
-        },
         {
           "method": "apt",
           "command": "sudo apt install llama-cpp"
@@ -3683,7 +3615,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub jan"
+          "command": "flatpak install flathub ai.jan.Jan"
         },
         {
           "method": "apt",
@@ -3711,7 +3643,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub darktable"
+          "command": "flatpak install flathub org.darktable.Darktable"
         },
         {
           "method": "apt",
@@ -3747,7 +3679,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub freecad"
+          "command": "flatpak install flathub org.freecad.FreeCAD"
         },
         {
           "method": "apt",
@@ -3783,7 +3715,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kicad"
+          "command": "flatpak install flathub org.kicad.KiCad"
         },
         {
           "method": "apt",
@@ -3819,7 +3751,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub ultimaker-cura"
+          "command": "flatpak install flathub com.ultimaker.cura"
         },
         {
           "method": "apt",
@@ -3847,7 +3779,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub godot-engine"
+          "command": "flatpak install flathub org.godotengine.Godot"
         },
         {
           "method": "apt",
@@ -3883,7 +3815,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kolourpaint"
+          "command": "flatpak install flathub org.kde.kolourpaint"
         },
         {
           "method": "apt",
@@ -3918,10 +3850,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub orcaslicer"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install orcaslicer"
         },
@@ -3946,10 +3874,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub davinci-resolve"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install davinci-resolve"
         },
@@ -3973,10 +3897,6 @@
         "ivpn"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ivpn"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ivpn"
@@ -4003,7 +3923,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub proton-vpn"
+          "command": "flatpak install flathub com.protonvpn.www"
         },
         {
           "method": "apt",
@@ -4031,7 +3951,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub mullvad-vpn"
+          "command": "flatpak install flathub net.mullvad.MullvadVPN"
         },
         {
           "method": "apt",
@@ -4057,10 +3977,6 @@
         "tailscale"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub tailscale"
-        },
         {
           "method": "apt",
           "command": "sudo apt install tailscale"
@@ -4094,10 +4010,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub wireguard"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install wireguard"
         },
@@ -4129,10 +4041,6 @@
         "openvpn"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub openvpn"
-        },
         {
           "method": "apt",
           "command": "sudo apt install openvpn"
@@ -4166,10 +4074,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub nmap"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install nmap"
         },
@@ -4201,10 +4105,6 @@
         "openssh"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub openssh"
-        },
         {
           "method": "apt",
           "command": "sudo apt install openssh"
@@ -4239,7 +4139,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub remmina"
+          "command": "flatpak install flathub org.remmina.Remmina"
         },
         {
           "method": "apt",
@@ -4274,10 +4174,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub zsh"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install zsh"
         },
@@ -4310,10 +4206,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub oh-my-zsh"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install oh-my-zsh"
         },
@@ -4337,10 +4229,6 @@
         "fish"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub fish"
-        },
         {
           "method": "apt",
           "command": "sudo apt install fish"
@@ -4373,10 +4261,6 @@
         "starship"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub starship"
-        },
         {
           "method": "apt",
           "command": "sudo apt install starship"
@@ -4411,7 +4295,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub wezterm"
+          "command": "flatpak install flathub org.wezfurlong.wezterm"
         },
         {
           "method": "apt",
@@ -4446,10 +4330,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub foot"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install foot"
         },
@@ -4481,10 +4361,6 @@
         "ptyxis"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ptyxis"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ptyxis"
@@ -4519,7 +4395,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub mpv"
+          "command": "flatpak install flathub io.mpv.Mpv"
         },
         {
           "method": "apt",
@@ -4555,7 +4431,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub celluloid"
+          "command": "flatpak install flathub io.github.celluloid_player.Celluloid"
         },
         {
           "method": "apt",
@@ -4591,7 +4467,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub strawberry"
+          "command": "flatpak install flathub org.strawberrymusicplayer.strawberry"
         },
         {
           "method": "apt",
@@ -4627,7 +4503,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub spotify"
+          "command": "flatpak install flathub com.spotify.Client"
         },
         {
           "method": "apt",
@@ -4662,10 +4538,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub ffmpeg"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install ffmpeg"
         },
@@ -4699,7 +4571,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub stremio"
+          "command": "flatpak install flathub com.stremio.Stremio"
         },
         {
           "method": "apt",
@@ -4735,7 +4607,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kodi"
+          "command": "flatpak install flathub tv.kodi.Kodi"
         },
         {
           "method": "apt",
@@ -4771,7 +4643,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub haruna"
+          "command": "flatpak install flathub org.kde.haruna"
         },
         {
           "method": "apt",
@@ -4807,7 +4679,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub shortwave"
+          "command": "flatpak install flathub de.haeckerfelix.Shortwave"
         },
         {
           "method": "apt",
@@ -4843,7 +4715,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub parabolic"
+          "command": "flatpak install flathub org.nickvision.tubeconverter"
         },
         {
           "method": "apt",
@@ -4879,7 +4751,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kde-partition-manager"
+          "command": "flatpak install flathub org.kde.partitionmanager"
         },
         {
           "method": "apt",
@@ -4915,7 +4787,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub kde-connect"
+          "command": "flatpak install flathub org.kde.kdeconnect"
         },
         {
           "method": "apt",
@@ -4951,7 +4823,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub bleachbit"
+          "command": "flatpak install flathub org.bleachbit.BleachBit"
         },
         {
           "method": "apt",
@@ -4987,7 +4859,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub dconf-editor"
+          "command": "flatpak install flathub ca.desrt.dconf-editor"
         },
         {
           "method": "apt",
@@ -5022,10 +4894,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub borgbackup"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install borgbackup"
         },
@@ -5058,10 +4926,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub restic"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install restic"
         },
@@ -5089,14 +4953,9 @@
       "license": "Unknown",
       "tags": [
         "system",
-        "linux",
-        "flatpak"
+        "linux"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub flatpak"
-        },
         {
           "method": "apt",
           "command": "sudo apt install flatpak"
@@ -5131,7 +4990,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub filelight"
+          "command": "flatpak install flathub org.kde.filelight"
         },
         {
           "method": "apt",
@@ -5166,10 +5025,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub conky"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install conky"
         },
@@ -5203,7 +5058,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub fsearch"
+          "command": "flatpak install flathub io.github.cboxdoerfer.FSearch"
         },
         {
           "method": "apt",
@@ -5238,10 +5093,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub cpu-x"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install cpu-x"
         },
@@ -5275,7 +5126,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub mission-center"
+          "command": "flatpak install flathub io.missioncenter.MissionCenter"
         },
         {
           "method": "apt",
@@ -5310,10 +5161,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub openrgb"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install openrgb"
         },
@@ -5346,10 +5193,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub git-lfs"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install git-lfs"
         },
@@ -5381,10 +5224,6 @@
         "lazygit"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub lazygit"
-        },
         {
           "method": "apt",
           "command": "sudo apt install lazygit"
@@ -5419,7 +5258,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub podman-desktop"
+          "command": "flatpak install flathub io.podman_desktop.PodmanDesktop"
         },
         {
           "method": "apt",
@@ -5454,10 +5293,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub incus"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install incus"
         },
@@ -5490,10 +5325,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub kubectl"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install kubectl"
         },
@@ -5525,10 +5356,6 @@
         "vagrant"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub vagrant"
-        },
         {
           "method": "apt",
           "command": "sudo apt install vagrant"
@@ -5563,7 +5390,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub gnome-boxes"
+          "command": "flatpak install flathub org.gnome.Boxes"
         },
         {
           "method": "apt",
@@ -5599,7 +5426,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub dbeaver"
+          "command": "flatpak install flathub io.dbeaver.DBeaverCommunity"
         },
         {
           "method": "apt",
@@ -5635,7 +5462,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub meld"
+          "command": "flatpak install flathub org.gnome.meld"
         },
         {
           "method": "apt",
@@ -5671,7 +5498,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub wireshark"
+          "command": "flatpak install flathub org.wireshark.Wireshark"
         },
         {
           "method": "apt",
@@ -5707,7 +5534,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub bruno"
+          "command": "flatpak install flathub com.usebruno.Bruno"
         },
         {
           "method": "apt",
@@ -5735,7 +5562,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub hoppscotch"
+          "command": "flatpak install flathub io.hoppscotch.Hoppscotch"
         },
         {
           "method": "apt",
@@ -5762,10 +5589,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub yaak"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install yaak"
         },
@@ -5791,7 +5614,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub imhex"
+          "command": "flatpak install flathub net.werwolv.ImHex"
         },
         {
           "method": "apt",
@@ -5825,10 +5648,6 @@
         "cmake"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub cmake"
-        },
         {
           "method": "apt",
           "command": "sudo apt install cmake"
@@ -5867,7 +5686,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub prism-launcher"
+          "command": "flatpak install flathub org.prismlauncher.PrismLauncher"
         },
         {
           "method": "apt",
@@ -5903,7 +5722,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub retroarch"
+          "command": "flatpak install flathub org.libretro.RetroArch"
         },
         {
           "method": "apt",
@@ -5939,7 +5758,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub mangohud"
+          "command": "flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud"
         },
         {
           "method": "apt",
@@ -5974,10 +5793,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub gamemode"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install gamemode"
         },
@@ -6011,7 +5826,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub antimicrox"
+          "command": "flatpak install flathub io.github.antimicrox.antimicrox"
         },
         {
           "method": "apt",
@@ -6047,7 +5862,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub goverlay"
+          "command": "flatpak install flathub io.github.benjamimgois.goverlay"
         },
         {
           "method": "apt",
@@ -6083,7 +5898,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub logseq"
+          "command": "flatpak install flathub com.logseq.Logseq"
         },
         {
           "method": "apt",
@@ -6111,7 +5926,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub joplin"
+          "command": "flatpak install flathub net.cozic.joplin_desktop"
         },
         {
           "method": "apt",
@@ -6137,10 +5952,6 @@
         "zathura"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub zathura"
-        },
         {
           "method": "apt",
           "command": "sudo apt install zathura"
@@ -6175,7 +5986,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub xournal"
+          "command": "flatpak install flathub com.github.xournalpp.xournalpp"
         },
         {
           "method": "apt",
@@ -6211,7 +6022,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub zotero"
+          "command": "flatpak install flathub org.zotero.Zotero"
         },
         {
           "method": "apt",
@@ -6246,10 +6057,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub trilium-notes"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install trilium-notes"
         },
@@ -6273,10 +6080,6 @@
         "gnupg"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub gnupg"
-        },
         {
           "method": "apt",
           "command": "sudo apt install gnupg"
@@ -6310,10 +6113,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub firejail"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install firejail"
         },
@@ -6345,10 +6144,6 @@
         "clamav"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub clamav"
-        },
         {
           "method": "apt",
           "command": "sudo apt install clamav"
@@ -6383,7 +6178,7 @@
       "install": [
         {
           "method": "flatpak",
-          "command": "flatpak install flathub ente-auth"
+          "command": "flatpak install flathub io.ente.auth"
         },
         {
           "method": "apt",
@@ -6409,10 +6204,6 @@
         "python-3"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub python-3"
-        },
         {
           "method": "apt",
           "command": "sudo apt install python-3"
@@ -6446,10 +6237,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub node-js"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install node-js"
         },
@@ -6481,10 +6268,6 @@
         "go"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub go"
-        },
         {
           "method": "apt",
           "command": "sudo apt install go"
@@ -6518,10 +6301,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub rust"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install rust"
         },
@@ -6553,10 +6332,6 @@
         "ruby"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ruby"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ruby"
@@ -6590,10 +6365,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub php"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install php"
         },
@@ -6625,10 +6396,6 @@
         "openjdk"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub openjdk"
-        },
         {
           "method": "apt",
           "command": "sudo apt install openjdk"
@@ -6662,10 +6429,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub deno"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install deno"
         },
@@ -6698,10 +6461,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub bun"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install bun"
         },
@@ -6725,10 +6484,6 @@
         "npm"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub npm"
-        },
         {
           "method": "apt",
           "command": "sudo apt install npm"
@@ -6762,10 +6517,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub pnpm"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install pnpm"
         },
@@ -6789,10 +6540,6 @@
         "yarn"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub yarn"
-        },
         {
           "method": "apt",
           "command": "sudo apt install yarn"
@@ -6818,10 +6565,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub uv"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install uv"
         },
@@ -6845,10 +6588,6 @@
         "htop"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub htop"
-        },
         {
           "method": "apt",
           "command": "sudo apt install htop"
@@ -6886,10 +6625,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub eza"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install eza"
         },
@@ -6921,10 +6656,6 @@
         "bat"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub bat"
-        },
         {
           "method": "apt",
           "command": "sudo apt install bat"
@@ -6958,10 +6689,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub fzf"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install fzf"
         },
@@ -6993,10 +6720,6 @@
         "ripgrep"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ripgrep"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ripgrep"
@@ -7030,10 +6753,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub zoxide"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install zoxide"
         },
@@ -7065,10 +6784,6 @@
         "tldr"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub tldr"
-        },
         {
           "method": "apt",
           "command": "sudo apt install tldr"
@@ -7102,10 +6817,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub wget"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install wget"
         },
@@ -7137,10 +6848,6 @@
         "curl"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub curl"
-        },
         {
           "method": "apt",
           "command": "sudo apt install curl"
@@ -7174,10 +6881,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub aria2"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install aria2"
         },
@@ -7209,10 +6912,6 @@
         "yazi"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub yazi"
-        },
         {
           "method": "apt",
           "command": "sudo apt install yazi"
@@ -7246,10 +6945,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub ranger"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install ranger"
         },
@@ -7281,10 +6976,6 @@
         "ncdu"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub ncdu"
-        },
         {
           "method": "apt",
           "command": "sudo apt install ncdu"
@@ -7318,10 +7009,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub fd"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install fd"
         },
@@ -7353,10 +7040,6 @@
         "zellij"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub zellij"
-        },
         {
           "method": "apt",
           "command": "sudo apt install zellij"
@@ -7390,10 +7073,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub superfile"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install superfile"
         },
@@ -7417,10 +7096,6 @@
         "rsync"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub rsync"
-        },
         {
           "method": "apt",
           "command": "sudo apt install rsync"
