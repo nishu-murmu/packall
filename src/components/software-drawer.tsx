@@ -139,7 +139,7 @@ export function SoftwareDrawer() {
   }
 
   const handleQuickInstall = async () => {
-    await runBatch("install", [software.id])
+    await runBatch("install", [software.id], selectedMethod)
   }
 
   const handleQuickRemove = async () => {
