@@ -122,42 +122,8 @@ jobs:
 #           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
 #           commit_message: Update to ${{ github.ref_name }}
 
-  repos:
-    needs: build
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    steps:
-      - uses: actions/checkout@v4
-      - name: Tooling
-        run: sudo apt-get update && sudo apt-get install -y dpkg-dev apt-utils createrepo-c rpm gnupg
-      - name: Download release packages
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir -p assets/deb assets/rpm
-          gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --dir assets/deb
-          gh release download "$GITHUB_REF_NAME" --pattern '*.rpm' --dir assets/rpm
-      - name: Import signing key (optional)
-        id: gpg
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.REPO_GPG_PRIVATE_KEY }}
-        run: |
-          if [ -n "$GPG_PRIVATE_KEY" ]; then
-            echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-            echo "key=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5; exit}')" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Build repositories
-        run: |
-          packaging/scripts/make-apt-repo.sh assets/deb site "${{ steps.gpg.outputs.key }}"
-          packaging/scripts/make-rpm-repo.sh assets/rpm site "${{ steps.gpg.outputs.key }}"
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: site
-          keep_files: true
-
   publish:
-    needs: [build, repos]
+    needs: build
     if: always() && needs.build.result == 'success'
     runs-on: ubuntu-latest
     steps:
