@@ -73,11 +73,11 @@ jobs:
 
             | File | Install |
             |---|---|
-            | `packall-linux-amd64.tar.gz` | Extract and move to your PATH (see below) |
+            | `packall-tui-linux-amd64.tar.gz` | Extract and move to your PATH (see below) |
 
             ```
-            tar xzf packall-linux-amd64.tar.gz
-            install -Dm755 packall-linux-amd64 ~/.local/bin/packall
+            tar xzf packall-tui-linux-amd64.tar.gz
+            install -Dm755 packall-tui-linux-amd64 ~/.local/bin/packall
             ```
 
             Verify downloads with `sha256sum -c SHA256SUMS.txt`.
@@ -98,12 +98,12 @@ jobs:
           ver="${GITHUB_REF_NAME#v}"
           GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
             go build -ldflags "-s -w -X main.version=${ver}" \
-            -o packall-linux-amd64 ./cmd/packall
-          tar czf packall-linux-amd64.tar.gz packall-linux-amd64
+            -o packall-tui-linux-amd64 ./cmd/packall
+          tar czf packall-tui-linux-amd64.tar.gz packall-tui-linux-amd64
       - name: Upload to release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$GITHUB_REF_NAME" packall-linux-amd64.tar.gz --clobber
+        run: gh release upload "$GITHUB_REF_NAME" packall-tui-linux-amd64.tar.gz --clobber
 
   checksums:
     needs: [build, tui]
