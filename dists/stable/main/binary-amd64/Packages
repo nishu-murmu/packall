@@ -2,13 +2,13 @@ Package: packall
 Version: 0.1.0
 Architecture: amd64
 Maintainer: packall
-Installed-Size: 14678
+Installed-Size: 14679
 Depends: libwebkit2gtk-4.1-0, libgtk-3-0, policykit-1 | polkitd, libwebkit2gtk-4.1-0, libgtk-3-0
 Filename: pool/main/Packall_0.1.0_amd64.deb
-Size: 4280380
-MD5sum: 645fe17f55181b50d21918efd6ad02df
-SHA1: ecc2e26b2df88e2e580560b4e1f814c2c8144db3
-SHA256: a499ebc3739ad3b2744fa21515a116fc0a4ac22b9590996343e4fc9b97dc76c9
+Size: 4278304
+MD5sum: c0dbb8dd3a18b8dcfa4f2eaf9b73c49d
+SHA1: d9b59ef2777194d2671835914d2f0fb5c0ab917d
+SHA256: a1a1761a65b1ef4ee83e20a55d321f87e7d194c0ad5d8d07a07763e3ff6b94e0
 Section: utils
 Priority: optional
 Homepage: https://github.com/nishu-murmu/packall
