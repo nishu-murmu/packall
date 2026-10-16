@@ -9,36 +9,14 @@ permissions:
   contents: write
 
 env:
-  # Build on the oldest supported Ubuntu so the .deb/.AppImage run on older glibc.
   BUILD_OS: ubuntu-22.04
 
 jobs:
-  test:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm test
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: src-tauri
-      - name: Install system deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - run: cargo test --manifest-path src-tauri/Cargo.toml
-
   build:
-    needs: test
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -47,12 +25,22 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
       - name: Install system deps
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf rpm
+
       - run: npm ci
-      - uses: tauri-apps/tauri-action@v1
+      - run: npm run typecheck
+      - run: npm test
+      - run: cargo test --manifest-path src-tauri/Cargo.toml
+
+      - name: Build desktop app
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -76,14 +64,6 @@ jobs:
           prerelease: false
           args: --bundles deb,rpm,appimage
 
-  tui:
-    needs: build
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.24'
       - name: Build TUI binary
         run: |
           ver="${GITHUB_REF_NAME#v}"
@@ -91,21 +71,18 @@ jobs:
             go build -ldflags "-s -w -X main.version=${ver}" \
             -o packall-tui ./cmd/packall
           tar czf packall-tui-linux-amd64.tar.gz packall-tui
-      - name: Upload to release
+
+      - name: Upload TUI to release
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "$GITHUB_REF_NAME" packall-tui-linux-amd64.tar.gz --clobber
 
-  checksums:
-    needs: [build, tui]
-    runs-on: ubuntu-latest
-    steps:
       - name: Publish SHA256SUMS
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          mkdir assets && cd assets
+          mkdir -p checksums && cd checksums
           gh release download "$GITHUB_REF_NAME" --pattern '*.deb' --pattern '*.rpm' --pattern '*.AppImage' --pattern '*.tar.gz'
           sha256sum * > SHA256SUMS.txt
           cat SHA256SUMS.txt
@@ -146,7 +123,6 @@ jobs:
 #           commit_message: Update to ${{ github.ref_name }}
 
   repos:
-    # Static APT + RPM repositories served from GitHub Pages (branch: gh-pages).
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
@@ -181,8 +157,8 @@ jobs:
           keep_files: true
 
   publish:
-    needs: [checksums, repos]
-    if: always() && needs.checksums.result == 'success'
+    needs: [build, repos]
+    if: always() && needs.build.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Publish release (mark as non-draft)
