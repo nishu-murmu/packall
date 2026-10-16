@@ -123,6 +123,16 @@ export const SOFTWARE: SoftwareEntry[] = [
         ],
       },
       {
+        method: "script",
+        command: "curl -fsS https://dl.brave.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsS https://dl.brave.com/install.sh | sh",
+          },
+        ],
+      },
+      {
         method: "apt",
         command: "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list && sudo apt update && sudo apt install -y brave-browser",
         steps: [
@@ -409,7 +419,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "flatpak",
-        command: "flatpak install flathub org.mozilla.Thunderbird",
+        command: "flatpak install flathub org.mozilla.thunderbird",
       },
       {
         method: "snap",
@@ -568,6 +578,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "flatpak",
         command: "flatpak install flathub dev.zed.Zed",
+      },
+      {
+        method: "script",
+        command: "curl -f https://zed.dev/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -f https://zed.dev/install.sh | sh",
+          },
+        ],
       },
       {
         method: "script",
@@ -1286,7 +1306,17 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "flatpak",
-        command: "flatpak install flathub com.jellyfin.JellyfinServer",
+        command: "flatpak install flathub org.jellyfin.JellyfinServer",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://repo.jellyfin.org/install-debuntu.sh | sudo bash",
+          },
+        ],
       },
       {
         method: "script",
@@ -1334,6 +1364,16 @@ export const SOFTWARE: SoftwareEntry[] = [
         ],
       },
       {
+        method: "script",
+        command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name vaultwarden --restart unless-stopped -v vw-data:/data -p 8080:80 vaultwarden/server:latest",
+          },
+        ],
+      },
+      {
         method: "manual",
         command: "Docker: docker run vaultwarden/server",
       },
@@ -1357,6 +1397,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S home-assistant",
+      },
+      {
+        method: "script",
+        command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo docker run -d --name homeassistant --restart unless-stopped --privileged --network host -e TZ=UTC -v homeassistant-config:/config ghcr.io/home-assistant/home-assistant:stable",
+          },
+        ],
       },
       {
         method: "script",
@@ -1951,7 +2001,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "snap",
-        command: "sudo snap install stellarium",
+        command: "sudo snap install stellarium-daily",
       },
     ],
   },
@@ -2147,10 +2197,6 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo zypper install ghostty",
       },
       {
-        method: "flatpak",
-        command: "flatpak install flathub com.mitchellh.ghostty",
-      },
-      {
         method: "snap",
         command: "sudo snap install ghostty --classic",
       },
@@ -2203,6 +2249,14 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S fastfetch",
       },
       {
+        method: "dnf",
+        command: "sudo dnf install fastfetch",
+      },
+      {
+        method: "zypper",
+        command: "sudo zypper install fastfetch",
+      },
+      {
         method: "apt",
         command: "sudo apt install -y fastfetch || (sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch && sudo apt update && sudo apt install -y fastfetch)",
         steps: [
@@ -2211,14 +2265,6 @@ export const SOFTWARE: SoftwareEntry[] = [
             command: "sudo apt install -y fastfetch || (sudo add-apt-repository -y ppa:zhangsongcui3371/fastfetch && sudo apt update && sudo apt install -y fastfetch)",
           },
         ],
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install fastfetch",
-      },
-      {
-        method: "zypper",
-        command: "sudo zypper install fastfetch",
       },
     ],
   },
@@ -2414,6 +2460,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "paru -S google-chrome",
       },
       {
+        method: "flatpak",
+        command: "flatpak install flathub com.google.Chrome",
+      },
+      {
         method: "apt",
         command: "wget -qO /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo apt install -y /tmp/google-chrome.deb",
         steps: [
@@ -2432,10 +2482,6 @@ export const SOFTWARE: SoftwareEntry[] = [
             command: "sudo dnf install -y https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm",
           },
         ],
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub com.google.Chrome",
       },
     ],
   },
@@ -2967,6 +3013,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)\"",
+          },
+        ],
+      },
     ],
   },
   {
@@ -3089,7 +3145,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "flatpak",
-        command: "flatpak install flathub com.jetbrains.PyCharm-Community",
+        command: "flatpak install flathub com.jetbrains.PyCharm-Professional",
       },
       {
         method: "snap",
@@ -3166,6 +3222,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S sublime-text-4",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub com.sublimehq.SublimeText",
       },
       {
         method: "snap",
@@ -3304,6 +3364,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo zypper install helix",
       },
       {
+        method: "flatpak",
+        command: "flatpak install flathub com.helix_editor.Helix",
+      },
+      {
         method: "snap",
         command: "sudo snap install helix --classic",
       },
@@ -3409,6 +3473,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "curl -fsSL https://opencode.ai/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://opencode.ai/install | bash",
+          },
+        ],
+      },
     ],
   },
   {
@@ -3428,6 +3502,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S openai-codex-bin",
+      },
+      {
+        method: "script",
+        command: "sudo npm install -g @openai/codex",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @openai/codex",
+          },
+        ],
       },
       {
         method: "script",
@@ -3469,6 +3553,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "sudo npm install -g @google/gemini-cli",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sudo npm install -g @google/gemini-cli",
+          },
+        ],
+      },
     ],
   },
   {
@@ -3488,6 +3582,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S claude-code",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://claude.ai/install.sh | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://claude.ai/install.sh | bash",
+          },
+        ],
       },
       {
         method: "script",
@@ -3526,6 +3630,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install ollama",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://ollama.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://ollama.com/install.sh | sh",
+          },
+        ],
       },
       {
         method: "script",
@@ -3811,7 +3925,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "flatpak",
-        command: "flatpak install flathub io.github.softfever.OrcaSlicer",
+        command: "flatpak install flathub com.orcaslicer.OrcaSlicer",
       },
     ],
   },
@@ -3940,6 +4054,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install tailscale",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://tailscale.com/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://tailscale.com/install.sh | sh",
+          },
+        ],
       },
       {
         method: "script",
@@ -4177,6 +4301,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\" \"\" --unattended",
+          },
+        ],
+      },
     ],
   },
   {
@@ -4232,6 +4366,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install starship",
+      },
+      {
+        method: "script",
+        command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -sS https://starship.rs/install.sh | sh -s -- -y",
+          },
+        ],
       },
       {
         method: "script",
@@ -5124,6 +5268,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "sh -c 'V=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po \"\\\"tag_name\\\": *\\\"v\\K[^\\\"]*\") && curl -Lo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/download/v${V}/lazygit_${V}_Linux_$(uname -m | sed s/aarch64/arm64/).tar.gz\" && tar xf /tmp/lazygit.tar.gz -C /tmp lazygit && sudo install /tmp/lazygit -D -t /usr/local/bin/'",
+          },
+        ],
+      },
     ],
   },
   {
@@ -5225,6 +5379,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         command: "sudo pacman -S vagrant",
       },
       {
+        method: "dnf",
+        command: "sudo dnf install vagrant",
+      },
+      {
         method: "apt",
         command: "wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo $VERSION_CODENAME) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list && sudo apt update && sudo apt install -y vagrant",
         steps: [
@@ -5233,10 +5391,6 @@ export const SOFTWARE: SoftwareEntry[] = [
             command: "wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && echo \"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(. /etc/os-release && echo $VERSION_CODENAME) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list && sudo apt update && sudo apt install -y vagrant",
           },
         ],
-      },
-      {
-        method: "dnf",
-        command: "sudo dnf install vagrant",
       },
     ],
   },
@@ -5300,7 +5454,7 @@ export const SOFTWARE: SoftwareEntry[] = [
       },
       {
         method: "snap",
-        command: "sudo snap install dbeaver-ce",
+        command: "sudo snap install dbeaver-ce --classic",
       },
     ],
   },
@@ -5441,14 +5595,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S yaak-bin",
-      },
-      {
-        method: "flatpak",
-        command: "flatpak install flathub app.yaak.Yaak",
-      },
-      {
-        method: "snap",
-        command: "sudo snap install yaak",
       },
     ],
   },
@@ -6144,6 +6290,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y",
+          },
+        ],
+      },
     ],
   },
   {
@@ -6274,6 +6430,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://deno.land/install.sh | sh -s -- -y",
+          },
+        ],
+      },
     ],
   },
   {
@@ -6293,6 +6459,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "aur",
         command: "paru -S bun-bin",
+      },
+      {
+        method: "script",
+        command: "curl -fsSL https://bun.sh/install | bash",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://bun.sh/install | bash",
+          },
+        ],
       },
       {
         method: "script",
@@ -6370,6 +6546,16 @@ export const SOFTWARE: SoftwareEntry[] = [
           },
         ],
       },
+      {
+        method: "script",
+        command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+          },
+        ],
+      },
     ],
   },
   {
@@ -6429,6 +6615,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install uv",
+      },
+      {
+        method: "script",
+        command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "curl -LsSf https://astral.sh/uv/install.sh | sh",
+          },
+        ],
       },
       {
         method: "script",
@@ -6931,6 +7127,16 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S superfile",
+      },
+      {
+        method: "script",
+        command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+        steps: [
+          {
+            title: "Run the official installer",
+            command: "bash -c \"$(curl -sLo- https://superfile.netlify.app/install.sh)\"",
+          },
+        ],
       },
       {
         method: "script",
