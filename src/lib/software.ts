@@ -2354,10 +2354,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.konqueror",
-      },
-      {
         method: "apt",
         command: "sudo apt install konqueror",
       },
@@ -2462,10 +2458,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.qutebrowser.qutebrowser",
-      },
-      {
         method: "apt",
         command: "sudo apt install qutebrowser",
       },
@@ -2512,6 +2504,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install nyxt",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub engineer.atlas.Nyxt",
       },
     ],
   },
@@ -2580,6 +2576,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install mullvad-browser",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub net.mullvad.MullvadBrowser",
       },
     ],
   },
@@ -2913,6 +2913,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "pacman",
         command: "sudo pacman -S free-download-manager",
       },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.freedownloadmanager.Manager",
+      },
     ],
   },
   {
@@ -3133,10 +3137,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "sublime-text",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub com.sublimetext.three",
-      },
       {
         method: "apt",
         command: "sudo apt install sublime-text",
@@ -3866,10 +3866,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub net.mullvad.MullvadVPN",
-      },
-      {
         method: "apt",
         command: "sudo apt install mullvad-vpn",
       },
@@ -4261,6 +4257,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "zypper",
         command: "sudo zypper install foot",
       },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub page.codeberg.dnkl.foot",
+      },
     ],
   },
   {
@@ -4292,6 +4292,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install ptyxis",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub app.devsuite.Ptyxis",
       },
     ],
   },
@@ -4666,10 +4670,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.partitionmanager",
-      },
-      {
         method: "apt",
         command: "sudo apt install kde-partition-manager",
       },
@@ -4701,10 +4701,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "kde-connect",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.kde.kdeconnect",
-      },
       {
         method: "apt",
         command: "sudo apt install kde-connect",
@@ -5024,6 +5020,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "zypper",
         command: "sudo zypper install cpu-x",
       },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub io.github.thetumultuousunicornofdarkness.cpu-x",
+      },
     ],
   },
   {
@@ -5091,6 +5091,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "zypper",
         command: "sudo zypper install openrgb",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.openrgb.OpenRGB",
       },
     ],
   },
@@ -5477,10 +5481,6 @@ export const SOFTWARE: SoftwareEntry[] = [
     ],
     install: [
       {
-        method: "flatpak",
-        command: "flatpak install flathub io.hoppscotch.Hoppscotch",
-      },
-      {
         method: "apt",
         command: "sudo apt install hoppscotch",
       },
@@ -5672,10 +5672,6 @@ export const SOFTWARE: SoftwareEntry[] = [
       "mangohud",
     ],
     install: [
-      {
-        method: "flatpak",
-        command: "flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud",
-      },
       {
         method: "apt",
         command: "sudo apt install mangohud",
@@ -5884,6 +5880,10 @@ export const SOFTWARE: SoftwareEntry[] = [
         method: "zypper",
         command: "sudo zypper install zathura",
       },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.pwmt.zathura",
+      },
     ],
   },
   {
@@ -5979,6 +5979,10 @@ export const SOFTWARE: SoftwareEntry[] = [
       {
         method: "pacman",
         command: "sudo pacman -S trilium-notes",
+      },
+      {
+        method: "flatpak",
+        command: "flatpak install flathub org.triliumnotes.Trilium",
       },
     ],
   },

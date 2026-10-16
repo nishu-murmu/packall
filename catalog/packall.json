@@ -2438,10 +2438,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub org.kde.konqueror"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install konqueror"
         },
@@ -2546,10 +2542,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub org.qutebrowser.qutebrowser"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install qutebrowser"
         },
@@ -2596,6 +2588,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install nyxt"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub engineer.atlas.Nyxt"
         }
       ]
     },
@@ -2664,6 +2660,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install mullvad-browser"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub net.mullvad.MullvadBrowser"
         }
       ]
     },
@@ -2996,6 +2996,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S free-download-manager"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub org.freedownloadmanager.Manager"
         }
       ]
     },
@@ -3217,10 +3221,6 @@
         "sublime-text"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub com.sublimetext.three"
-        },
         {
           "method": "apt",
           "command": "sudo apt install sublime-text"
@@ -3950,10 +3950,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub net.mullvad.MullvadVPN"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install mullvad-vpn"
         },
@@ -4344,6 +4340,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install foot"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub page.codeberg.dnkl.foot"
         }
       ]
     },
@@ -4376,6 +4376,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install ptyxis"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub app.devsuite.Ptyxis"
         }
       ]
     },
@@ -4750,10 +4754,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub org.kde.partitionmanager"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install kde-partition-manager"
         },
@@ -4785,10 +4785,6 @@
         "kde-connect"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub org.kde.kdeconnect"
-        },
         {
           "method": "apt",
           "command": "sudo apt install kde-connect"
@@ -5107,6 +5103,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install cpu-x"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub io.github.thetumultuousunicornofdarkness.cpu-x"
         }
       ]
     },
@@ -5175,6 +5175,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install openrgb"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub org.openrgb.OpenRGB"
         }
       ]
     },
@@ -5561,10 +5565,6 @@
       ],
       "install": [
         {
-          "method": "flatpak",
-          "command": "flatpak install flathub io.hoppscotch.Hoppscotch"
-        },
-        {
           "method": "apt",
           "command": "sudo apt install hoppscotch"
         },
@@ -5756,10 +5756,6 @@
         "mangohud"
       ],
       "install": [
-        {
-          "method": "flatpak",
-          "command": "flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud"
-        },
         {
           "method": "apt",
           "command": "sudo apt install mangohud"
@@ -5967,6 +5963,10 @@
         {
           "method": "zypper",
           "command": "sudo zypper install zathura"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub org.pwmt.zathura"
         }
       ]
     },
@@ -6063,6 +6063,10 @@
         {
           "method": "pacman",
           "command": "sudo pacman -S trilium-notes"
+        },
+        {
+          "method": "flatpak",
+          "command": "flatpak install flathub org.triliumnotes.Trilium"
         }
       ]
     },
