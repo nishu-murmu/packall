@@ -44,11 +44,11 @@ var nativeMethods = map[Family][]catalog.Method{
 // Order in which methods are tried for each family. Native first, then the
 // universal formats. This table is the heart of "it knows your machine".
 var methodPriority = map[Family][]catalog.Method{
-	Arch:   {catalog.Pacman, catalog.AUR, catalog.Paru, catalog.Yay, catalog.Flatpak, catalog.Snap},
-	Debian: {catalog.Apt, catalog.Flatpak, catalog.Snap},
-	Fedora: {catalog.Dnf, catalog.Flatpak, catalog.Snap},
-	Suse:   {catalog.Zypper, catalog.Flatpak, catalog.Snap},
-	Other: {catalog.Flatpak, catalog.Snap, catalog.Pacman, catalog.Apt, catalog.Dnf,
+	Arch:   {catalog.Pacman, catalog.AUR, catalog.Paru, catalog.Yay, catalog.Flatpak, catalog.Script, catalog.Snap},
+	Debian: {catalog.Apt, catalog.Flatpak, catalog.Script, catalog.Snap},
+	Fedora: {catalog.Dnf, catalog.Flatpak, catalog.Script, catalog.Snap},
+	Suse:   {catalog.Zypper, catalog.Flatpak, catalog.Script, catalog.Snap},
+	Other: {catalog.Flatpak, catalog.Script, catalog.Snap, catalog.Pacman, catalog.Apt, catalog.Dnf,
 		catalog.Zypper, catalog.AUR, catalog.Paru, catalog.Yay, catalog.Brew},
 }
 
@@ -98,6 +98,10 @@ func toolFor(m catalog.Method) []string {
 // MethodAvailable reports whether the host can use a method. With no detection
 // data at all it assumes yes, so a listing still shows something useful.
 func MethodAvailable(m catalog.Method, managers []Manager) bool {
+	// Vendor install scripts only need a shell and curl, which every desktop has.
+	if m == catalog.Script {
+		return true
+	}
 	tools := toolFor(m)
 	if len(tools) == 0 {
 		return false

@@ -37,6 +37,7 @@ const ALL_METHODS: InstallMethod[] = [
   "dnf",
   "zypper",
   "brew",
+  "script",
 ]
 
 describe("CATEGORIES", () => {

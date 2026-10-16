@@ -28,6 +28,7 @@ export type InstallMethod =
   | "dnf"
   | "zypper"
   | "brew"
+  | "script"
 
 export interface InstallStep {
   title: string
