@@ -1,5 +1,8 @@
-use crate::data::{get_categories, get_software_catalogue};
-use crate::system::{build_action_command, detect_available_managers, scan_system_packages};
+use crate::data::{find_software, get_categories, get_software_catalogue};
+use crate::plan::install_plan;
+use crate::system::{
+    build_action_command, detect_available_managers, detect_distro_info, scan_system_packages,
+};
 use std::collections::HashSet;
 use std::process::Command;
 
@@ -25,7 +28,10 @@ pub fn handle_cli(args: &[String]) {
             println!("Packall v0.1.0 - Linux Software Directory & Package Manager");
         }
         _ => {
-            eprintln!("Unknown command: '{}'. Run 'packall help' for usage.", subcmd);
+            eprintln!(
+                "Unknown command: '{}'. Run 'packall help' for usage.",
+                subcmd
+            );
             std::process::exit(1);
         }
     }
@@ -102,15 +108,16 @@ fn handle_list(args: &[String]) {
 
     let catalogue = get_software_catalogue();
     let system_pkgs = scan_system_packages();
-    let installed_names: HashSet<String> = system_pkgs
-        .iter()
-        .map(|p| p.name.to_lowercase())
-        .collect();
+    let installed_names: HashSet<String> =
+        system_pkgs.iter().map(|p| p.name.to_lowercase()).collect();
 
     // If --system is requested
     if show_system {
         if as_json {
-            println!("{}", serde_json::to_string_pretty(&system_pkgs).unwrap_or_default());
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&system_pkgs).unwrap_or_default()
+            );
             return;
         }
 
@@ -146,7 +153,10 @@ fn handle_list(args: &[String]) {
         .collect();
 
     if as_json {
-        println!("{}", serde_json::to_string_pretty(&items).unwrap_or_default());
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&items).unwrap_or_default()
+        );
         return;
     }
 
@@ -163,7 +173,10 @@ fn handle_list(args: &[String]) {
     };
 
     println!("\n📦 {} ({} items):", title, items.len());
-    println!("{:<24} {:<16} {:<12} {}", "NAME", "CATEGORY", "STATUS", "TAGLINE");
+    println!(
+        "{:<24} {:<16} {:<12} {}",
+        "NAME", "CATEGORY", "STATUS", "TAGLINE"
+    );
     println!("{}", "-".repeat(80));
 
     items.sort_by(|a, b| a.category.cmp(&b.category).then(a.name.cmp(&b.name)));
@@ -176,7 +189,10 @@ fn handle_list(args: &[String]) {
         } else {
             "○ Available"
         };
-        println!("{:<24} {:<16} {:<12} {}", item.name, item.category, status, item.tagline);
+        println!(
+            "{:<24} {:<16} {:<12} {}",
+            item.name, item.category, status, item.tagline
+        );
     }
 }
 
@@ -190,10 +206,8 @@ fn handle_search(args: &[String]) {
     let catalogue = get_software_catalogue();
     let system_pkgs = scan_system_packages();
 
-    let installed_names: HashSet<String> = system_pkgs
-        .iter()
-        .map(|p| p.name.to_lowercase())
-        .collect();
+    let installed_names: HashSet<String> =
+        system_pkgs.iter().map(|p| p.name.to_lowercase()).collect();
 
     let cat_matches: Vec<_> = catalogue
         .into_iter()
@@ -213,13 +227,23 @@ fn handle_search(args: &[String]) {
 
     println!("\n🔍 SEARCH RESULTS FOR '{}'", query);
     println!("\nCatalogue Matches ({}):", cat_matches.len());
-    println!("{:<24} {:<16} {:<12} {}", "NAME", "CATEGORY", "STATUS", "TAGLINE");
+    println!(
+        "{:<24} {:<16} {:<12} {}",
+        "NAME", "CATEGORY", "STATUS", "TAGLINE"
+    );
     println!("{}", "-".repeat(80));
     for item in cat_matches {
         let is_installed = installed_names.contains(&item.id.to_lowercase())
             || installed_names.contains(&item.name.to_lowercase());
-        let status = if is_installed { "✔ Installed" } else { "○ Available" };
-        println!("{:<24} {:<16} {:<12} {}", item.name, item.category, status, item.tagline);
+        let status = if is_installed {
+            "✔ Installed"
+        } else {
+            "○ Available"
+        };
+        println!(
+            "{:<24} {:<16} {:<12} {}",
+            item.name, item.category, status, item.tagline
+        );
     }
 
     if !sys_matches.is_empty() {
@@ -242,18 +266,26 @@ fn handle_info(args: &[String]) {
     let catalogue = get_software_catalogue();
     let system_pkgs = scan_system_packages();
 
-    let found = catalogue.iter().find(|s| {
-        s.id.to_lowercase() == target || s.name.to_lowercase() == target
-    });
+    let found = catalogue
+        .iter()
+        .find(|s| s.id.to_lowercase() == target || s.name.to_lowercase() == target);
 
     if let Some(s) = found {
         let is_installed = system_pkgs.iter().any(|p| {
-            p.name.to_lowercase() == s.id.to_lowercase() || p.name.to_lowercase() == s.name.to_lowercase()
+            p.name.to_lowercase() == s.id.to_lowercase()
+                || p.name.to_lowercase() == s.name.to_lowercase()
         });
 
         println!("\n{}", "=".repeat(60));
         println!("{} ({})", s.name, s.category);
-        println!("Status:      {}", if is_installed { "✔ Installed on system" } else { "○ Available to install" });
+        println!(
+            "Status:      {}",
+            if is_installed {
+                "✔ Installed on system"
+            } else {
+                "○ Available to install"
+            }
+        );
         println!("License:     {}", s.license);
         println!("Homepage:    {}", s.homepage);
         println!("Tags:        {}", s.tags.join(", "));
@@ -283,7 +315,10 @@ fn handle_info(args: &[String]) {
         return;
     }
 
-    eprintln!("Package '{}' not found in Packall catalogue or system packages.", target);
+    eprintln!(
+        "Package '{}' not found in Packall catalogue or system packages.",
+        target
+    );
 }
 
 fn handle_install(args: &[String]) {
@@ -313,20 +348,66 @@ fn handle_install(args: &[String]) {
         return;
     }
 
-    let (bin, cmd_args) = build_action_command("install", &pkgs, manager);
-    println!("Executing: {} {}", bin, cmd_args.join(" "));
+    // Catalogue apps install with the right package name for this distro;
+    // anything else is passed straight to the package manager as before.
+    let (catalogue_apps, raw): (Vec<String>, Vec<String>) =
+        pkgs.into_iter().partition(|p| find_software(p).is_some());
 
-    let status = Command::new(&bin).args(&cmd_args).status();
-    match status {
-        Ok(s) => {
-            if s.success() {
-                println!("Installation completed successfully.");
-            } else {
-                eprintln!("Command failed with exit code: {:?}", s.code());
+    if !catalogue_apps.is_empty() {
+        let family = detect_distro_info().family;
+        let available: Vec<String> = detect_available_managers()
+            .into_iter()
+            .filter(|m| m.available)
+            .map(|m| m.id)
+            .collect();
+        for token in &catalogue_apps {
+            let entry = find_software(token).expect("partitioned on find_software");
+            match install_plan(&entry, &family, &available, manager) {
+                Some(plan) => {
+                    println!("Installing {} via {}", entry.name, plan.method);
+                    for command in &plan.commands {
+                        println!("Executing: {}", command);
+                        if !report(Command::new("sh").arg("-c").arg(command).status(), "sh") {
+                            break;
+                        }
+                    }
+                }
+                None => {
+                    let methods: Vec<&str> =
+                        entry.install.iter().map(|o| o.method.as_str()).collect();
+                    eprintln!(
+                        "No automatic install for {} on this system. It is available via: {}. \
+                         Install one of those tools (e.g. flatpak) or run 'packall info {}'.",
+                        entry.name,
+                        methods.join(", "),
+                        entry.id
+                    );
+                }
             }
+        }
+    }
+
+    if raw.is_empty() {
+        return;
+    }
+    let (bin, cmd_args) = build_action_command("install", &raw, manager);
+    println!("Executing: {} {}", bin, cmd_args.join(" "));
+    report(Command::new(&bin).args(&cmd_args).status(), &bin);
+}
+
+fn report(status: std::io::Result<std::process::ExitStatus>, bin: &str) -> bool {
+    match status {
+        Ok(s) if s.success() => {
+            println!("Installation completed successfully.");
+            true
+        }
+        Ok(s) => {
+            eprintln!("Command failed with exit code: {:?}", s.code());
+            false
         }
         Err(e) => {
             eprintln!("Failed to launch {}: {}", bin, e);
+            false
         }
     }
 }
@@ -374,8 +455,15 @@ fn handle_scan() {
     println!("\n🔍 Scanning Host System Package Managers...");
     let managers = detect_available_managers();
     for m in &managers {
-        let status = if m.available { "AVAILABLE" } else { "NOT FOUND" };
-        println!("  • {:<14} [{:<9}] (e.g. {})", m.name, status, m.install_cmd);
+        let status = if m.available {
+            "AVAILABLE"
+        } else {
+            "NOT FOUND"
+        };
+        println!(
+            "  • {:<14} [{:<9}] (e.g. {})",
+            m.name, status, m.install_cmd
+        );
     }
 
     let pkgs = scan_system_packages();
