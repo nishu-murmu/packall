@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest"
 import { CATEGORIES, CATEGORY_MAP } from "@/lib/categories"
 import { METHOD_COLORS, METHOD_DESCRIPTIONS, METHOD_LABELS } from "@/lib/install-methods"
 import { SOFTWARE, SOFTWARE_MAP } from "@/lib/software"
-import type { CategoryId, InstallMethod } from "@/lib/types"
+import { NATIVE_METHODS, UNIVERSAL_METHODS, parseOption } from "@/lib/actions"
+import type { CategoryId, DistroFamily, InstallMethod } from "@/lib/types"
 
 // Mirrors the CategoryId union in types.ts. Duplicated as a runtime array
 // because the union evaporates at compile time.
@@ -233,5 +234,36 @@ describe("SOFTWARE catalogue", () => {
     const featured = SOFTWARE.filter((s) => s.featured).length
     expect(featured).toBeGreaterThan(0)
     expect(featured * 2).toBeLessThan(SOFTWARE.length)
+  })
+})
+
+describe("install coverage", () => {
+  // Apps whose vendors only ship versioned downloads, registration-gated
+  // installers or nothing at all for these distros. Shrink this list, never grow it.
+  const KNOWN_GAPS: Record<string, DistroFamily[]> = {
+    veracrypt: ["debian", "fedora", "suse"],
+    virtualbox: ["fedora"],
+    helium: ["suse"],
+    cursor: ["debian", "fedora", "suse"],
+    "llama-cpp": ["debian", "suse"],
+    "davinci-resolve": ["debian", "fedora", "suse"],
+    ivpn: ["debian", "fedora", "suse"],
+    vagrant: ["suse"],
+    hoppscotch: ["debian", "fedora", "suse"],
+    yaak: ["debian", "fedora", "suse"],
+  }
+
+  it("every app can be installed automatically on every distro family", () => {
+    const families = ["arch", "debian", "fedora", "suse"] as const
+    for (const entry of SOFTWARE) {
+      for (const family of families) {
+        if (KNOWN_GAPS[entry.id]?.includes(family)) continue
+        const usable = [...NATIVE_METHODS[family], ...UNIVERSAL_METHODS]
+        const ok = entry.install.some(
+          (o) => usable.includes(o.method) && (parseOption(o).automatable || !!o.steps?.length)
+        )
+        expect(ok, `'${entry.id}' has no automatic install path on ${family}`).toBe(true)
+      }
+    }
   })
 })
