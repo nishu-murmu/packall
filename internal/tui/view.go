@@ -36,9 +36,19 @@ func (m Model) listHeight() int {
 	return max(1, m.contentHeight()-2)
 }
 
+// jobListRoom returns how many rows the job list gets in the jobs view.
+// The pane's inner height is shared between a 3-line header (title, progress
+// bar, blank line), the job list, a gap line, and the log/summary section.
+func (m Model) jobListRoom() int {
+	inner := m.contentHeight() - 2
+	room := inner - 3 - 1 - m.logHeight()
+	return max(3, room)
+}
+
 // logHeight is the room the job log gets, under the job list.
 func (m Model) logHeight() int {
-	return max(3, m.contentHeight()-2)
+	inner := m.contentHeight() - 2
+	return max(3, inner/3)
 }
 
 // sidebarOn reports whether there is room for the sidebar as well as a list.
@@ -485,10 +495,7 @@ func (m Model) viewJobs() string {
 func (m Model) jobRows() []string {
 	spinner := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 
-	room := m.contentHeight() - 8
-	if room < 3 {
-		room = 3
-	}
+	room := m.jobListRoom()
 
 	jobs := m.batch.Jobs
 	// With more jobs than room, centre the window on the running one.
