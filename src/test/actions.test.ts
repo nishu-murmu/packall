@@ -174,6 +174,36 @@ describe("pickOption", () => {
     expect(none).toBeNull()
   })
 
+  it("falls back to a vendor install script when no package manager has the app", () => {
+    const scripted: SoftwareEntry = {
+      ...firefox,
+      id: "scripted",
+      install: [
+        { method: "snap", command: "sudo snap install example" },
+        {
+          method: "script",
+          command: "curl -fsSL https://example.com/install.sh | sh",
+          steps: [{ title: "Run the official installer", command: "curl -fsSL https://example.com/install.sh | sh" }],
+        },
+      ],
+    }
+    const ctx = { distro: distro("fedora"), managers: [mgr("dnf"), mgr("snap", false)], systemPackages: [] }
+    const opt = pickOption(scripted, "install", ctx)
+    expect(opt?.method).toBe("script")
+    expect(buildCommands("install", opt!)).toEqual(["curl -fsSL https://example.com/install.sh | sh"])
+    expect(missingUniversalFor(scripted, ctx)).toBeNull()
+  })
+
+  it("honours an explicitly chosen method over the distro priority", () => {
+    const o = pickOption(firefox, "install", {
+      distro: distro("debian"),
+      managers: [mgr("apt"), mgr("flatpak")],
+      systemPackages: [],
+      forceMethod: "flatpak",
+    })
+    expect(o?.method).toBe("flatpak")
+  })
+
   it("update and remove use the method the package was installed with", () => {
     const o = pickOption(firefox, "remove", {
       distro: distro("debian"),

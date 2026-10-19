@@ -8,9 +8,9 @@
 use packall_lib::data::{get_categories, get_software_catalogue};
 use std::collections::HashSet;
 
-const KNOWN_METHODS: [&str; 13] = [
+const KNOWN_METHODS: [&str; 14] = [
     "apt", "snap", "flatpak", "appimage", "deb", "aur", "paru", "yay", "pacman", "manual", "dnf",
-    "zypper", "brew",
+    "zypper", "brew", "script",
 ];
 
 #[test]
@@ -35,7 +35,11 @@ fn category_ids_are_unique() {
 fn category_fields_are_populated() {
     for cat in get_categories() {
         assert!(!cat.id.trim().is_empty(), "category id must not be blank");
-        assert!(!cat.name.trim().is_empty(), "category '{}' name must not be blank", cat.id);
+        assert!(
+            !cat.name.trim().is_empty(),
+            "category '{}' name must not be blank",
+            cat.id
+        );
         assert!(
             !cat.description.trim().is_empty(),
             "category '{}' description must not be blank",
@@ -59,7 +63,9 @@ fn category_ids_are_lowercase_kebab_case() {
             cat.id
         );
         assert!(
-            cat.id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-'),
+            cat.id
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '-'),
             "category id '{}' must be kebab-case ascii",
             cat.id
         );
@@ -69,7 +75,10 @@ fn category_ids_are_lowercase_kebab_case() {
 #[test]
 fn catalogue_is_non_empty_and_covers_every_category() {
     let catalogue = get_software_catalogue();
-    assert!(!catalogue.is_empty(), "software catalogue must not be empty");
+    assert!(
+        !catalogue.is_empty(),
+        "software catalogue must not be empty"
+    );
 
     let cats = get_categories();
     let category_ids: HashSet<&str> = cats.iter().map(|c| c.id.as_str()).collect();
@@ -117,7 +126,10 @@ fn every_entry_has_populated_display_fields() {
         let ctx = format!("entry '{}'", entry.id);
         assert!(!entry.name.trim().is_empty(), "{ctx}: name blank");
         assert!(!entry.tagline.trim().is_empty(), "{ctx}: tagline blank");
-        assert!(!entry.description.trim().is_empty(), "{ctx}: description blank");
+        assert!(
+            !entry.description.trim().is_empty(),
+            "{ctx}: description blank"
+        );
         assert!(!entry.homepage.trim().is_empty(), "{ctx}: homepage blank");
         assert!(!entry.license.trim().is_empty(), "{ctx}: license blank");
     }
@@ -203,8 +215,22 @@ fn featured_entries_exist_but_not_everything_is_featured() {
 fn software_entry_serializes_to_json_with_expected_shape() {
     let catalogue = get_software_catalogue();
     let json = serde_json::to_value(&catalogue[0]).expect("serialization must not fail");
-    for key in ["id", "name", "tagline", "description", "category", "homepage", "license", "tags", "install", "featured"] {
-        assert!(json.get(key).is_some(), "serialized entry missing key '{key}'");
+    for key in [
+        "id",
+        "name",
+        "tagline",
+        "description",
+        "category",
+        "homepage",
+        "license",
+        "tags",
+        "install",
+        "featured",
+    ] {
+        assert!(
+            json.get(key).is_some(),
+            "serialized entry missing key '{key}'"
+        );
     }
 }
 

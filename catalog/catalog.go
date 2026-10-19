@@ -33,6 +33,7 @@ const (
 	Deb      Method = "deb"
 	AppImage Method = "appimage"
 	Manual   Method = "manual"
+	Script   Method = "script"
 )
 
 // Step is one command in a multi-step install.
@@ -232,6 +233,8 @@ func (m Method) Label() string {
 		return "Homebrew"
 	case Manual:
 		return "manual"
+	case Script:
+		return "install script"
 	default:
 		return string(m)
 	}

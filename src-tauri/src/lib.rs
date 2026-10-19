@@ -2,6 +2,7 @@ pub mod cli;
 pub mod commands;
 pub mod data;
 pub mod jobs;
+pub mod plan;
 pub mod system;
 
 use commands::{

@@ -26,6 +26,7 @@ import {
   ChevronUp,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { pickOption } from "@/lib/actions"
 import { toast } from "sonner"
 
 export function SoftwareDrawer() {
@@ -52,7 +53,6 @@ export function SoftwareDrawer() {
   const [stepResults, setStepResults] = React.useState<StepExecutionResult[]>([])
   const [expandedLogStep, setExpandedLogStep] = React.useState<number | null>(null)
 
-  // Determine intuitive default installation method based on detected distro & installed managers
   React.useEffect(() => {
     if (!software) return
 
@@ -60,53 +60,10 @@ export function SoftwareDrawer() {
     setActiveStepIndex(null)
     setExpandedLogStep(null)
 
-    const availableMethods = software.install.map((i) => i.method)
-
-    if (distroInfo) {
-      const pref = distroInfo.preferred_manager.toLowerCase()
-      // If distro has preferred manager, check if software has exact match
-      const exactMatch = availableMethods.find((m) => m === pref)
-      if (exactMatch) {
-        setSelectedMethod(exactMatch)
-        return
-      }
-
-      // If Arch family and software offers 'aur', match with paru or yay
-      if (
-        (distroInfo.id.includes("arch") || pref === "paru" || pref === "yay") &&
-        availableMethods.includes("aur")
-      ) {
-        setSelectedMethod("aur")
-        return
-      }
-
-      // If Debian/Ubuntu and software offers 'deb' or 'apt'
-      if (
-        (distroInfo.id.includes("ubuntu") || distroInfo.id.includes("debian")) &&
-        availableMethods.includes("apt")
-      ) {
-        setSelectedMethod("apt")
-        return
-      }
-
-      // Check against any installed package manager on the host
-      const hostInstalledManagerIds = packageManagers
-        .filter((pm) => pm.available)
-        .map((pm) => pm.id.toLowerCase())
-
-      const matchInstalled = availableMethods.find((m) =>
-        hostInstalledManagerIds.includes(m)
-      )
-      if (matchInstalled) {
-        setSelectedMethod(matchInstalled)
-        return
-      }
-    }
-
-    // Fallback: Pick first available installation option
-    if (software.install.length > 0) {
-      setSelectedMethod(software.install[0].method)
-    }
+    // Default to exactly what a plain Install would use, so the picker never
+    // starts on a method the installer itself would not choose.
+    const picked = pickOption(software, "install", { distro: distroInfo, managers: packageManagers, systemPackages: [] })
+    setSelectedMethod(picked?.method ?? software.install[0]?.method ?? null)
   }, [software, distroInfo, packageManagers])
 
   if (!software) return null
