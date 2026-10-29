@@ -24,6 +24,7 @@ import (
 	"github.com/nishu-murmu/packall/catalog"
 	"github.com/nishu-murmu/packall/internal/actions"
 	"github.com/nishu-murmu/packall/internal/distro"
+	"github.com/nishu-murmu/packall/internal/repo"
 	"github.com/nishu-murmu/packall/internal/runner"
 )
 
@@ -31,6 +32,7 @@ type view int
 
 const (
 	viewCatalogue view = iota
+	viewRepos
 	viewInstalled
 	viewManagers
 	viewDetail
@@ -55,7 +57,9 @@ type Model struct {
 
 	host     distro.Info
 	packages []actions.Package
-	scanning bool
+	// installed is packages keyed by manager/name, for marking repo rows.
+	installed map[string]bool
+	scanning  bool
 
 	view        view
 	returnTo    view
@@ -78,6 +82,9 @@ type Model struct {
 	pkgCursor int
 	pkgOffset int
 	pkgQueue  map[string]bool
+
+	// Repositories view: every package the host's managers can install.
+	repos repoState
 
 	// Detail.
 	detail *catalog.Entry
@@ -118,6 +125,7 @@ func New() Model {
 		categories:  catalog.Categories(),
 		queue:       map[string]bool{},
 		pkgQueue:    map[string]bool{},
+		repos:       repoState{loading: true, queue: map[string]repo.Pkg{}},
 		search:      ti,
 		scanning:    true,
 	}
@@ -143,7 +151,7 @@ type tickMsg time.Time
 
 // Init starts host detection and the installed-package scan.
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(detectCmd(), scanCmd(), tickCmd())
+	return tea.Batch(detectCmd(), scanCmd(), loadReposCmd(), tickCmd())
 }
 
 func detectCmd() tea.Cmd {
@@ -206,7 +214,31 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case scanMsg:
 		m.packages = []actions.Package(msg)
+		m.installed = make(map[string]bool, len(m.packages))
+		for _, p := range m.packages {
+			m.installed[pkgKey(p)] = true
+		}
 		m.scanning = false
+		return m, nil
+
+	case repoMsg:
+		m.repos.index, m.repos.err, m.repos.loading = msg.index, msg.err, false
+		m.refilterRepos()
+		return m, nil
+
+	case aurTickMsg:
+		// Only the query still in the box is worth sending.
+		if m.view != viewRepos || string(msg) != m.repoQuery() {
+			return m, nil
+		}
+		return m, aurCmd(string(msg))
+
+	case aurMsg:
+		if msg.query != m.repoQuery() {
+			return m, nil
+		}
+		m.repos.aurQuery, m.repos.aurHits, m.repos.aurErr = msg.query, msg.pkgs, msg.err
+		m.refilterRepos()
 		return m, nil
 
 	case tickMsg:
@@ -276,6 +308,7 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.search.Blur()
 			m.search.SetValue("")
 			m.refilter()
+			m.refilterRepos()
 			return m, nil
 		case "enter":
 			m.searching = false
@@ -285,7 +318,8 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.search, cmd = m.search.Update(msg)
 		m.refilter()
-		return m, cmd
+		m.refilterRepos()
+		return m, tea.Batch(cmd, m.aurDebounce())
 	}
 
 	if m.showHelp {
@@ -319,7 +353,7 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m.escape()
 
 	case key.Matches(msg, m.keys.Search):
-		if m.view == viewCatalogue || m.view == viewInstalled {
+		if m.view == viewCatalogue || m.view == viewInstalled || m.view == viewRepos {
 			m.searching = true
 			m.search.Focus()
 			return m, textinput.Blink
@@ -330,6 +364,17 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.view, m.focus = viewCatalogue, paneList
 		m.clampCursor()
 		return m, nil
+
+	case key.Matches(msg, m.keys.Repos):
+		m.view, m.focus = viewRepos, paneList
+		m.refilterRepos()
+		// An empty box shows nothing here, so start typing straight away.
+		if m.repoQuery() == "" {
+			m.searching = true
+			m.search.Focus()
+			return m, textinput.Blink
+		}
+		return m, m.aurDebounce()
 
 	case key.Matches(msg, m.keys.Installed):
 		m.view, m.focus = viewInstalled, paneList
@@ -405,6 +450,7 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case key.Matches(msg, m.keys.Clear):
 		m.queue = map[string]bool{}
 		m.pkgQueue = map[string]bool{}
+		m.repos.queue = map[string]repo.Pkg{}
 		return m, nil
 
 	case key.Matches(msg, m.keys.Install):
@@ -445,9 +491,11 @@ func (m Model) escape() (tea.Model, tea.Cmd) {
 	case m.search.Value() != "":
 		m.search.SetValue("")
 		m.refilter()
-	case len(m.queue) > 0 || len(m.pkgQueue) > 0:
+		m.refilterRepos()
+	case len(m.queue) > 0 || len(m.pkgQueue) > 0 || len(m.repos.queue) > 0:
 		m.queue = map[string]bool{}
 		m.pkgQueue = map[string]bool{}
+		m.repos.queue = map[string]repo.Pkg{}
 	}
 	return m, nil
 }
@@ -518,6 +566,16 @@ func (m *Model) toggle() {
 		} else {
 			m.pkgQueue[k] = true
 		}
+	case viewRepos:
+		if len(m.repos.hits) == 0 {
+			return
+		}
+		p := m.repos.hits[m.repos.cursor]
+		if _, ok := m.repos.queue[p.Key()]; ok {
+			delete(m.repos.queue, p.Key())
+		} else {
+			m.repos.queue[p.Key()] = p
+		}
 	}
 }
 
@@ -530,6 +588,10 @@ func (m *Model) selectAll() {
 	case viewInstalled:
 		for _, p := range m.installedList() {
 			m.pkgQueue[pkgKey(p)] = true
+		}
+	case viewRepos:
+		for _, p := range m.repos.hits {
+			m.repos.queue[p.Key()] = p
 		}
 	}
 }
@@ -544,7 +606,14 @@ func (m Model) run(action actions.Action) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	if m.view == viewInstalled {
+	if m.view == viewRepos {
+		pkgs := m.selectedRepoPackages()
+		if len(pkgs) == 0 {
+			m.flash, m.flashAt = "nothing to "+string(action)+" — / to search the repositories", time.Now()
+			return m, nil
+		}
+		m.pending, m.pendingPkgs, m.pendingEntries = action, pkgs, nil
+	} else if m.view == viewInstalled {
 		pkgs := m.selectedPackages()
 		if len(pkgs) == 0 {
 			m.flash, m.flashAt = "nothing selected — space to add a package", time.Now()
@@ -619,6 +688,7 @@ func (m Model) startPending() (tea.Model, tea.Cmd) {
 	// The queue has been acted on; clear it so a second i does not repeat it.
 	m.queue = map[string]bool{}
 	m.pkgQueue = map[string]bool{}
+	m.repos.queue = map[string]repo.Pkg{}
 
 	return m, tea.Batch(waitForEvents(m.events), tickCmd(), sudoKeepaliveCmd(ctx))
 }
@@ -700,6 +770,8 @@ func (m Model) count() int {
 		return len(m.categories) + 1
 	case m.view == viewInstalled:
 		return len(m.installedList())
+	case m.view == viewRepos:
+		return len(m.repos.hits)
 	default:
 		return len(m.entries)
 	}
@@ -715,6 +787,8 @@ func (m Model) current() int {
 		return m.catCursor
 	case m.view == viewInstalled:
 		return m.pkgCursor
+	case m.view == viewRepos:
+		return m.repos.cursor
 	default:
 		return m.cursor
 	}
@@ -747,6 +821,9 @@ func (m *Model) cursorTo(i int) {
 	case m.view == viewInstalled:
 		m.pkgCursor = i
 		m.pkgOffset = scroll(m.pkgOffset, i, m.listHeight(), len(m.installedList()))
+	case m.view == viewRepos:
+		m.repos.cursor = i
+		m.repos.offset = scroll(m.repos.offset, i, m.repoListHeight(), len(m.repos.hits))
 	default:
 		m.cursor = i
 		m.offset = scroll(m.offset, i, m.listHeight(), len(m.entries))
@@ -789,6 +866,8 @@ func (m *Model) clampCursor() {
 	n := len(m.installedList())
 	m.pkgCursor = clamp(m.pkgCursor, n)
 	m.pkgOffset = scroll(m.pkgOffset, m.pkgCursor, m.listHeight(), n)
+
+	m.clampRepoCursor()
 }
 
 // syncLog rebuilds the log viewport from the active or last-interesting job.

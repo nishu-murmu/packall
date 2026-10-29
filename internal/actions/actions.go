@@ -243,13 +243,28 @@ func Build(action Action, opt catalog.Option, managers []Manager) []string {
 	return commandsFor(action, parsed, managers)
 }
 
-// BuildForPackage produces update/remove commands for something known only from
-// the host scan, with no catalogue entry behind it.
+// packageName is what a package name or Flatpak id may look like on every
+// manager Packall drives. It admits nothing a shell would interpret.
+var packageName = regexp.MustCompile(`^[A-Za-z0-9@_+][A-Za-z0-9@._+-]*$`)
+
+// ValidPackageName reports whether a name is safe to put in a command. Names
+// from the catalogue are reviewed; names from a repository index or the AUR are
+// not, and they end up in a shell command line.
+func ValidPackageName(name string) bool {
+	return len(name) <= 255 && packageName.MatchString(name)
+}
+
+// BuildForPackage produces commands for something with no catalogue entry
+// behind it: a package from the host scan, or one found in a repository index.
+// A name that is not a plausible package name gets no commands at all.
 func BuildForPackage(action Action, pkg Package, managers []Manager) []string {
 	method := catalog.Method(pkg.Manager)
 	id := pkg.Name
 	if method == catalog.Flatpak && pkg.Description != "" {
 		id = pkg.Description
+	}
+	if !ValidPackageName(id) {
+		return nil
 	}
 	return commandsFor(action, Parsed{Method: method, Pkgs: []string{id}, Automatable: true}, managers)
 }
