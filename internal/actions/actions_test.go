@@ -556,3 +556,24 @@ func TestEveryEntryIsInstallableSomewhere(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildForPackageRefusesNamesAShellWouldInterpret(t *testing.T) {
+	for _, name := range []string{"", "-rf", "vim; rm -rf ~", "a b", "$(id)", "x`y`", "foo|bar", "../etc"} {
+		if got := BuildForPackage(Install, Package{Manager: "apt", Name: name}, nil); got != nil {
+			t.Errorf("%q built %v, want nothing", name, got)
+		}
+	}
+	for _, name := range []string{"vim", "g++", "libstdc++6", "python3.12", "lib32-gcc-libs", "@scope", "visual-studio-code-bin"} {
+		if !ValidPackageName(name) {
+			t.Errorf("%q was refused", name)
+		}
+	}
+}
+
+func TestBuildForPackageInstallsAURPackagesWithTheHelper(t *testing.T) {
+	got := BuildForPackage(Install, Package{Manager: "aur", Name: "visual-studio-code-bin"}, []Manager{mgr("yay")})
+	want := []string{"yay -S --needed --noconfirm visual-studio-code-bin"}
+	if !equal(got, want) {
+		t.Errorf("= %v, want %v", got, want)
+	}
+}

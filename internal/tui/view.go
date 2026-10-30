@@ -85,6 +85,8 @@ func (m Model) View() string {
 		body = m.viewManagers()
 	case viewInstalled:
 		body = m.viewInstalled()
+	case viewRepos:
+		body = m.viewRepos()
 	default:
 		body = m.viewCatalogue()
 	}
@@ -132,6 +134,8 @@ func (m Model) viewFooter() string {
 		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d queued", len(m.queue)))
 	case len(m.pkgQueue) > 0:
 		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d selected", len(m.pkgQueue)))
+	case len(m.repos.queue) > 0:
+		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d queued from the repositories", len(m.repos.queue)))
 	case m.scanning:
 		left = m.styles.Subtitle.Render("scanning installed packages…")
 	}
@@ -217,7 +221,11 @@ func (m Model) viewSidebar() string {
 // viewList renders the app list.
 func (m Model) viewList(width int) string {
 	if len(m.entries) == 0 {
-		return m.styles.Empty.Render("nothing matches " + quote(m.search.Value()))
+		msg := "nothing matches " + quote(m.search.Value())
+		if m.repos.index.Len() > 0 {
+			msg += fmt.Sprintf(" in the catalogue\n\n2 to search all %d packages in your repositories", m.repos.index.Len())
+		}
+		return m.styles.Empty.Render(msg)
 	}
 
 	height := m.listHeight()
@@ -442,6 +450,16 @@ func (m Model) viewManagers() string {
 	b.WriteString("\n" + m.styles.Label.Render("Catalogue") + "\n")
 	b.WriteString("  " + m.styles.Value.Render(fmt.Sprintf("%d apps in %d categories",
 		len(catalog.All()), len(catalog.Categories()))) + "\n")
+
+	b.WriteString("\n" + m.styles.Label.Render("Repositories") + "\n")
+	if m.repos.loading {
+		b.WriteString("  " + m.styles.Subtitle.Render("reading package indexes…") + "\n")
+	} else {
+		b.WriteString("  " + m.styles.Value.Render(fmt.Sprintf("%d packages indexed", m.repos.index.Len())) + "\n")
+		if m.repos.err != nil {
+			b.WriteString("  " + m.styles.Error.Render(m.repos.err.Error()) + "\n")
+		}
+	}
 
 	return m.pane(b.String(), m.width, m.contentHeight(), true)
 }

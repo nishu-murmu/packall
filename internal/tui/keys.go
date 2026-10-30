@@ -25,6 +25,7 @@ type KeyMap struct {
 	Enter   key.Binding
 
 	Catalogue key.Binding
+	Repos     key.Binding
 	Installed key.Binding
 	Managers  key.Binding
 
@@ -57,6 +58,7 @@ func DefaultKeyMap() KeyMap {
 		Enter:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "open")),
 
 		Catalogue: key.NewBinding(key.WithKeys("1"), key.WithHelp("1", "catalogue")),
+		Repos:     key.NewBinding(key.WithKeys("2"), key.WithHelp("2", "repositories")),
 		Installed: key.NewBinding(key.WithKeys("3"), key.WithHelp("3", "installed")),
 		Managers:  key.NewBinding(key.WithKeys("4"), key.WithHelp("4", "managers")),
 
@@ -79,7 +81,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		{k.Down, k.Up, k.Left, k.Right, k.Top, k.Bottom},
 		{k.Search, k.Toggle, k.All, k.Clear, k.Enter},
 		{k.Install, k.Update, k.Remove},
-		{k.Catalogue, k.Installed, k.Managers, k.Sidebar},
+		{k.Catalogue, k.Repos, k.Installed, k.Managers, k.Sidebar},
 		{k.Help, k.Escape, k.Quit},
 	}
 }
