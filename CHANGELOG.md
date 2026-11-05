@@ -1,5 +1,38 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Updates view (TUI)** — press `5` to see every installed package with a
+  newer version waiting, as `installed → newer`, across pacman, the AUR, apt,
+  dnf, zypper, Flatpak, Snap and Homebrew. Select packages and press `u`, or
+  press `U` twice to upgrade everything (one full upgrade per manager). The
+  tab shows the count, the Installed view marks outdated rows with `↑`, and
+  `r` re-checks. Pacman packages only update through the full upgrade, since
+  Arch does not support partial upgrades.
+- **Repositories view (TUI)** — press `2` to search every package the host's
+  repositories offer, not just the curated catalogue: pacman's sync
+  databases, apt's package lists, and the AUR (searched online when `yay` or
+  `paru` is installed). Results queue and install through the same batch
+  runner as catalogue apps. Indexes are read straight from disk in pure Go,
+  so no libalpm or libapt-pkg is linked.
+- **View tabs (TUI)** — the header now lists Catalogue, Repositories,
+  Installed and Managers with the key that opens each, and how many packages
+  the repositories hold.
+- **`tab` widens a search (TUI)** — moves the current query between the
+  catalogue and the repositories, even while typing. A catalogue search shows
+  how many repository matches it has in the footer, and an empty catalogue
+  result points at them.
+- **Repositories intro screen (TUI)** — the empty view explains what is
+  searched, lists package counts per manager, and says whether the AUR is
+  included or what to install to include it.
+
+### Changed
+
+- Package names from the repositories and the AUR are rejected if a shell
+  would interpret them, since they end up in command lines.
+
 ## 0.3.0
 
 ### Added

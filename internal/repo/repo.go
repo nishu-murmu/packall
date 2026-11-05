@@ -62,6 +62,18 @@ func (ix *Index) Len() int {
 	return len(ix.pkgs)
 }
 
+// Counts is how many packages each manager contributes, keyed by Manager.
+func (ix *Index) Counts() map[string]int {
+	out := map[string]int{}
+	if ix == nil {
+		return out
+	}
+	for _, p := range ix.pkgs {
+		out[p.Manager]++
+	}
+	return out
+}
+
 // Search ranks packages against a query: an exact name first, then names that
 // start with it, then names that contain it, then summaries that mention it.
 // Within a rank shorter names come first, since "vim" is likelier wanted than

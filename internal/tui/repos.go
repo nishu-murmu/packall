@@ -155,7 +155,7 @@ func (m Model) viewRepos() string {
 		}
 		content = m.styles.Empty.Render(msg + "\n\nrun your manager's refresh (apt update, or pacman -Syu) and reopen Packall")
 	case q == "":
-		content = m.styles.Empty.Render("/ to search everything your package managers offer")
+		content = m.repoIntro()
 	case len(r.hits) == 0:
 		content = m.styles.Empty.Render("nothing matches " + quote(q))
 	default:
@@ -173,6 +173,39 @@ func (m Model) viewRepos() string {
 		top += m.styles.Error.Render("AUR packages are user-submitted and unreviewed — read the PKGBUILD before installing") + "\n"
 	}
 	return m.pane(top+content, m.width, m.contentHeight(), true)
+}
+
+// repoIntro fills the empty Repositories view: what is being searched, where
+// it came from, and how to use it. It is the first thing anyone pressing 2
+// sees, so it explains the view rather than just asking for a query.
+func (m Model) repoIntro() string {
+	var b strings.Builder
+	b.WriteString(m.styles.Value.Render("Every package your system's repositories offer, not just the curated catalogue.") + "\n")
+	b.WriteString(m.styles.Subtitle.Render("Read from the package lists already on disk; installs use your own package manager.") + "\n\n")
+
+	counts := m.repos.index.Counts()
+	managers := make([]string, 0, len(counts))
+	for mgr := range counts {
+		managers = append(managers, mgr)
+	}
+	sort.Strings(managers)
+	for _, mgr := range managers {
+		b.WriteString("  " + m.styles.Method.Render(fmt.Sprintf("%-8s", mgr)) +
+			m.styles.Value.Render(plural(counts[mgr], "package", "packages")) + "\n")
+	}
+	switch {
+	case m.aurAvailable():
+		b.WriteString("  " + m.styles.Method.Render(fmt.Sprintf("%-8s", "aur")) +
+			m.styles.Value.Render("searched online as you type") + "\n")
+	case m.host.Has("pacman"):
+		b.WriteString("  " + m.styles.Skipped.Render(fmt.Sprintf("%-8s", "aur")) +
+			m.styles.Subtitle.Render("install yay or paru to include the AUR") + "\n")
+	}
+
+	b.WriteString("\n" + m.styles.Key.Render("/") + m.styles.Value.Render(" to start searching") + "\n")
+	b.WriteString(m.styles.Empty.Render(
+		"space to queue · i to install · tab back to the catalogue · 1 3 4 to switch views"))
+	return b.String()
 }
 
 // repoRow is one package: marker, name, version, summary, and where it is from.

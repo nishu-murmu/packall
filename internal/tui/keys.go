@@ -24,10 +24,15 @@ type KeyMap struct {
 	Remove  key.Binding
 	Enter   key.Binding
 
+	UpdateAll key.Binding
+	Refresh   key.Binding
+
 	Catalogue key.Binding
 	Repos     key.Binding
+	Scope     key.Binding
 	Installed key.Binding
 	Managers  key.Binding
+	Updates   key.Binding
 
 	Sidebar key.Binding
 	Help    key.Binding
@@ -57,10 +62,15 @@ func DefaultKeyMap() KeyMap {
 		Remove:  key.NewBinding(key.WithKeys("x"), key.WithHelp("x", "remove")),
 		Enter:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "open")),
 
+		UpdateAll: key.NewBinding(key.WithKeys("U"), key.WithHelp("U U", "update everything")),
+		Refresh:   key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "re-check updates")),
+
 		Catalogue: key.NewBinding(key.WithKeys("1"), key.WithHelp("1", "catalogue")),
 		Repos:     key.NewBinding(key.WithKeys("2"), key.WithHelp("2", "repositories")),
+		Scope:     key.NewBinding(key.WithKeys("tab"), key.WithHelp("tab", "catalogue ⇄ repos")),
 		Installed: key.NewBinding(key.WithKeys("3"), key.WithHelp("3", "installed")),
 		Managers:  key.NewBinding(key.WithKeys("4"), key.WithHelp("4", "managers")),
+		Updates:   key.NewBinding(key.WithKeys("5"), key.WithHelp("5", "updates")),
 
 		Sidebar: key.NewBinding(key.WithKeys("s"), key.WithHelp("s", "sidebar")),
 		Help:    key.NewBinding(key.WithKeys("?"), key.WithHelp("?", "help")),
@@ -80,8 +90,8 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Down, k.Up, k.Left, k.Right, k.Top, k.Bottom},
 		{k.Search, k.Toggle, k.All, k.Clear, k.Enter},
-		{k.Install, k.Update, k.Remove},
-		{k.Catalogue, k.Repos, k.Installed, k.Managers, k.Sidebar},
+		{k.Install, k.Update, k.UpdateAll, k.Remove, k.Refresh},
+		{k.Catalogue, k.Repos, k.Scope, k.Installed, k.Managers, k.Updates, k.Sidebar},
 		{k.Help, k.Escape, k.Quit},
 	}
 }

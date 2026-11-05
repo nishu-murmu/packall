@@ -46,6 +46,8 @@ type Styles struct {
 
 	Method    lipgloss.Style
 	Installed lipgloss.Style
+	// Update marks a package with a newer version waiting.
+	Update lipgloss.Style
 
 	StatusBar lipgloss.Style
 	Key       lipgloss.Style
@@ -97,6 +99,7 @@ func NewStyles() Styles {
 
 		Method:    lipgloss.NewStyle().Foreground(cyan),
 		Installed: lipgloss.NewStyle().Foreground(green),
+		Update:    lipgloss.NewStyle().Foreground(amber).Bold(true),
 
 		StatusBar: lipgloss.NewStyle().Foreground(dim),
 		Key:       lipgloss.NewStyle().Foreground(violet).Bold(true),

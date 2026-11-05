@@ -629,3 +629,34 @@ func MatchesFamily(e *catalog.Entry, family Family) bool {
 	}
 	return false
 }
+
+// UpgradeAll returns the commands that bring every package one manager owns up
+// to date. manager is an id as the installed scan reports it ("aur" for the
+// AUR helpers). nil means Packall does not know how.
+//
+// Arch in particular needs this: upgrading one repository package without the
+// rest is a partial upgrade, which Arch does not support, so pacman's only
+// safe update is the whole system.
+func UpgradeAll(manager string, managers []Manager) []string {
+	switch manager {
+	case "pacman":
+		return []string{"sudo pacman -Syu --noconfirm"}
+	case "aur", "paru", "yay":
+		return []string{aurHelper(managers) + " -Sua --noconfirm"}
+	case "apt":
+		return []string{`sudo sh -c "apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get upgrade -y"`}
+	case "dnf":
+		return []string{"sudo dnf upgrade -y"}
+	case "zypper":
+		return []string{"sudo zypper --non-interactive update"}
+	case "flatpak":
+		return []string{"flatpak update --user -y --noninteractive",
+			"sudo flatpak update --system -y --noninteractive"}
+	case "snap":
+		return []string{"sudo snap refresh"}
+	case "brew":
+		return []string{"brew upgrade"}
+	default:
+		return nil
+	}
+}

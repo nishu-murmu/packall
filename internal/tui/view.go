@@ -87,6 +87,8 @@ func (m Model) View() string {
 		body = m.viewInstalled()
 	case viewRepos:
 		body = m.viewRepos()
+	case viewUpdates:
+		body = m.viewUpdates()
 	default:
 		body = m.viewCatalogue()
 	}
@@ -117,7 +119,77 @@ func (m Model) viewHeader() string {
 	if gap < 1 {
 		gap = 1
 	}
-	return left + strings.Repeat(" ", gap) + right + "\n"
+	return left + strings.Repeat(" ", gap) + right + "\n" + m.viewTabs()
+}
+
+// viewTabs names the views and the number that opens each. Without it the
+// Repositories view is only findable through `?`, and it is the one most
+// people would not guess exists.
+func (m Model) viewTabs() string {
+	active := m.view
+	if active == viewDetail {
+		active = viewCatalogue
+	}
+
+	type tab struct {
+		key   string
+		name  string
+		short string
+		extra string
+		// alert draws extra in the update colour: it is something to act on.
+		alert bool
+		view  view
+	}
+	repos := ""
+	switch {
+	case m.repos.loading:
+		repos = "…"
+	case m.repos.index.Len() > 0:
+		repos = compact(m.repos.index.Len())
+	}
+	updates, alert := "…", false
+	if m.updates.checked {
+		updates, alert = fmt.Sprint(len(m.updates.list)), len(m.updates.list) > 0
+	}
+	tabs := []tab{
+		{"1", "Catalogue", "Apps", fmt.Sprint(len(catalog.All())), false, viewCatalogue},
+		{"2", "Repositories", "Repos", repos, false, viewRepos},
+		{"3", "Installed", "Installed", "", false, viewInstalled},
+		{"4", "Managers", "Managers", "", false, viewManagers},
+		{"5", "Updates", "Updates", updates, alert, viewUpdates},
+	}
+
+	// Widest first; drop the counts, then shorten the names, to fit.
+	render := func(counts, short bool) string {
+		parts := make([]string, 0, len(tabs))
+		for _, t := range tabs {
+			name := t.name
+			if short {
+				name = t.short
+			}
+			style := m.styles.Subtitle
+			if t.view == active {
+				style = m.styles.ItemSelected.Underline(true)
+			}
+			part := m.styles.Key.Render(t.key) + " " + style.Render(name)
+			switch {
+			case t.alert:
+				// Kept even when the other counts are dropped for room: it is
+				// the one number that asks for something.
+				part += " " + m.styles.Update.Render("↑"+t.extra)
+			case counts && t.extra != "":
+				part += " " + m.styles.Count.Render(t.extra)
+			}
+			parts = append(parts, part)
+		}
+		return strings.Join(parts, "   ")
+	}
+	for _, opt := range [][2]bool{{true, false}, {false, false}, {false, true}} {
+		if line := render(opt[0], opt[1]); lipgloss.Width(line) <= m.width {
+			return line
+		}
+	}
+	return ""
 }
 
 func (m Model) viewFooter() string {
@@ -134,10 +206,25 @@ func (m Model) viewFooter() string {
 		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d queued", len(m.queue)))
 	case len(m.pkgQueue) > 0:
 		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d selected", len(m.pkgQueue)))
+	case len(m.updates.queue) > 0:
+		hint := "u to update them"
+		if m.view != viewUpdates {
+			hint = "5 to see them"
+		}
+		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d updates selected — %s", len(m.updates.queue), hint))
 	case len(m.repos.queue) > 0:
 		left = m.styles.ItemQueued.Render(fmt.Sprintf("%d queued from the repositories", len(m.repos.queue)))
 	case m.scanning:
 		left = m.styles.Subtitle.Render("scanning installed packages…")
+	}
+
+	// A catalogue search also says how much more the repositories hold, so the
+	// wider search is offered at the moment it is useful.
+	if hint := m.scopeHint(); hint != "" {
+		if left != "" {
+			left += "  "
+		}
+		left += hint
 	}
 
 	hints := m.help.ShortHelpView(m.keys.ShortHelp())
@@ -149,6 +236,15 @@ func (m Model) viewFooter() string {
 		return "\n" + left
 	}
 	return "\n" + left + strings.Repeat(" ", gap) + hints
+}
+
+// scopeHint points a catalogue search at the repositories when they match too.
+func (m Model) scopeHint() string {
+	if m.view != viewCatalogue || m.repoQuery() == "" || m.repos.total == 0 {
+		return ""
+	}
+	return m.styles.Key.Render("tab") + m.styles.Subtitle.Render(
+		fmt.Sprintf(" → %s in your repositories", plural(m.repos.total, "match", "matches")))
 }
 
 // ---------------------------------------------------------------- catalogue
@@ -223,7 +319,14 @@ func (m Model) viewList(width int) string {
 	if len(m.entries) == 0 {
 		msg := "nothing matches " + quote(m.search.Value())
 		if m.repos.index.Len() > 0 {
-			msg += fmt.Sprintf(" in the catalogue\n\n2 to search all %d packages in your repositories", m.repos.index.Len())
+			msg += " in the catalogue"
+			if m.repos.total > 0 {
+				msg += fmt.Sprintf("\n\nbut your repositories have %s — tab to see them",
+					plural(m.repos.total, "match", "matches"))
+			} else {
+				msg += fmt.Sprintf("\n\ntab to search all %s packages in your repositories",
+					thousands(m.repos.index.Len()))
+			}
 		}
 		return m.styles.Empty.Render(msg)
 	}
@@ -408,7 +511,13 @@ func (m Model) viewInstalled() string {
 				style = m.styles.ItemSelected
 			}
 			badge := m.styles.Method.Render(p.Manager)
-			name := style.Render(truncate(p.Name, max(8, width-24)))
+			if u, ok := m.upgradeFor(p); ok {
+				badge = m.versionText(u) + "  " + badge
+				if marker == "  " {
+					marker = m.styles.Update.Render("↑ ")
+				}
+			}
+			name := style.Render(truncate(p.Name, max(8, width-lipgloss.Width(badge)-4)))
 
 			gap := width - lipgloss.Width(marker) - lipgloss.Width(name) - lipgloss.Width(badge)
 			if gap < 1 {
@@ -419,7 +528,14 @@ func (m Model) viewInstalled() string {
 		content = strings.Join(rows, "\n")
 	}
 
-	header := m.styles.Label.Render(fmt.Sprintf("Installed — %d packages", len(list))) + "\n"
+	header := m.styles.Label.Render(fmt.Sprintf("Installed — %d packages", len(list)))
+	if n := len(m.updates.list); n > 0 {
+		header += "  " + m.styles.Update.Render(fmt.Sprintf("↑ %s", plural(n, "update", "updates"))) +
+			m.styles.Subtitle.Render(" · ") + m.styles.Key.Render("5") +
+			m.styles.Subtitle.Render(" to review, ") + m.styles.Key.Render("U") +
+			m.styles.Subtitle.Render(" to update all")
+	}
+	header += "\n"
 	return m.pane(header+content, m.width, m.contentHeight(), true)
 }
 
@@ -652,6 +768,30 @@ func quote(s string) string {
 		return "the filter"
 	}
 	return "\"" + s + "\""
+}
+
+// thousands formats n with comma separators: 48213 → "48,213".
+func thousands(n int) string {
+	s := fmt.Sprint(n)
+	for i := len(s) - 3; i > 0; i -= 3 {
+		s = s[:i] + "," + s[i:]
+	}
+	return s
+}
+
+// compact formats a large count briefly for the tab bar: 48213 → "48k".
+func compact(n int) string {
+	if n < 1000 {
+		return fmt.Sprint(n)
+	}
+	return fmt.Sprintf("%dk", n/1000)
+}
+
+func plural(n int, one, many string) string {
+	if n == 1 {
+		return "1 " + one
+	}
+	return thousands(n) + " " + many
 }
 
 func orDash(s string) string {

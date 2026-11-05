@@ -185,6 +185,25 @@ Packaging gets much simpler at that point: `CGO_ENABLED=0 go build` gives a
 static binary with no glibc floor, so the `ubuntu-22.04` pin in CI and the
 AppImage both become unnecessary, and the PKGBUILD/spec dependency lines go away.
 
+## Step 7 — beyond the catalogue: the Repositories view — **DONE (TUI)**
+
+The catalogue answers "what should I install?"; the Repositories view answers
+"install this one thing I already know the name of". `internal/repo` reads the
+indexes every manager already keeps on disk — pacman's sync databases
+(`/var/lib/pacman/sync/*.db`, tarballs of `desc` files) and apt's lists
+(`/var/lib/apt/lists/*_Packages`, RFC 822 stanzas) — and the AUR comes from its
+RPC search, debounced, only when `yay` or `paru` can install it. No libalpm or
+libapt-pkg is linked, so the binary stays static and distro-neutral.
+
+In the TUI it is tab `2`, and `tab` carries a catalogue search into it with the
+query intact; the footer of a catalogue search says how many repository
+matches are waiting. dnf, zypper and apk are not indexed yet — their metadata
+is SQLite or compressed XML, which is the next thing to add.
+
+The desktop app does not have it yet; its Rust backend shares no code with
+`internal/repo`, so bringing it over means either porting the readers or
+having the GUI call the Go binary.
+
 ## Website
 
 The site has been reframed around the terminal already, and the copy is accurate

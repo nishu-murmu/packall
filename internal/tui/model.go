@@ -35,6 +35,7 @@ const (
 	viewRepos
 	viewInstalled
 	viewManagers
+	viewUpdates
 	viewDetail
 	viewJobs
 )
@@ -86,6 +87,9 @@ type Model struct {
 	// Repositories view: every package the host's managers can install.
 	repos repoState
 
+	// Updates view: installed packages with a newer version waiting.
+	updates updateState
+
 	// Detail.
 	detail *catalog.Entry
 
@@ -101,6 +105,9 @@ type Model struct {
 	pending        actions.Action
 	pendingEntries []*catalog.Entry
 	pendingPkgs    []actions.Package
+	// pendingPlan is a batch planned up front, for work that is not a plain
+	// per-entry or per-package action (the Updates view).
+	pendingPlan *Batch
 
 	flash   string
 	flashAt time.Time
@@ -126,6 +133,7 @@ func New() Model {
 		queue:       map[string]bool{},
 		pkgQueue:    map[string]bool{},
 		repos:       repoState{loading: true, queue: map[string]repo.Pkg{}},
+		updates:     updateState{checking: true, queue: map[string]bool{}},
 		search:      ti,
 		scanning:    true,
 	}
@@ -151,7 +159,7 @@ type tickMsg time.Time
 
 // Init starts host detection and the installed-package scan.
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(detectCmd(), scanCmd(), loadReposCmd(), tickCmd())
+	return tea.Batch(detectCmd(), scanCmd(), loadReposCmd(), checkUpdatesCmd(), tickCmd())
 }
 
 func detectCmd() tea.Cmd {
@@ -221,6 +229,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.scanning = false
 		return m, nil
 
+	case updatesMsg:
+		m.updates.set([]distro.Upgrade(msg))
+		m.clampUpdateCursor()
+		return m, nil
+
 	case repoMsg:
 		m.repos.index, m.repos.err, m.repos.loading = msg.index, msg.err, false
 		m.refilterRepos()
@@ -273,13 +286,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.host = distro.Refresh()
 			m.refilter()
 		}
-		// What is installed has changed, so the Installed view is stale.
-		return m, scanCmd()
+		// What is installed has changed, so the Installed and Updates views
+		// are stale.
+		return m, tea.Batch(scanCmd(), m.refreshUpdates())
 
 	case sudoMsg:
 		if msg.err != nil {
 			m.flash, m.flashAt = "administrator rights declined — nothing was run", time.Now()
-			m.pendingEntries, m.pendingPkgs = nil, nil
+			m.pendingEntries, m.pendingPkgs, m.pendingPlan = nil, nil, nil
 			return m, nil
 		}
 		return m.startPending()
@@ -309,21 +323,20 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	if m.searching {
 		switch msg.String() {
 		case "esc":
-			m.searching = false
-			m.search.Blur()
-			m.search.SetValue("")
-			m.refilter()
-			m.refilterRepos()
+			m.clearSearch()
 			return m, nil
 		case "enter":
 			m.searching = false
 			m.search.Blur()
 			return m, nil
+		case "tab":
+			return m.toggleScope()
 		}
 		var cmd tea.Cmd
 		m.search, cmd = m.search.Update(msg)
 		m.refilter()
 		m.refilterRepos()
+		m.clampUpdateCursor()
 		return m, tea.Batch(cmd, m.aurDebounce())
 	}
 
@@ -358,7 +371,7 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m.escape()
 
 	case key.Matches(msg, m.keys.Search):
-		if m.view == viewCatalogue || m.view == viewInstalled || m.view == viewRepos {
+		if m.view == viewCatalogue || m.view == viewInstalled || m.view == viewRepos || m.view == viewUpdates {
 			m.searching = true
 			m.search.Focus()
 			return m, textinput.Blink
@@ -366,27 +379,47 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case key.Matches(msg, m.keys.Catalogue):
+		m.leaveView(viewCatalogue)
 		m.view, m.focus = viewCatalogue, paneList
 		m.clampCursor()
 		return m, nil
 
 	case key.Matches(msg, m.keys.Repos):
-		m.view, m.focus = viewRepos, paneList
-		m.refilterRepos()
-		// An empty box shows nothing here, so start typing straight away.
-		if m.repoQuery() == "" {
-			m.searching = true
-			m.search.Focus()
-			return m, textinput.Blink
-		}
-		return m, m.aurDebounce()
+		m.leaveView(viewRepos)
+		return m.openRepos()
+
+	case key.Matches(msg, m.keys.Scope):
+		return m.toggleScope()
 
 	case key.Matches(msg, m.keys.Installed):
+		m.leaveView(viewInstalled)
 		m.view, m.focus = viewInstalled, paneList
 		m.clampCursor()
 		return m, nil
 
+	case key.Matches(msg, m.keys.Updates):
+		m.leaveView(viewUpdates)
+		m.view, m.focus = viewUpdates, paneList
+		m.clampUpdateCursor()
+		return m, nil
+
+	case key.Matches(msg, m.keys.UpdateAll):
+		return m.upgradeAll()
+
+	case key.Matches(msg, m.keys.Refresh):
+		if m.view != viewUpdates && m.view != viewInstalled {
+			return m, nil
+		}
+		cmd := m.refreshUpdates()
+		if cmd == nil {
+			m.flash, m.flashAt = "already checking for updates…", time.Now()
+		} else {
+			m.flash, m.flashAt = "checking for updates…", time.Now()
+		}
+		return m, cmd
+
 	case key.Matches(msg, m.keys.Managers):
+		m.leaveView(viewManagers)
 		m.view = viewManagers
 		return m, nil
 
@@ -456,6 +489,7 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.queue = map[string]bool{}
 		m.pkgQueue = map[string]bool{}
 		m.repos.queue = map[string]repo.Pkg{}
+		m.updates.queue = map[string]bool{}
 		return m, nil
 
 	case key.Matches(msg, m.keys.Install):
@@ -473,6 +507,50 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.log, cmd = m.log.Update(msg)
 		return m, cmd
+	}
+	return m, nil
+}
+
+// clearSearch empties and closes the search box. Every view filters on the
+// same box, so a query left behind would silently empty the next one.
+func (m *Model) clearSearch() {
+	m.searching = false
+	m.search.Blur()
+	m.search.SetValue("")
+	m.refilter()
+	m.refilterRepos()
+	m.clampUpdateCursor()
+}
+
+// leaveView clears the search when a number key moves to a different view.
+// Pressing the current view's own key keeps it; tab is the way to carry a
+// query from the catalogue to the repositories.
+func (m *Model) leaveView(to view) {
+	if m.view != to {
+		m.clearSearch()
+	}
+}
+
+// openRepos switches to the Repositories view, keeping whatever is in the
+// search box.
+func (m Model) openRepos() (tea.Model, tea.Cmd) {
+	// The search box is not focused here: a focused box swallows 1–4, which
+	// would trap the user in this view. The intro screen asks for / instead.
+	m.view, m.focus = viewRepos, paneList
+	m.refilterRepos()
+	return m, m.aurDebounce()
+}
+
+// toggleScope moves a search between the catalogue and the repositories with
+// the query intact, so a catalogue search that comes up short is one key away
+// from every package the host offers. It works while typing, too.
+func (m Model) toggleScope() (tea.Model, tea.Cmd) {
+	switch m.view {
+	case viewCatalogue:
+		return m.openRepos()
+	case viewRepos:
+		m.view, m.focus = viewCatalogue, paneList
+		m.clampCursor()
 	}
 	return m, nil
 }
@@ -497,10 +575,11 @@ func (m Model) escape() (tea.Model, tea.Cmd) {
 		m.search.SetValue("")
 		m.refilter()
 		m.refilterRepos()
-	case len(m.queue) > 0 || len(m.pkgQueue) > 0 || len(m.repos.queue) > 0:
+	case len(m.queue) > 0 || len(m.pkgQueue) > 0 || len(m.repos.queue) > 0 || len(m.updates.queue) > 0:
 		m.queue = map[string]bool{}
 		m.pkgQueue = map[string]bool{}
 		m.repos.queue = map[string]repo.Pkg{}
+		m.updates.queue = map[string]bool{}
 	}
 	return m, nil
 }
@@ -581,6 +660,17 @@ func (m *Model) toggle() {
 		} else {
 			m.repos.queue[p.Key()] = p
 		}
+	case viewUpdates:
+		list := m.updatesList()
+		if len(list) == 0 {
+			return
+		}
+		k := list[m.updates.cursor].Key()
+		if m.updates.queue[k] {
+			delete(m.updates.queue, k)
+		} else {
+			m.updates.queue[k] = true
+		}
 	}
 }
 
@@ -598,6 +688,10 @@ func (m *Model) selectAll() {
 		for _, p := range m.repos.hits {
 			m.repos.queue[p.Key()] = p
 		}
+	case viewUpdates:
+		for _, u := range m.updatesList() {
+			m.updates.queue[u.Key()] = true
+		}
 	}
 }
 
@@ -609,6 +703,26 @@ func (m Model) run(action actions.Action) (tea.Model, tea.Cmd) {
 	if m.batch != nil && !m.batch.Finished {
 		m.flash, m.flashAt = "a batch is already running", time.Now()
 		return m, nil
+	}
+
+	if m.view == viewUpdates {
+		if action != actions.Update {
+			m.flash, m.flashAt = "u updates the selection, U updates everything", time.Now()
+			return m, nil
+		}
+		sel := m.selectedUpgrades()
+		if len(sel) == 0 {
+			// Like the catalogue: an empty selection acts on the highlighted row.
+			list := m.updatesList()
+			if len(list) == 0 {
+				m.flash, m.flashAt = "nothing to update", time.Now()
+				return m, nil
+			}
+			sel = list[m.updates.cursor : m.updates.cursor+1]
+		}
+		m.pending = action
+		m.pendingPlan = NewUpgradeBatch(sel, m.host.Managers)
+		return m.launch()
 	}
 
 	if m.view == viewRepos {
@@ -642,11 +756,22 @@ func (m Model) run(action actions.Action) (tea.Model, tea.Cmd) {
 		}
 		m.pending, m.pendingEntries, m.pendingPkgs = action, entries, nil
 	}
+	return m.launch()
+}
+
+// launch starts whatever is pending, priming sudo first when it needs it.
+func (m Model) launch() (tea.Model, tea.Cmd) {
+	if m.batch != nil && !m.batch.Finished {
+		m.flash, m.flashAt = "a batch is already running", time.Now()
+		m.pendingPlan = nil
+		return m, nil
+	}
 
 	// Plan it now, so sudo is only asked for when something actually needs it.
 	batch := m.planPending()
 	if len(batch.Jobs) == 0 {
-		m.flash, m.flashAt = "nothing to "+string(action), time.Now()
+		m.flash, m.flashAt = "nothing to "+string(m.pending), time.Now()
+		m.pendingPlan = nil
 		return m, nil
 	}
 	if batch.NeedsRoot() {
@@ -662,6 +787,9 @@ func (m Model) run(action actions.Action) (tea.Model, tea.Cmd) {
 
 // planPending builds the batch for whatever is pending, without starting it.
 func (m Model) planPending() *Batch {
+	if m.pendingPlan != nil {
+		return m.pendingPlan
+	}
 	ctx := m.host.Context(m.packages)
 	if len(m.pendingPkgs) > 0 {
 		return NewPackageBatch(m.pending, m.pendingPkgs, m.host.Managers)
@@ -672,13 +800,16 @@ func (m Model) planPending() *Batch {
 // startPending runs the planned batch.
 func (m Model) startPending() (tea.Model, tea.Cmd) {
 	batch := m.planPending()
-	m.pendingEntries, m.pendingPkgs = nil, nil
+	m.pendingEntries, m.pendingPkgs, m.pendingPlan = nil, nil, nil
 
 	jobs, index := batch.Runnable()
 	m.batch, m.jobIndex = batch, index
 	m.returnTo = m.view
 	m.view = viewJobs
 	m.log = viewport.New(max(10, m.width-4), m.logHeight())
+	// The search that found these is done with; left in the box it would hide
+	// everything else when the user goes back to browsing.
+	m.clearSearch()
 
 	if len(jobs) == 0 {
 		batch.Finished = true
@@ -694,6 +825,7 @@ func (m Model) startPending() (tea.Model, tea.Cmd) {
 	m.queue = map[string]bool{}
 	m.pkgQueue = map[string]bool{}
 	m.repos.queue = map[string]repo.Pkg{}
+	m.updates.queue = map[string]bool{}
 
 	return m, tea.Batch(waitForEvents(m.events), tickCmd(), sudoKeepaliveCmd(ctx))
 }
@@ -777,6 +909,8 @@ func (m Model) count() int {
 		return len(m.installedList())
 	case m.view == viewRepos:
 		return len(m.repos.hits)
+	case m.view == viewUpdates:
+		return len(m.updatesList())
 	default:
 		return len(m.entries)
 	}
@@ -794,6 +928,8 @@ func (m Model) current() int {
 		return m.pkgCursor
 	case m.view == viewRepos:
 		return m.repos.cursor
+	case m.view == viewUpdates:
+		return m.updates.cursor
 	default:
 		return m.cursor
 	}
@@ -829,6 +965,9 @@ func (m *Model) cursorTo(i int) {
 	case m.view == viewRepos:
 		m.repos.cursor = i
 		m.repos.offset = scroll(m.repos.offset, i, m.repoListHeight(), len(m.repos.hits))
+	case m.view == viewUpdates:
+		m.updates.cursor = i
+		m.updates.offset = scroll(m.updates.offset, i, m.updatesListHeight(), len(m.updatesList()))
 	default:
 		m.cursor = i
 		m.offset = scroll(m.offset, i, m.listHeight(), len(m.entries))
@@ -873,6 +1012,7 @@ func (m *Model) clampCursor() {
 	m.pkgOffset = scroll(m.pkgOffset, m.pkgCursor, m.listHeight(), n)
 
 	m.clampRepoCursor()
+	m.clampUpdateCursor()
 }
 
 // syncLog rebuilds the log viewport from the active or last-interesting job.

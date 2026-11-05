@@ -17,6 +17,45 @@
 
 ---
 
+## Two ways to find software
+
+- **Catalogue** — 215 hand-picked apps in 14 categories, each with verified
+  package names for every supported distro, so Packall picks the right
+  install method (native, Flatpak, Snap, AUR, or the vendor's script).
+- **Repositories** *(TUI)* — every package your system's repositories offer,
+  not just the curated ones. Packall reads the package lists your manager
+  already keeps on disk (pacman's sync databases, apt's package lists) and
+  searches the AUR online when `yay` or `paru` is installed. Queue and install
+  them exactly like catalogue apps.
+
+In the TUI the views are tabs along the top. Search the catalogue with `/`;
+if what you want is not there, press `tab` to run the same search across your
+repositories — the footer tells you how many matches are waiting.
+
+> The Repositories view reads indexes from disk, so it is only as fresh as
+> your last `sudo pacman -Sy` or `sudo apt update`. AUR packages are
+> user-submitted — read the PKGBUILD before installing.
+
+## Keeping things up to date *(TUI)*
+
+On start Packall asks each manager what it could upgrade (`checkupdates` or
+`pacman -Qu`, `paru`/`yay -Qua`, `apt list --upgradable`, `dnf check-update`,
+`zypper list-updates`, `flatpak remote-ls --updates`, `snap refresh --list`,
+`brew outdated`). None of these need root.
+
+- The **Updates** tab (`5`) shows the count and lists every package as
+  `installed → newer`. Select with `Space` / `a`, then `u` to update the
+  selection, or press `U` twice to upgrade everything.
+- The **Installed** view marks outdated packages with `↑` and the new version.
+- `r` re-checks; the list also refreshes after every batch.
+
+> Arch does not support partial upgrades, so pacman packages are only updated
+> through `U` (`pacman -Syu`); AUR and every other manager can be updated one
+> by one. Install `pacman-contrib` for fresh results — without it Packall
+> falls back to `pacman -Qu`, which only knows about your last `pacman -Sy`.
+
+---
+
 ### Desktop app (GUI)
 
 ```bash
@@ -47,7 +86,12 @@ Manual downloads are on the [Releases](https://github.com/nishu-murmu/packall/re
 | `/` | Search |
 | `j` `k` `h` `l` | Navigate |
 | `Space` | Toggle app in queue |
+| `a` / `c` | Queue all shown / clear queue |
 | `i` / `u` / `x` | Install / update / remove |
+| `1` `2` `3` `4` `5` | Catalogue / Repositories / Installed / Managers / Updates *(TUI)* |
+| `U` `U` | Update every outdated package *(TUI)* |
+| `r` | Re-check for updates *(TUI)* |
+| `Tab` | Move the current search between Catalogue and Repositories *(TUI)* |
 | `?` | Full keybindings help |
 
 ---

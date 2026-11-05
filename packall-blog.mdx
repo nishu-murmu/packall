@@ -1,0 +1,153 @@
+---
+title: "I Built Packall — A Keyboard-Driven App Store for Linux"
+description: "Browse 215 curated apps, queue what you need, and let Packall install them with the right package manager for your distro. GUI and TUI included."
+pubDate: 2026-10-22
+tags: ["linux", "open-source", "rust", "go", "tauri", "tui", "package-manager"]
+---
+
+## The Problem
+
+Every time I set up a fresh Linux install, the same ritual begins: open a terminal, remember the package name for this distro, figure out if it's in the repos or needs a Flatpak, rinse, repeat for 30+ apps.
+
+Debian calls it `fd-find`. Arch calls it `fd`. Fedora calls it `fd-find` too, but it's in a different repo. And that's just one tool.
+
+I got tired of maintaining a notes file. So I built **Packall**.
+
+## What Is Packall?
+
+Packall is a curated catalogue of 215 essential Linux apps across 14 categories. You browse, queue the ones you want, and hit install. Packall figures out your distro, picks the right package manager, resolves the correct package name, and runs everything in the background with live progress.
+
+It comes in two flavours:
+
+- **Desktop app** — a Tauri GUI built with TypeScript and Rust
+- **Terminal app** — a Go TUI built with Bubbletea and Lipgloss
+
+Both share the same catalogue and the same distro detection logic.
+
+## Install It
+
+```bash
+# Desktop app (GUI)
+curl -fsSL https://packall-website.pages.dev/install.sh | sh
+
+# Terminal app (TUI)
+curl -fsSL https://packall-website.pages.dev/install.sh | sh -s -- --tui
+```
+
+Or build from source:
+
+```bash
+git clone https://github.com/nishu-murmu/packall.git && cd packall
+go build -o packall ./cmd/packall && ./packall
+```
+
+## How It Works
+
+Packall detects your system on launch — distribution, family (Debian, Arch, Fedora, SUSE), and which package managers are available. Every catalogue entry carries install options for `apt`, `dnf`, `pacman`, `zypper`, `flatpak`, `snap`, and the AUR, each with the real package name that distro actually ships.
+
+```bash
+# See what Packall knows about your machine
+packall doctor
+```
+
+```
+packall   v0.3.0
+system    Arch Linux
+id        arch
+family    arch
+preferred pacman
+
+managers
+  ✓ pacman
+  ✓ flatpak
+  ✓ yay
+  · snap
+  · apt
+  · dnf
+  · zypper
+
+catalogue 215 apps in 14 categories
+```
+
+When you install something, Packall builds a batch of jobs — one per app — and runs them sequentially with a progress bar, per-job status, and a scrollable log. If an app needs Flatpak and you don't have it, Packall offers to install Flatpak first as a bootstrap job, then continues with the original queue.
+
+## The TUI
+
+The terminal interface is keyboard-driven and works over SSH on an 80x24 terminal:
+
+| Key | Action |
+|---|---|
+| `/` | Search the catalogue |
+| `j` / `k` | Move up and down |
+| `h` / `l` | Switch panes |
+| `Space` | Toggle app in queue |
+| `a` | Select all visible |
+| `i` | Install queued apps |
+| `u` | Update queued apps |
+| `x` | Remove queued apps |
+| `?` | Full keybindings help |
+
+The layout adapts: a sidebar lists categories, the main pane shows apps with their install method as a right-aligned badge, and a detail pane appears when the terminal is wide enough. It's all rendered with Lipgloss and Bubbletea.
+
+## The CLI
+
+If you prefer scripting or accessibility, the plain-text CLI is first-class:
+
+```bash
+# List everything
+packall list
+
+# Search by name, tag or description
+packall search "terminal emulator"
+
+# See how an app would install on this machine
+packall info wezterm
+
+# Install several at once
+packall install neovim wezterm fish
+
+# Dry run — just print the commands
+packall install -n firefox vlc
+```
+
+Screen readers handle line output far better than a full-screen TUI, so this path exists by design, not as an afterthought.
+
+## Distro Coverage
+
+Packall supports the major families out of the box:
+
+- **Debian / Ubuntu** — `apt`
+- **Fedora / RHEL** — `dnf`
+- **Arch / Manjaro** — `pacman` + AUR (yay / paru)
+- **openSUSE** — `zypper`
+- **Any distro** — Flatpak, Snap, and vendor install scripts
+
+Every package ID in the catalogue has been verified against the actual repos, Flathub, and the AUR. No guessing.
+
+## Auto-Bootstrap
+
+This is the feature I'm most proud of. If you queue an app that needs Flatpak and your system doesn't have it, Packall:
+
+1. Detects the gap
+2. Prepends a bootstrap job to install Flatpak via your native package manager
+3. Resolves the rest of the queue assuming Flatpak will be available after step 2
+4. Runs everything in order
+
+The same works for Snap and AUR helpers. On Arch, it can bootstrap `yay` from source via `git clone` + `makepkg`, since AUR helpers aren't in the official repos.
+
+## Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Desktop app | TypeScript + Tauri (Rust) |
+| Terminal app | Go + Bubbletea + Lipgloss |
+| Catalogue | Shared data in TypeScript and Go |
+| Distro detection | `/etc/os-release` parsing + `which` probing |
+| CI/CD | GitHub Actions, single consolidated workflow |
+| Packages | `.deb`, `.rpm`, AppImage, AUR, TUI tarball |
+
+## What's Next
+
+Packall is open source under AGPL-3.0. I'm actively working on expanding the catalogue, improving distro coverage, and polishing the install experience. Contributions are welcome — especially new catalogue entries and distro-specific package name corrections.
+
+Check it out: [github.com/nishu-murmu/packall](https://github.com/nishu-murmu/packall)
