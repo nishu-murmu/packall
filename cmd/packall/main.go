@@ -21,6 +21,7 @@ import (
 	"github.com/nishu-murmu/packall/internal/actions"
 	"github.com/nishu-murmu/packall/internal/distro"
 	"github.com/nishu-murmu/packall/internal/runner"
+	"github.com/nishu-murmu/packall/internal/selfupdate"
 	"github.com/nishu-murmu/packall/internal/tui"
 )
 
@@ -39,6 +40,7 @@ usage:
   packall update <app>...       update apps
   packall remove <app>...       remove apps
   packall doctor                show what this machine is and what it has
+  packall self-update [--check] update packall itself to the latest release
 
 options:
   -n, --dry-run                 print the commands instead of running them
@@ -69,6 +71,8 @@ func main() {
 			rest = append(rest, a)
 		}
 	}
+
+	tui.Version = version
 
 	if len(rest) == 0 {
 		if err := runTUI(); err != nil {
@@ -112,6 +116,8 @@ func runCLI(args []string, dryRun, assumeYes bool) error {
 		return cmdInfo(rest[0])
 	case "doctor":
 		return cmdDoctor()
+	case "self-update", "selfupdate", "upgrade-self":
+		return cmdSelfUpdate(rest, dryRun, assumeYes)
 	case "install":
 		return cmdAction(actions.Install, rest, dryRun, assumeYes)
 	case "update", "upgrade":
@@ -334,6 +340,54 @@ func cmdAction(action actions.Action, names []string, dryRun, assumeYes bool) er
 	if failed > 0 {
 		return fmt.Errorf("%d of %d failed", failed, len(jobs))
 	}
+	return nil
+}
+
+// cmdSelfUpdate replaces this binary with the latest release's.
+func cmdSelfUpdate(args []string, dryRun, assumeYes bool) error {
+	checkOnly := dryRun
+	for _, a := range args {
+		switch a {
+		case "--check", "-c":
+			checkOnly = true
+		default:
+			return fmt.Errorf("self-update takes only --check, not %q", a)
+		}
+	}
+
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+
+	fmt.Printf("installed %s\n", version)
+	rel, err := selfupdate.Latest(ctx)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("latest    %s\n", rel.Version)
+
+	if !selfupdate.Newer(rel.Version, version) {
+		fmt.Println("\npackall is up to date")
+		return nil
+	}
+	if checkOnly {
+		fmt.Println("\nan update is available — run `packall-tui self-update`")
+		return nil
+	}
+
+	target, err := selfupdate.Executable()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("\nreplace %s with %s\n", target, rel.Tag)
+	if !assumeYes && !confirm() {
+		fmt.Println("nothing was changed")
+		return nil
+	}
+	fmt.Printf("downloading %s…\n", selfupdate.AssetName)
+	if err := selfupdate.Apply(ctx, rel, target); err != nil {
+		return err
+	}
+	fmt.Printf("updated to %s\n", rel.Version)
 	return nil
 }
 

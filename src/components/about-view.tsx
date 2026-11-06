@@ -1,7 +1,8 @@
+import * as React from "react"
 import { useAppState } from "@/lib/app-state"
 import { SOFTWARE } from "@/lib/software"
 import { CATEGORIES } from "@/lib/categories"
-import { Terminal, Package, Cpu, Search } from "lucide-react"
+import { Terminal, Package, Cpu, Search, RefreshCw, ArrowUpCircle } from "lucide-react"
 import { Logo } from "@/components/logo"
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
@@ -22,7 +23,16 @@ function GithubIcon({ className = "size-4" }: { className?: string }) {
 }
 
 export function AboutView() {
-  const { installed, systemPackages } = useAppState()
+  const { installed, systemPackages, appUpdate, appUpdateState, checkAppUpdate, updatePackall } = useAppState()
+  const [checking, setChecking] = React.useState(false)
+  const recheck = async () => {
+    setChecking(true)
+    try {
+      await checkAppUpdate({ notify: true })
+    } finally {
+      setChecking(false)
+    }
+  }
 
   const stats = [
     { label: "Apps in Catalog", value: SOFTWARE.length, icon: Package, color: "text-blue-500", bg: "bg-blue-500/10 border-blue-500/20" },
@@ -63,6 +73,55 @@ export function AboutView() {
       </div>
 
       <div className="px-6 pb-10 space-y-7 max-w-3xl mx-auto pt-8">
+        {/* Version & self-update */}
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Version</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 bg-card/60 p-4">
+            <div className="text-sm">
+              <p className="font-semibold">
+                Packall {appUpdate?.current ?? "—"}
+                {appUpdate && !appUpdate.available && (
+                  <span className="ml-2 text-xs font-normal text-emerald-500">up to date</span>
+                )}
+              </p>
+              {appUpdate?.available && (
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {appUpdateState === "updated"
+                    ? `Packall ${appUpdate.latest} is installed — restart Packall to use it.`
+                    : `Packall ${appUpdate.latest} is available.`}
+                </p>
+              )}
+              {!appUpdate && <p className="mt-0.5 text-xs text-muted-foreground">Could not reach GitHub yet.</p>}
+            </div>
+            <div className="flex items-center gap-2">
+              {appUpdate?.available && appUpdateState !== "updated" && (
+                <button
+                  type="button"
+                  onClick={() => void updatePackall()}
+                  disabled={appUpdateState === "updating"}
+                  className="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+                >
+                  <ArrowUpCircle className="size-4" />
+                  {appUpdateState === "updating"
+                    ? "Updating…"
+                    : appUpdate.method === "manual"
+                      ? `Download ${appUpdate.latest}`
+                      : `Update to ${appUpdate.latest}`}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => void recheck()}
+                disabled={checking}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/60 px-4 py-2 text-xs font-semibold transition-all hover:bg-accent disabled:opacity-60"
+              >
+                <RefreshCw className={`size-4 ${checking ? "animate-spin" : ""}`} />
+                Check for updates
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Statistics */}
         <section className="space-y-3">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Statistics</h2>

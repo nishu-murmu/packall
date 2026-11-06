@@ -25,8 +25,12 @@ pub fn handle_cli(args: &[String]) {
         "scan" | "detect" => handle_scan(),
         "categories" | "cat" => handle_categories(),
         "version" | "-v" | "--version" => {
-            println!("Packall v0.1.0 - Linux Software Directory & Package Manager");
+            println!(
+                "Packall v{} - Linux Software Directory & Package Manager",
+                crate::self_update::CURRENT_VERSION
+            );
         }
+        "self-update" | "selfupdate" | "upgrade-self" => handle_self_update(rest),
         _ => {
             eprintln!(
                 "Unknown command: '{}'. Run 'packall help' for usage.",
@@ -63,6 +67,7 @@ COMMANDS:
     update, upgrade [packages..] Update specified packages or run full system upgrade
     scan, detect                 Scan host for package managers and count installed packages
     categories, cat              List all categories with package counts
+    self-update [--check]        Update Packall itself to the latest release
     gui                          Explicitly launch the desktop GUI
     help, --help, -h             Print this help message
 
@@ -481,5 +486,66 @@ fn handle_categories() {
     for cat in categories {
         let count = catalogue.iter().filter(|s| s.category == cat.id).count();
         println!("{:<20} {:<8} {}", cat.id, count, cat.description);
+    }
+}
+
+fn handle_self_update(args: &[String]) {
+    use crate::self_update::{apply_appimage, check};
+    let check_only = args.iter().any(|a| a == "--check" || a == "-c");
+
+    println!("Installed: {}", crate::self_update::CURRENT_VERSION);
+    let info = match check() {
+        Ok(i) => i,
+        Err(e) => {
+            eprintln!("Could not check for updates: {}", e);
+            std::process::exit(1);
+        }
+    };
+    println!("Latest:    {}", info.latest);
+
+    if !info.available {
+        println!("\nPackall is up to date.");
+        return;
+    }
+    if check_only {
+        println!("\nAn update is available. Run: packall self-update");
+        return;
+    }
+
+    match info.method.as_str() {
+        "appimage" => {
+            println!("\nDownloading Packall {} (AppImage)...", info.latest);
+            match apply_appimage() {
+                Ok(v) => println!("Updated to Packall {}. Restart Packall to use it.", v),
+                Err(e) => {
+                    eprintln!("Update failed: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        "deb" | "rpm" => {
+            for c in &info.commands {
+                println!("\nExecuting: {}", c);
+                match Command::new("sh").args(["-c", c]).status() {
+                    Ok(s) if s.success() => {}
+                    Ok(s) => {
+                        eprintln!("Update failed with exit code: {:?}", s.code());
+                        std::process::exit(1);
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to launch sh: {}", e);
+                        std::process::exit(1);
+                    }
+                }
+            }
+            println!("Updated to Packall {}.", info.latest);
+        }
+        _ => {
+            println!(
+                "\nThis copy of Packall was not installed by the installer, a .deb or an .rpm,\n\
+                 so it cannot update itself. Download {} from:\n  {}",
+                info.latest, info.release_url
+            );
+        }
     }
 }

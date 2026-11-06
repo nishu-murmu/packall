@@ -165,3 +165,15 @@ export interface JobEvent {
   success?: boolean | null
   cancelled?: boolean
 }
+
+/** Result of checking GitHub for a newer Packall release. */
+export interface AppUpdateInfo {
+  current: string
+  latest: string
+  available: boolean
+  releaseUrl: string
+  /** How this install updates: "appimage" | "deb" | "rpm" | "manual" | "none" */
+  method: string
+  /** Shell commands for "deb"/"rpm" updates. */
+  commands: string[]
+}

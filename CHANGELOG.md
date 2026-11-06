@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Self-update** — `packall self-update` (desktop) and `packall-tui self-update`
+  (terminal) install the latest release in place; `--check` only checks. The
+  desktop app checks on launch and offers an Update button (also in About); the
+  TUI shows a header note when a new version is out and updates with `P`.
+
 - **Updates view (TUI)** — press `5` to see every installed package with a
   newer version waiting, as `installed → newer`, across pacman, the AUR, apt,
   dnf, zypper, Flatpak, Snap and Homebrew. Select packages and press `u`, or
@@ -30,6 +35,8 @@
 
 ### Changed
 
+- Release builds stamp the tag's version into the desktop app
+  (`scripts/set-version.mjs`); before this, 0.2.x and 0.3.0 binaries reported 0.1.0.
 - Package names from the repositories and the AUR are rejected if a shell
   would interpret them, since they end up in command lines.
 

@@ -24,8 +24,9 @@ type KeyMap struct {
 	Remove  key.Binding
 	Enter   key.Binding
 
-	UpdateAll key.Binding
-	Refresh   key.Binding
+	UpdateAll  key.Binding
+	Refresh    key.Binding
+	SelfUpdate key.Binding
 
 	Catalogue key.Binding
 	Repos     key.Binding
@@ -62,8 +63,9 @@ func DefaultKeyMap() KeyMap {
 		Remove:  key.NewBinding(key.WithKeys("x"), key.WithHelp("x", "remove")),
 		Enter:   key.NewBinding(key.WithKeys("enter"), key.WithHelp("enter", "open")),
 
-		UpdateAll: key.NewBinding(key.WithKeys("U"), key.WithHelp("U U", "update everything")),
-		Refresh:   key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "re-check updates")),
+		UpdateAll:  key.NewBinding(key.WithKeys("U"), key.WithHelp("U U", "update everything")),
+		Refresh:    key.NewBinding(key.WithKeys("r"), key.WithHelp("r", "re-check updates")),
+		SelfUpdate: key.NewBinding(key.WithKeys("P"), key.WithHelp("P", "update Packall itself")),
 
 		Catalogue: key.NewBinding(key.WithKeys("1"), key.WithHelp("1", "catalogue")),
 		Repos:     key.NewBinding(key.WithKeys("2"), key.WithHelp("2", "repositories")),
@@ -90,7 +92,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Down, k.Up, k.Left, k.Right, k.Top, k.Bottom},
 		{k.Search, k.Toggle, k.All, k.Clear, k.Enter},
-		{k.Install, k.Update, k.UpdateAll, k.Remove, k.Refresh},
+		{k.Install, k.Update, k.UpdateAll, k.Remove, k.Refresh, k.SelfUpdate},
 		{k.Catalogue, k.Repos, k.Scope, k.Installed, k.Managers, k.Updates, k.Sidebar},
 		{k.Help, k.Escape, k.Quit},
 	}

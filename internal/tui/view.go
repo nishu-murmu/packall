@@ -114,6 +114,9 @@ func (m Model) viewHeader() string {
 		}
 	}
 	right := m.styles.Host.Render(host)
+	if badge := m.selfBadge(); badge != "" {
+		right = badge + "  " + right
+	}
 
 	gap := m.width - lipgloss.Width(left) - lipgloss.Width(right)
 	if gap < 1 {

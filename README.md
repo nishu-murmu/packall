@@ -77,6 +77,18 @@ go build -o packall ./cmd/packall && ./packall
 
 Manual downloads are on the [Releases](https://github.com/nishu-murmu/packall/releases) page (AppImage, TUI tarball).
 
+### Updating Packall
+
+Both apps update themselves from the latest GitHub release:
+
+```bash
+packall self-update        # desktop app (also offered on launch and in About)
+packall-tui self-update    # terminal app (or press P when the header says a new version is out)
+```
+
+Add `--check` to only check. The AppImage and TUI binary are replaced in place;
+`.deb`/`.rpm` installs update through apt, dnf or zypper.
+
 ---
 
 ## Keyboard shortcuts

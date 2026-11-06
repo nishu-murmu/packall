@@ -126,3 +126,19 @@ pub fn unlock_privileges(password: String) -> Result<(), String> {
 pub fn forget_privileges() {
     forget_sudo()
 }
+
+/// Whether a newer Packall release exists, and how this install would update.
+#[tauri::command]
+pub async fn check_app_update() -> Result<crate::self_update::UpdateInfo, String> {
+    tauri::async_runtime::spawn_blocking(crate::self_update::check)
+        .await
+        .map_err(|e| e.to_string())?
+}
+
+/// Replace the running AppImage with the latest release. Returns the new version.
+#[tauri::command]
+pub async fn apply_app_update() -> Result<String, String> {
+    tauri::async_runtime::spawn_blocking(crate::self_update::apply_appimage)
+        .await
+        .map_err(|e| e.to_string())?
+}

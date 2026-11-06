@@ -15,6 +15,7 @@ import type {
   DistroFilter,
   Batch,
   Job,
+  AppUpdateInfo,
   JobEvent,
 } from "@/lib/types"
 import { invoke } from "@tauri-apps/api/core"
@@ -60,6 +61,10 @@ interface AppState {
   busyIds: Set<string>
   /** Navigable ids in the System Packages view (set by that view). */
   systemNavIds: string[]
+  /** Latest-release check for Packall itself; null until it answers. */
+  appUpdate: AppUpdateInfo | null
+  /** "idle" | "updating" | "updated" */
+  appUpdateState: "idle" | "updating" | "updated"
 
   setView: (view: View) => void
   setSelectedCategory: (id: CategoryId) => void
@@ -94,6 +99,10 @@ interface AppState {
   ) => Promise<ActionExecutionResult>
   runMultiStepAction: (steps: InstallStep[]) => Promise<MultiStepActionResult>
   goBack: () => void
+  /** Ask GitHub again whether a newer Packall exists. */
+  checkAppUpdate: (opts?: { notify?: boolean }) => Promise<void>
+  /** Update Packall itself the way it was installed. */
+  updatePackall: () => Promise<void>
 }
 
 const AppStateContext = React.createContext<AppState | null>(null)
@@ -416,6 +425,69 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setToolPrompt(null)
   }, [])
 
+  // Gate on sudo, show the batch in the progress dock and start it in the
+  // background. Shared by package actions and Packall's own update.
+  const launchBatch = React.useCallback(
+    async (
+      action: BatchAction,
+      jobs: Job[],
+      specs: { id: string; name: string; commands: string[] }[],
+      clearSelection = true
+    ) => {
+      if (specs.length > 0 && specs.some((sp) => sp.commands.some((c) => /\bsudo\b/.test(c)))) {
+        let state = "ready"
+        try {
+          state = await invoke<string>("sudo_state")
+        } catch {
+          state = "ready" // not running inside Tauri; the start call reports it
+        }
+        if (state === "unavailable") {
+          toast.error("sudo is required to install system packages, but it was not found")
+          return
+        }
+        if (state === "needs_password" && !(await askForPassword())) {
+          return
+        }
+      }
+
+      const batch: Batch = {
+        id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        action,
+        jobs,
+        done: specs.length === 0,
+        startedAt: Date.now(),
+      }
+      batchesRef.current = [batch, ...batchesRef.current].slice(0, 5)
+      setBatches(batchesRef.current)
+      setJobsPanelOpen(true)
+      if (clearSelection) setSelectedQueue(new Set())
+
+      if (specs.length === 0) {
+        toast.error("Nothing to do for the selected items")
+        return
+      }
+
+      try {
+        await invoke("start_batch", { batchId: batch.id, jobs: specs })
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err)
+        const failed: Batch = {
+          ...batch,
+          done: true,
+          jobs: batch.jobs.map((j) =>
+            j.status === "queued"
+              ? { ...j, status: "failed", error: "Package actions need the Packall desktop app" }
+              : j
+          ),
+        }
+        batchesRef.current = batchesRef.current.map((b) => (b.id === batch.id ? failed : b))
+        setBatches(batchesRef.current)
+        toast.error(`Could not start background job: ${message}`)
+      }
+    },
+    [askForPassword]
+  )
+
   const startBatch = React.useCallback(
     async (action: BatchAction, targets: string[], forceMethod?: InstallMethod | null) => {
 
@@ -510,59 +582,78 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      if (specs.length > 0 && specs.some((sp) => sp.commands.some((c) => /\bsudo\b/.test(c)))) {
-        let state = "ready"
-        try {
-          state = await invoke<string>("sudo_state")
-        } catch {
-          state = "ready" // not running inside Tauri; the start call reports it
-        }
-        if (state === "unavailable") {
-          toast.error("sudo is required to install system packages, but it was not found")
-          return
-        }
-        if (state === "needs_password" && !(await askForPassword())) {
-          return
-        }
-      }
-
-      const batch: Batch = {
-        id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        action,
-        jobs,
-        done: specs.length === 0,
-        startedAt: Date.now(),
-      }
-      batchesRef.current = [batch, ...batchesRef.current].slice(0, 5)
-      setBatches(batchesRef.current)
-      setJobsPanelOpen(true)
-      setSelectedQueue(new Set())
-
-      if (specs.length === 0) {
-        toast.error("Nothing to do for the selected items")
-        return
-      }
-
-      try {
-        await invoke("start_batch", { batchId: batch.id, jobs: specs })
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err)
-        const failed: Batch = {
-          ...batch,
-          done: true,
-          jobs: batch.jobs.map((j) =>
-            j.status === "queued"
-              ? { ...j, status: "failed", error: "Package actions need the Packall desktop app" }
-              : j
-          ),
-        }
-        batchesRef.current = batchesRef.current.map((b) => (b.id === batch.id ? failed : b))
-        setBatches(batchesRef.current)
-        toast.error(`Could not start background job: ${message}`)
-      }
+      await launchBatch(action, jobs, specs)
     },
-    [distroInfo, packageManagers, systemPackages, installed, askForPassword, askInstallTool]
+    [distroInfo, packageManagers, systemPackages, installed, askInstallTool, launchBatch]
   )
+
+  // ── Updating Packall itself ───────────────────────────────────────────
+  const [appUpdate, setAppUpdate] = React.useState<AppUpdateInfo | null>(null)
+  const [appUpdateState, setAppUpdateState] = React.useState<"idle" | "updating" | "updated">("idle")
+  const updatePackallRef = React.useRef<() => Promise<void>>(async () => {})
+
+  const checkAppUpdate = React.useCallback(async (opts?: { notify?: boolean }) => {
+    let info: AppUpdateInfo
+    try {
+      info = await invoke<AppUpdateInfo>("check_app_update")
+    } catch (err) {
+      // Offline or rate limited: only say so when the user asked.
+      if (opts?.notify) toast.error(`Could not check for updates: ${err instanceof Error ? err.message : String(err)}`)
+      return
+    }
+    setAppUpdate(info)
+    if (info.available) {
+      toast.info(`Packall ${info.latest} is available`, {
+        description: `You have ${info.current}.`,
+        duration: 15000,
+        action: { label: "Update", onClick: () => void updatePackallRef.current() },
+      })
+    } else if (opts?.notify) {
+      toast.success(`Packall ${info.current} is the latest version`)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    void checkAppUpdate()
+  }, [checkAppUpdate])
+
+  const updatePackall = React.useCallback(async () => {
+    const info = appUpdate
+    if (!info?.available || appUpdateState !== "idle") return
+    if (info.method === "appimage") {
+      setAppUpdateState("updating")
+      const id = toast.loading(`Downloading Packall ${info.latest}…`)
+      try {
+        const v = await invoke<string>("apply_app_update")
+        setAppUpdateState("updated")
+        toast.success(`Updated to Packall ${v}`, { id, description: "Restart Packall to use the new version." })
+      } catch (err) {
+        setAppUpdateState("idle")
+        toast.error(`Update failed: ${err instanceof Error ? err.message : String(err)}`, { id })
+      }
+      return
+    }
+    if ((info.method === "deb" || info.method === "rpm") && info.commands.length > 0) {
+      const jobId = "__packall_self_update__"
+      await launchBatch(
+        "update",
+        [{ id: jobId, name: `Packall ${info.latest}`, action: "update", status: "queued", percent: null, method: info.method, log: [] }],
+        [{ id: jobId, name: `Packall ${info.latest}`, commands: info.commands }],
+        false
+      )
+      return
+    }
+    // Built from source or installed some other way: send them to the release.
+    try {
+      await invoke("open_external_url", { url: info.releaseUrl })
+    } catch {
+      window.open(info.releaseUrl, "_blank", "noopener")
+    }
+  }, [appUpdate, appUpdateState, launchBatch])
+
+  React.useEffect(() => {
+    updatePackallRef.current = updatePackall
+  }, [updatePackall])
 
   const runBatch = React.useCallback(
     async (action: BatchAction, ids?: string[], forceMethod?: InstallMethod | null) => {
@@ -731,6 +822,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     toolPrompt,
     busyIds,
     systemNavIds,
+    appUpdate,
+    appUpdateState,
     setView: setViewWrapper,
     setSelectedCategory,
     setSearchQuery,
@@ -758,6 +851,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     runPackageAction,
     runMultiStepAction,
     goBack,
+    checkAppUpdate,
+    updatePackall,
   }
 
   return (

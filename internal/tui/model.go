@@ -109,6 +109,9 @@ type Model struct {
 	// per-entry or per-package action (the Updates view).
 	pendingPlan *Batch
 
+	// self is the update of Packall itself.
+	self selfState
+
 	flash   string
 	flashAt time.Time
 	err     error
@@ -159,7 +162,7 @@ type tickMsg time.Time
 
 // Init starts host detection and the installed-package scan.
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(detectCmd(), scanCmd(), loadReposCmd(), checkUpdatesCmd(), tickCmd())
+	return tea.Batch(detectCmd(), scanCmd(), loadReposCmd(), checkUpdatesCmd(), tickCmd(), selfCheckCmd())
 }
 
 func detectCmd() tea.Cmd {
@@ -298,6 +301,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m.startPending()
 
+	case selfCheckMsg, selfUpdatedMsg:
+		return m.handleSelfMsg(msg)
+
 	case tea.KeyMsg:
 		return m.handleKey(msg)
 	}
@@ -356,6 +362,8 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	}
 
 	switch {
+	case key.Matches(msg, m.keys.SelfUpdate):
+		return m.startSelfUpdate()
 	case key.Matches(msg, m.keys.Quit):
 		if m.batch != nil && !m.batch.Finished {
 			m.flash, m.flashAt = "a batch is running — ctrl+c to cancel it first", time.Now()
