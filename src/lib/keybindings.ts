@@ -22,6 +22,9 @@ export const KEYBINDINGS: {
   { key: "G", action: "jumpBottom", description: "Jump to last item" },
   { key: "s", action: "toggleSidebar", description: "Toggle sidebar collapse" },
   { key: "1", action: "gotoGrid", description: "Go to category grid" },
+  { key: "2", action: "gotoRepos", description: "Search every package your repositories offer" },
   { key: "3", action: "gotoInstalled", description: "Go to installed" },
   { key: "4", action: "gotoSystem", description: "Go to system package manager" },
+  { key: "5", action: "gotoUpdates", description: "Go to available updates" },
+  { key: "U", action: "updateAll", description: "Update every outdated package" },
 ]

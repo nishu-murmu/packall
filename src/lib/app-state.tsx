@@ -17,6 +17,8 @@ import type {
   Job,
   AppUpdateInfo,
   JobEvent,
+  PackageUpdate,
+  RepoPackage,
 } from "@/lib/types"
 import { invoke } from "@tauri-apps/api/core"
 import { listen } from "@tauri-apps/api/event"
@@ -24,6 +26,10 @@ import { applyJobEvent } from "@/lib/jobs-reducer"
 import {
   buildCommands,
   buildSystemPackageCommands,
+  buildPackageCommands,
+  upgradeAllCommands,
+  updateKey,
+  UPGRADE_ORDER,
   bootstrapCommands,
   bootstrapAURCommands,
   missingUniversalFor,
@@ -59,12 +65,19 @@ interface AppState {
   /** Prompt asking to install a missing Flatpak/Snap runtime or AUR helper. */
   toolPrompt: { tool: "flatpak" | "snap" | "aur"; count: number } | null
   busyIds: Set<string>
-  /** Navigable ids in the System Packages view (set by that view). */
+  /** Navigable ids in the list views — System, Repositories, Updates (set by the view). */
   systemNavIds: string[]
   /** Latest-release check for Packall itself; null until it answers. */
   appUpdate: AppUpdateInfo | null
   /** "idle" | "updating" | "updated" */
   appUpdateState: "idle" | "updating" | "updated"
+  /** Installed packages with a newer version waiting. */
+  updates: PackageUpdate[]
+  /** The same, keyed by `manager/name` for badge lookups. */
+  updatesByKey: Map<string, PackageUpdate>
+  updatesChecking: boolean
+  updatesChecked: boolean
+  upgradeAllConfirmOpen: boolean
 
   setView: (view: View) => void
   setSelectedCategory: (id: CategoryId) => void
@@ -85,6 +98,13 @@ interface AppState {
   finishPasswordPrompt: (ok: boolean) => void
   finishToolPrompt: (ok: boolean) => void
   setSystemNavIds: (ids: string[]) => void
+  /** Ask every manager what it could upgrade. */
+  checkUpdates: () => Promise<void>
+  setUpgradeAllConfirmOpen: (open: boolean) => void
+  /** Run each manager's own full upgrade, one job per manager. */
+  upgradeAll: () => Promise<void>
+  /** Remember repository packages on screen, so queued ones can be resolved. */
+  registerRepoPackages: (pkgs: RepoPackage[]) => void
   /** One-click entry point: starts at once, except removals which ask first. */
   requestBatch: (action: BatchAction) => Promise<void>
   /** Start `action` for every queued item (or `ids` when given) in the background. */
@@ -147,6 +167,12 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [packageManagers, setPackageManagers] = React.useState<PackageManagerInfo[]>([])
   const [distroInfo, setDistroInfo] = React.useState<DistroInfo | null>(null)
   const [isLoadingSystem, setIsLoadingSystem] = React.useState(false)
+  const [updates, setUpdates] = React.useState<PackageUpdate[]>([])
+  const [updatesChecking, setUpdatesChecking] = React.useState(false)
+  const [updatesChecked, setUpdatesChecked] = React.useState(false)
+  const [upgradeAllConfirmOpen, setUpgradeAllConfirmOpen] = React.useState(false)
+  const updatesInFlight = React.useRef(false)
+  const repoPackages = React.useRef<Map<string, RepoPackage>>(new Map())
   const [, setViewStack] = React.useState<View[]>([{ kind: "grid" }])
 
   React.useEffect(() => {
@@ -243,10 +269,44 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Initial load of system packages
+  const checkUpdates = React.useCallback(async () => {
+    if (updatesInFlight.current) return
+    updatesInFlight.current = true
+    setUpdatesChecking(true)
+    try {
+      setUpdates(await invoke<PackageUpdate[]>("check_package_updates"))
+      setUpdatesChecked(true)
+    } catch (err) {
+      console.warn("Could not check for updates (running in web mode?):", err)
+    } finally {
+      updatesInFlight.current = false
+      setUpdatesChecking(false)
+    }
+  }, [])
+
+  const updatesByKey = React.useMemo(
+    () => new Map(updates.map((u) => [updateKey(u.manager, u.name), u])),
+    [updates]
+  )
+
+  // Drop queued updates that no longer exist, e.g. after a batch upgraded them.
+  React.useEffect(() => {
+    setSelectedQueue((prev) => {
+      const live = new Set(updates.map((u) => `update:${updateKey(u.manager, u.name)}`))
+      const next = new Set([...prev].filter((id) => !id.startsWith("update:") || live.has(id)))
+      return next.size === prev.size ? prev : next
+    })
+  }, [updates])
+
+  const registerRepoPackages = React.useCallback((pkgs: RepoPackage[]) => {
+    for (const p of pkgs) repoPackages.current.set(`repo:${p.manager}/${p.repo}/${p.name}`, p)
+  }, [])
+
+  // Initial load of system packages, then the (slower, networked) update check.
   React.useEffect(() => {
     refreshSystemPackages()
-  }, [refreshSystemPackages])
+    void checkUpdates()
+  }, [refreshSystemPackages, checkUpdates])
 
   const setViewWrapper = React.useCallback((v: View) => {
     setViewStack((prev) => [...prev, v])
@@ -361,9 +421,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       // dismisses itself. A second toast would be redundant.
       if (ev.kind === "batch_done") {
         void refreshSystemPackages()
+        void checkUpdates()
       }
     },
-    [refreshSystemPackages]
+    [refreshSystemPackages, checkUpdates]
   )
 
   React.useEffect(() => {
@@ -523,6 +584,50 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       for (const id of targets) {
         const sw = SOFTWARE_MAP[id]
         const base: Job = { id, name: sw?.name ?? id, action, status: "queued", percent: null, log: [] }
+
+        // A package picked in the Repositories view.
+        if (id.startsWith("repo:")) {
+          const pkg = repoPackages.current.get(id)
+          const named = { ...base, name: pkg?.name ?? id }
+          if (!pkg) {
+            jobs.push({ ...named, status: "skipped", error: "Search for it again in Repositories" })
+          } else if (action !== "install") {
+            jobs.push({ ...named, status: "skipped", error: `Install it first — ${action} works on installed packages` })
+          } else {
+            const commands = buildPackageCommands("install", pkg.manager, pkg.name, packageManagers)
+            if (commands.length === 0) {
+              jobs.push({ ...named, status: "skipped", error: "Cannot install this package automatically" })
+            } else {
+              jobs.push({ ...named, method: pkg.manager })
+              specs.push({ id, name: pkg.name, commands })
+            }
+          }
+          continue
+        }
+
+        // A package picked in the Updates view.
+        if (id.startsWith("update:")) {
+          const u = updatesByKey.get(id.slice("update:".length))
+          const named = { ...base, name: u?.name ?? id.slice("update:".length) }
+          if (!u) {
+            jobs.push({ ...named, status: "skipped", error: "Already up to date" })
+          } else if (action !== "update") {
+            jobs.push({ ...named, status: "skipped", error: "Use Update for packages in the Updates view" })
+          } else if (u.manager === "pacman") {
+            // Arch does not support partial upgrades.
+            jobs.push({ ...named, method: "pacman", status: "skipped", error: "Arch only supports full upgrades — use Update all" })
+          } else {
+            const commands = buildPackageCommands("update", u.manager, u.manager === "flatpak" && u.id ? u.id : u.name, packageManagers)
+            if (commands.length === 0) {
+              jobs.push({ ...named, status: "skipped", error: "Cannot update this package automatically" })
+            } else {
+              jobs.push({ ...named, method: u.manager })
+              specs.push({ id, name: u.name, commands })
+            }
+          }
+          continue
+        }
+
         if (!sw) {
           // Not in the catalogue: a raw package picked from the System view.
           const sysPkg = systemPackages.find((p) => p.name === id)
@@ -584,7 +689,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
       await launchBatch(action, jobs, specs)
     },
-    [distroInfo, packageManagers, systemPackages, installed, askInstallTool, launchBatch]
+    [distroInfo, packageManagers, systemPackages, installed, updatesByKey, askInstallTool, launchBatch]
   )
 
   // ── Updating Packall itself ───────────────────────────────────────────
@@ -654,6 +759,34 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     updatePackallRef.current = updatePackall
   }, [updatePackall])
+
+
+  const upgradeAll = React.useCallback(async () => {
+    setUpgradeAllConfirmOpen(false)
+    const counts = new Map<string, number>()
+    for (const u of updates) counts.set(u.manager, (counts.get(u.manager) ?? 0) + 1)
+    if (counts.size === 0) {
+      toast.info("Everything is up to date")
+      return
+    }
+    const order = [...UPGRADE_ORDER, ...[...counts.keys()].filter((m) => !UPGRADE_ORDER.includes(m))]
+    const jobs: Job[] = []
+    const specs: { id: string; name: string; commands: string[] }[] = []
+    for (const mgr of order) {
+      const n = counts.get(mgr)
+      if (!n) continue
+      const id = `__upgrade_${mgr}__`
+      const name = `Upgrade ${mgr} — ${n} package${n === 1 ? "" : "s"}`
+      const commands = upgradeAllCommands(mgr, packageManagers)
+      if (commands.length === 0) {
+        jobs.push({ id, name, action: "update", status: "skipped", percent: null, log: [], error: "Cannot upgrade these from here" })
+        continue
+      }
+      jobs.push({ id, name, action: "update", status: "queued", percent: null, method: mgr, log: [] })
+      specs.push({ id, name, commands })
+    }
+    await launchBatch("update", jobs, specs)
+  }, [updates, packageManagers, launchBatch])
 
   const runBatch = React.useCallback(
     async (action: BatchAction, ids?: string[], forceMethod?: InstallMethod | null) => {
@@ -824,6 +957,11 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     systemNavIds,
     appUpdate,
     appUpdateState,
+    updates,
+    updatesByKey,
+    updatesChecking,
+    updatesChecked,
+    upgradeAllConfirmOpen,
     setView: setViewWrapper,
     setSelectedCategory,
     setSearchQuery,
@@ -843,6 +981,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     finishPasswordPrompt,
     finishToolPrompt,
     setSystemNavIds,
+    checkUpdates,
+    setUpgradeAllConfirmOpen,
+    upgradeAll,
+    registerRepoPackages,
     requestBatch,
     runBatch,
     cancelBatch,

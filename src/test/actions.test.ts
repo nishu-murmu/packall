@@ -9,6 +9,10 @@ import {
   missingUniversalFor,
   parseOption,
   pickOption,
+  isSafePackageName,
+  buildPackageCommands,
+  upgradeAllCommands,
+  updateForSoftware,
 } from "@/lib/actions"
 import { SOFTWARE_MAP, SOFTWARE } from "@/lib/software"
 import type { DistroInfo, PackageManagerInfo, SoftwareEntry } from "@/lib/types"
@@ -309,5 +313,45 @@ describe("Flatpak/Snap bootstrap", () => {
     const snap = bootstrapCommands("snap", distro("fedora"))
     expect(snap[0]).toBe("sudo dnf install -y snapd")
     expect(snap).toContain("sudo systemctl enable --now snapd.socket")
+  })
+})
+
+describe("repositories and updates", () => {
+  const paru = [{ id: "paru", name: "Paru", available: true, is_aur: true, install_cmd: "", update_cmd: "", remove_cmd: "" }]
+
+  it("refuses package names a shell would interpret", () => {
+    expect(isSafePackageName("python-requests")).toBe(true)
+    expect(isSafePackageName("org.mozilla.firefox")).toBe(true)
+    expect(isSafePackageName("foo; rm -rf ~")).toBe(false)
+    expect(isSafePackageName("-rf")).toBe(false)
+    expect(buildPackageCommands("install", "pacman", "$(evil)")).toEqual([])
+  })
+
+  it("builds install commands for repository packages", () => {
+    expect(buildPackageCommands("install", "pacman", "zellij")).toEqual(["sudo pacman -S --needed --noconfirm zellij"])
+    expect(buildPackageCommands("install", "aur", "yay-bin", paru)).toEqual(["paru -S --needed --noconfirm yay-bin"])
+  })
+
+  it("upgrades a whole manager", () => {
+    expect(upgradeAllCommands("pacman")).toEqual(["sudo pacman -Syu --noconfirm"])
+    expect(upgradeAllCommands("aur", paru)).toEqual(["paru -Sua --noconfirm"])
+    expect(upgradeAllCommands("flatpak")).toHaveLength(2)
+    expect(upgradeAllCommands("nope")).toEqual([])
+  })
+
+  it("matches a pending update to a catalogue app", () => {
+    const sw = {
+      id: "firefox", name: "Firefox", tagline: "", description: "", category: "browsers" as const,
+      homepage: "", license: "", tags: [],
+      install: [
+        { method: "flatpak" as const, command: "flatpak install flathub org.mozilla.firefox" },
+        { method: "pacman" as const, command: "sudo pacman -S firefox" },
+      ],
+    }
+    const flatpak = { manager: "flatpak", name: "Firefox", id: "org.mozilla.firefox", current: "", latest: "120" }
+    const pacman = { manager: "pacman", name: "firefox", id: "", current: "119", latest: "120" }
+    expect(updateForSoftware(sw, [flatpak])).toBe(flatpak)
+    expect(updateForSoftware(sw, [pacman])).toBe(pacman)
+    expect(updateForSoftware(sw, [{ ...pacman, name: "firefox-esr" }])).toBeUndefined()
   })
 })

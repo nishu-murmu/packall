@@ -3,6 +3,7 @@ import { useAppState, useFilteredSoftware, useNavigableSoftware } from "@/lib/ap
 import { CATEGORIES } from "@/lib/categories"
 import { SOFTWARE } from "@/lib/software"
 import { SoftwareCard } from "@/components/software-card"
+import { updateForSoftware } from "@/lib/actions"
 import { CategoryIcon } from "@/components/category-icon"
 import { Button } from "@/components/ui/button"
 import {
@@ -29,6 +30,7 @@ export function SoftwareGrid() {
     toggleCategoryCollapsed: toggleCategory,
     distroFilter,
     setDistroFilter,
+    updates,
   } = useAppState()
 
   const filtered = useFilteredSoftware()
@@ -253,6 +255,7 @@ export function SoftwareGrid() {
                           software={sw}
                           index={globalIdx}
                           isInstalled={installed.has(sw.id)}
+                          update={installed.has(sw.id) ? updateForSoftware(sw, updates) : undefined}
                           isQueued={selectedQueue.has(sw.id)}
                           isHighlighted={selectedIndex === globalIdx}
                           onSelect={() => handleSelectCard(sw.id)}

@@ -1,7 +1,7 @@
 import * as React from "react"
-import type { SoftwareEntry } from "@/lib/types"
+import type { PackageUpdate, SoftwareEntry } from "@/lib/types"
 import { cn } from "@/lib/utils"
-import { AlertCircle, Check, CheckSquare, Square } from "lucide-react"
+import { AlertCircle, ArrowUp, Check, CheckSquare, Square } from "lucide-react"
 import { isSupportedOnHost } from "@/lib/actions"
 import { useAppState } from "@/lib/app-state"
 
@@ -88,10 +88,13 @@ export function SoftwareCard({
   isHighlighted,
   onSelect,
   onToggleQueue,
+  update,
 }: {
   software: SoftwareEntry
   index?: number
   isInstalled: boolean
+  /** A newer version waiting for this installed app. */
+  update?: PackageUpdate
   isQueued?: boolean
   isHighlighted?: boolean
   onSelect?: () => void
@@ -162,7 +165,15 @@ export function SoftwareCard({
       </div>
 
       <div className="flex shrink-0 flex-col items-center gap-1">
-        {isInstalled && (
+        {isInstalled && update && (
+          <span
+            title={`Update available${update.current ? `: ${update.current}` : ""} → ${update.latest || "newer version"}`}
+            className="flex size-5 items-center justify-center rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400"
+          >
+            <ArrowUp className="size-3" strokeWidth={3} />
+          </span>
+        )}
+        {isInstalled && !update && (
           <span
             title="Installed"
             className="flex size-5 items-center justify-center rounded-full bg-success/15 text-success"

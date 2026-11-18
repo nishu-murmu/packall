@@ -5,8 +5,14 @@ import { Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function SearchBar() {
-  const { searchQuery, setSearchQuery, searchFocused, setSearchFocused } =
+  const { searchQuery, setSearchQuery, searchFocused, setSearchFocused, view } =
     useAppState()
+  const placeholder =
+    view.kind === "repos"
+      ? "Search your repositories... (press /)"
+      : view.kind === "updates"
+        ? "Filter updates... (press /)"
+        : "Search software... (press /)"
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
@@ -33,7 +39,7 @@ export function SearchBar() {
           ref={inputRef}
           id="search-input"
           type="text"
-          placeholder="Search software... (press /)"
+          placeholder={placeholder}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setSearchFocused(true)}

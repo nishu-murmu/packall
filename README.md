@@ -22,21 +22,22 @@
 - **Catalogue** — 215 hand-picked apps in 14 categories, each with verified
   package names for every supported distro, so Packall picks the right
   install method (native, Flatpak, Snap, AUR, or the vendor's script).
-- **Repositories** *(TUI)* — every package your system's repositories offer,
+- **Repositories** — every package your system's repositories offer,
   not just the curated ones. Packall reads the package lists your manager
   already keeps on disk (pacman's sync databases, apt's package lists) and
   searches the AUR online when `yay` or `paru` is installed. Queue and install
   them exactly like catalogue apps.
 
-In the TUI the views are tabs along the top. Search the catalogue with `/`;
-if what you want is not there, press `tab` to run the same search across your
-repositories — the footer tells you how many matches are waiting.
+Press `2` in either app to open it. In the TUI the views are tabs along the
+top: search the catalogue with `/`, and if what you want is not there, press
+`tab` to run the same search across your repositories. In the desktop app,
+Repositories is in the sidebar and searches with the header search box.
 
 > The Repositories view reads indexes from disk, so it is only as fresh as
 > your last `sudo pacman -Sy` or `sudo apt update`. AUR packages are
 > user-submitted — read the PKGBUILD before installing.
 
-## Keeping things up to date *(TUI)*
+## Keeping things up to date
 
 On start Packall asks each manager what it could upgrade (`checkupdates` or
 `pacman -Qu`, `paru`/`yay -Qua`, `apt list --upgradable`, `dnf check-update`,
@@ -48,6 +49,10 @@ On start Packall asks each manager what it could upgrade (`checkupdates` or
   selection, or press `U` twice to upgrade everything.
 - The **Installed** view marks outdated packages with `↑` and the new version.
 - `r` re-checks; the list also refreshes after every batch.
+- In the **desktop app**, Updates (`5`) is in the sidebar with an amber count.
+  Each row has its own Update button, *Update all* (or `U`) asks first, and
+  outdated packages are flagged in System Packages (with an *Outdated* filter)
+  and on catalogue cards.
 
 > Arch does not support partial upgrades, so pacman packages are only updated
 > through `U` (`pacman -Syu`); AUR and every other manager can be updated one
@@ -100,8 +105,8 @@ Add `--check` to only check. The AppImage and TUI binary are replaced in place;
 | `Space` | Toggle app in queue |
 | `a` / `c` | Queue all shown / clear queue |
 | `i` / `u` / `x` | Install / update / remove |
-| `1` `2` `3` `4` `5` | Catalogue / Repositories / Installed / Managers / Updates *(TUI)* |
-| `U` `U` | Update every outdated package *(TUI)* |
+| `1` `2` `3` `4` `5` | TUI: Catalogue / Repositories / Installed / Managers / Updates — GUI: All Software / Repositories / Installed / System Packages / Updates |
+| `U` | Update every outdated package — press twice in the TUI; the GUI asks to confirm |
 | `r` | Re-check for updates *(TUI)* |
 | `Tab` | Move the current search between Catalogue and Repositories *(TUI)* |
 | `?` | Full keybindings help |

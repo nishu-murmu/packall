@@ -75,6 +75,37 @@ export interface SystemPackage {
   category?: CategoryId
 }
 
+/** A package some repository offers (Rust: repos::RepoPackage). */
+export interface RepoPackage {
+  manager: string // "pacman" | "apt" | "aur"
+  name: string
+  version: string
+  summary: string
+  repo: string
+}
+
+export interface RepoIndexInfo {
+  total: number
+  counts: Record<string, number>
+  error?: string | null
+}
+
+export interface RepoSearch {
+  hits: RepoPackage[]
+  total: number
+}
+
+/** An installed package with a newer version waiting (Rust: updates::PackageUpdate). */
+export interface PackageUpdate {
+  manager: string
+  name: string
+  /** Flatpak application id; empty otherwise. */
+  id: string
+  /** Empty when the manager only reports the new version. */
+  current: string
+  latest: string
+}
+
 export type DistroFamily = "arch" | "debian" | "fedora" | "suse" | "other"
 
 export interface PackageManagerInfo {
@@ -127,6 +158,8 @@ export type View =
   | { kind: "detail"; id: string }
   | { kind: "installed" }
   | { kind: "system" }
+  | { kind: "repos" }
+  | { kind: "updates" }
   | { kind: "about" }
   | { kind: "help" }
 

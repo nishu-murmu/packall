@@ -4,11 +4,18 @@
 
 ### Added
 
+- **Repositories and Updates in the desktop app** — the GUI gets both views.
+  Repositories (`2`) searches pacman's sync databases and apt's package lists
+  (read from disk in Rust) plus the AUR, and installs results with one click.
+  Updates (`5`) lists every outdated package as `installed → newer`, with a
+  per-row Update button, *Update selected*, and *Update all* (`U`, confirmed
+  first). The sidebar shows the update count, System Packages marks outdated
+  rows and gains an *Outdated* filter, and installed catalogue apps with an
+  update show an amber arrow.
 - **Self-update** — `packall self-update` (desktop) and `packall-tui self-update`
   (terminal) install the latest release in place; `--check` only checks. The
   desktop app checks on launch and offers an Update button (also in About); the
   TUI shows a header note when a new version is out and updates with `P`.
-
 - **Updates view (TUI)** — press `5` to see every installed package with a
   newer version waiting, as `installed → newer`, across pacman, the AUR, apt,
   dnf, zypper, Flatpak, Snap and Homebrew. Select packages and press `u`, or

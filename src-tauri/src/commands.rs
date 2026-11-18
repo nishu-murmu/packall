@@ -6,6 +6,10 @@ use crate::system::{
     MultiStepActionResult, MultiStepCommand, PackageManagerInfo, SystemPackage,
 };
 use crate::jobs::{cancel_batch, forget_sudo, run_batch, sudo_status, unlock_sudo, JobSpec};
+use crate::repos::{self, RepoPackage};
+use crate::updates::{check_updates, PackageUpdate};
+use serde::Serialize;
+use std::collections::BTreeMap;
 use std::process::Command;
 use tauri::{AppHandle, Emitter};
 
@@ -101,6 +105,8 @@ pub fn start_batch(app: AppHandle, batch_id: String, jobs: Vec<JobSpec>) -> Resu
                 let _ = app.emit("packall-job", event);
             });
             invalidate_system_cache();
+            // A full upgrade may have synced new repository databases.
+            repos::invalidate_index();
         })
         .map(|_| ())
         .map_err(|e| format!("Failed to start background worker: {}", e))
@@ -139,6 +145,58 @@ pub async fn check_app_update() -> Result<crate::self_update::UpdateInfo, String
 #[tauri::command]
 pub async fn apply_app_update() -> Result<String, String> {
     tauri::async_runtime::spawn_blocking(crate::self_update::apply_appimage)
+        .await
+        .map_err(|e| e.to_string())?
+}
+
+/// Every installed package with a newer version waiting. Slow — most managers
+/// ask the network — so it runs off the main thread.
+#[tauri::command]
+pub async fn check_package_updates() -> Vec<PackageUpdate> {
+    tauri::async_runtime::spawn_blocking(check_updates).await.unwrap_or_default()
+}
+
+#[derive(Serialize)]
+pub struct RepoIndexInfo {
+    pub total: usize,
+    /// Package count per manager, e.g. {"pacman": 14000}.
+    pub counts: BTreeMap<String, usize>,
+    pub error: Option<String>,
+}
+
+/// How many packages the host's repositories offer. Reading the index the
+/// first time takes a second or two.
+#[tauri::command]
+pub async fn repo_index_info() -> RepoIndexInfo {
+    tauri::async_runtime::spawn_blocking(|| {
+        let ix = repos::index();
+        RepoIndexInfo { total: ix.len(), counts: ix.counts(), error: ix.error.clone() }
+    })
+    .await
+    .unwrap_or(RepoIndexInfo { total: 0, counts: BTreeMap::new(), error: Some("index worker failed".into()) })
+}
+
+#[derive(Serialize)]
+pub struct RepoSearch {
+    pub hits: Vec<RepoPackage>,
+    /// Matches before the limit was applied.
+    pub total: usize,
+}
+
+#[tauri::command]
+pub async fn search_repositories(query: String, limit: Option<usize>) -> RepoSearch {
+    let limit = limit.unwrap_or(500).min(2000);
+    tauri::async_runtime::spawn_blocking(move || {
+        let (hits, total) = repos::index().search(&query, limit);
+        RepoSearch { hits, total }
+    })
+    .await
+    .unwrap_or(RepoSearch { hits: Vec::new(), total: 0 })
+}
+
+#[tauri::command]
+pub async fn search_aur_packages(query: String) -> Result<Vec<RepoPackage>, String> {
+    tauri::async_runtime::spawn_blocking(move || repos::search_aur(&query))
         .await
         .map_err(|e| e.to_string())?
 }

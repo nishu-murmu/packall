@@ -11,6 +11,8 @@ import {
   ExternalLink,
   RefreshCw,
   Sparkles,
+  Database,
+  ArrowUpCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/logo"
@@ -27,12 +29,16 @@ export function AppSidebar() {
     isLoadingSystem,
     refreshSystemPackages,
     systemPackages,
+    updates,
+    updatesChecked,
   } = useAppState()
 
   const isGrid = view.kind === "grid" || view.kind === "detail"
   const isInst = view.kind === "installed"
   const isSystem = view.kind === "system"
   const isAbout = view.kind === "about"
+  const isRepos = view.kind === "repos"
+  const isUpdates = view.kind === "updates"
 
   return (
     <aside
@@ -69,6 +75,13 @@ export function AppSidebar() {
           badge={SOFTWARE.length}
           shortcut="1"
         />
+        <SidebarLink
+          active={isRepos}
+          onClick={() => setView({ kind: "repos" })}
+          icon={<Database className="size-4 text-cyan-400" />}
+          label="Repositories"
+          shortcut="2"
+        />
 
         <SidebarLink
           active={isInst}
@@ -85,6 +98,15 @@ export function AppSidebar() {
           label="System Packages"
           badge={systemPackages.length > 0 ? systemPackages.length : undefined}
           shortcut="4"
+        />
+        <SidebarLink
+          active={isUpdates}
+          onClick={() => setView({ kind: "updates" })}
+          icon={<ArrowUpCircle className="size-4 text-amber-400" />}
+          label="Updates"
+          badge={updatesChecked && updates.length > 0 ? updates.length : undefined}
+          alert
+          shortcut="5"
         />
 
         <NavLabel className="mt-4">Filter</NavLabel>
@@ -151,6 +173,7 @@ function SidebarLink({
   label,
   badge,
   shortcut,
+  alert,
 }: {
   active?: boolean
   onClick: () => void
@@ -158,6 +181,8 @@ function SidebarLink({
   label: string
   badge?: number
   shortcut?: string
+  /** Draws the badge in the update colour: it is something to act on. */
+  alert?: boolean
 }) {
   return (
     <button
@@ -177,7 +202,9 @@ function SidebarLink({
         <span
           className={cn(
             "rounded-md px-1.5 py-0.5 text-[10px] font-mono tabular-nums",
-            active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+            alert
+              ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 font-semibold"
+              : active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
           )}
         >
           {badge}

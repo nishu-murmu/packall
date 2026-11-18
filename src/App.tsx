@@ -4,6 +4,8 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SoftwareGrid } from "@/components/software-grid"
 import { SoftwareDrawer } from "@/components/software-drawer"
 import { SystemPackagesView } from "@/components/system-packages-view"
+import { RepositoriesView } from "@/components/repositories-view"
+import { UpdatesView, UpgradeAllDialog } from "@/components/updates-view"
 import { BatchActionBar } from "@/components/batch-action-bar"
 import { JobsDock } from "@/components/jobs-dock"
 import { SearchBar } from "@/components/search-bar"
@@ -58,6 +60,10 @@ function AppContent() {
             <AboutView />
           ) : view.kind === "system" ? (
             <SystemPackagesView />
+          ) : view.kind === "repos" ? (
+            <RepositoriesView />
+          ) : view.kind === "updates" ? (
+            <UpdatesView />
           ) : (
             <SoftwareGrid />
           )}
@@ -77,6 +83,7 @@ function AppContent() {
 
       <PasswordDialog />
       <ToolInstallDialog />
+      <UpgradeAllDialog />
       <HelpOverlay />
       <Toaster />
     </div>

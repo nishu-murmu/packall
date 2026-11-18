@@ -12,7 +12,10 @@ import {
   Cpu,
   Package,
   Plus,
+  ArrowUpCircle,
 } from "lucide-react"
+import { updateKey, updateQueueId } from "@/lib/actions"
+import { VersionChange } from "@/components/updates-view"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
@@ -28,7 +31,18 @@ export function SystemPackagesView() {
     selectedIndex,
     setSelectedIndex,
     setSystemNavIds,
+    updatesByKey,
+    setView,
   } = useAppState()
+
+  const updateFor = React.useCallback(
+    (p: { manager: string; name: string }) => updatesByKey.get(updateKey(p.manager, p.name)),
+    [updatesByKey]
+  )
+  const outdatedCount = React.useMemo(
+    () => systemPackages.filter((p) => updateFor(p)).length,
+    [systemPackages, updateFor]
+  )
 
   const [filterManager, setFilterManager] = React.useState<string>("all")
   const [filterSearch, setFilterSearch] = React.useState("")
@@ -45,7 +59,9 @@ export function SystemPackagesView() {
 
   const filteredPackages = React.useMemo(() => {
     return systemPackages.filter((p) => {
-      if (filterManager !== "all" && p.manager !== filterManager) {
+      if (filterManager === "outdated") {
+        if (!updateFor(p)) return false
+      } else if (filterManager !== "all" && p.manager !== filterManager) {
         return false
       }
       if (filterSearch.trim()) {
@@ -58,7 +74,7 @@ export function SystemPackagesView() {
       }
       return true
     })
-  }, [systemPackages, filterManager, filterSearch])
+  }, [systemPackages, filterManager, filterSearch, updateFor])
 
   // Let the keyboard handler move over exactly the rows on screen.
   React.useEffect(() => {
@@ -91,7 +107,12 @@ export function SystemPackagesView() {
     setManualPkgInput("")
   }
 
-  const handleSingleUpdate = (name: string) => void runBatch("update", [name])
+  // An outdated package goes through the Updates path, which knows the new
+  // version and refuses partial upgrades on Arch.
+  const handleSingleUpdate = (pkg: { manager: string; name: string }) => {
+    const u = updateFor(pkg)
+    void runBatch("update", [u ? updateQueueId(u) : pkg.name])
+  }
 
   const handleSingleRemove = (name: string) => {
     if (confirm(`Are you sure you want to uninstall package '${name}'?`)) {
@@ -136,6 +157,26 @@ export function SystemPackagesView() {
           </div>
         </div>
 
+        {outdatedCount > 0 && (
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs">
+            <span className="flex items-center gap-2 font-medium text-amber-700 dark:text-amber-300">
+              <ArrowUpCircle className="size-4" />
+              {outdatedCount} installed package{outdatedCount === 1 ? " has" : "s have"} a newer version
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setFilterManager("outdated")}
+                className="cursor-pointer font-semibold text-amber-700 hover:underline dark:text-amber-300"
+              >
+                Show them
+              </button>
+              <Button size="sm" variant="secondary" onClick={() => setView({ kind: "updates" })} className="h-7 rounded-lg text-xs">
+                Review updates
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Manual Add Package Quick Input */}
         <form onSubmit={handleAddManualPackage} className="mt-4 flex items-center gap-2">
           <div className="relative flex-1 max-w-md">
@@ -166,6 +207,19 @@ export function SystemPackagesView() {
             >
               All Sources ({systemPackages.length})
             </button>
+            {outdatedCount > 0 && (
+              <button
+                onClick={() => setFilterManager("outdated")}
+                className={cn(
+                  "cursor-pointer flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-all",
+                  filterManager === "outdated"
+                    ? "bg-amber-500 text-white shadow-sm shadow-amber-500/20"
+                    : "bg-amber-500/15 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25"
+                )}
+              >
+                <ArrowUpCircle className="size-3" /> Outdated ({outdatedCount})
+              </button>
+            )}
             {Object.entries(managerCounts).map(([mgr, count]) => (
               <button
                 key={mgr}
@@ -241,6 +295,7 @@ export function SystemPackagesView() {
 
             {filteredPackages.map((pkg, idx) => {
               const isQueued = selectedQueue.has(pkg.name)
+              const update = updateFor(pkg)
               const mgrColor =
                 pkg.manager === "aur"
                   ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30"
@@ -278,9 +333,19 @@ export function SystemPackagesView() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-sm truncate text-foreground">{pkg.name}</span>
-                        <span className="text-xs font-mono text-muted-foreground/70">
-                          v{pkg.version}
-                        </span>
+                        {update ? (
+                          <span
+                            title={`Update available: ${update.latest || "newer version"}`}
+                            className="flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5"
+                          >
+                            <ArrowUpCircle className="size-3 text-amber-500" />
+                            <VersionChange update={{ ...update, current: update.current || pkg.version }} />
+                          </span>
+                        ) : (
+                          <span className="text-xs font-mono text-muted-foreground/70">
+                            v{pkg.version}
+                          </span>
+                        )}
                       </div>
                       {pkg.description && (
                         <p className="text-xs text-muted-foreground/80 truncate mt-0.5">
@@ -301,9 +366,12 @@ export function SystemPackagesView() {
                       <Button
                         size="icon-xs"
                         variant="ghost"
-                        title="Update package"
-                        onClick={() => handleSingleUpdate(pkg.name)}
-                        className="size-7 rounded-lg hover:bg-primary/10 hover:text-primary"
+                        title={update ? `Update to ${update.latest || "the newer version"}` : "Update package"}
+                        onClick={() => handleSingleUpdate(pkg)}
+                        className={cn(
+                          "size-7 rounded-lg hover:bg-primary/10 hover:text-primary",
+                          update && "text-amber-600 dark:text-amber-400"
+                        )}
                       >
                         <RefreshCw className="size-3" />
                       </Button>

@@ -6,6 +6,8 @@ import type {
   InstallMethod,
   InstallOption,
   PackageManagerInfo,
+  PackageUpdate,
+  RepoPackage,
   SoftwareEntry,
   SystemPackage,
 } from "./types"
@@ -173,6 +175,84 @@ export function buildCommands(
   return commandsForParsed(action, parsed, managers)
 }
 
+/**
+ * What a package name or Flatpak id may look like on every manager Packall
+ * drives. Names from a repository index or the AUR are not reviewed and end up
+ * in a shell command line, so anything a shell would interpret is refused.
+ */
+export function isSafePackageName(name: string): boolean {
+  return name.length <= 255 && /^[A-Za-z0-9@_+][A-Za-z0-9@._+-]*$/.test(name)
+}
+
+/** Commands for one package by manager and name, with no catalogue entry behind it. */
+export function buildPackageCommands(
+  action: BatchAction,
+  manager: string,
+  name: string,
+  managers: PackageManagerInfo[] = []
+): string[] {
+  if (!isSafePackageName(name)) return []
+  return commandsForParsed(action, { method: manager as InstallMethod, pkgs: [name], flags: [], automatable: true }, managers)
+}
+
+/** Queue ids for packages from the Repositories and Updates views. */
+export const repoQueueId = (p: RepoPackage) => `repo:${p.manager}/${p.repo}/${p.name}`
+export const updateQueueId = (u: PackageUpdate) => `update:${u.manager}/${u.name}`
+/** Lines an update up with the installed package it belongs to. */
+export const updateKey = (manager: string, name: string) => `${manager}/${name}`
+
+/**
+ * The order whole-manager upgrades run in. Repositories go before the AUR,
+ * since AUR builds link against repository libraries.
+ */
+export const UPGRADE_ORDER = ["pacman", "aur", "apt", "dnf", "zypper", "flatpak", "snap", "brew"]
+
+/**
+ * Commands that bring everything one manager owns up to date. Arch needs this:
+ * upgrading one repository package without the rest is a partial upgrade,
+ * which Arch does not support, so pacman's only safe update is the system.
+ */
+export function upgradeAllCommands(manager: string, managers: PackageManagerInfo[] = []): string[] {
+  switch (manager) {
+    case "pacman":
+      return ["sudo pacman -Syu --noconfirm"]
+    case "aur":
+    case "paru":
+    case "yay":
+      return [`${aurHelper(managers)} -Sua --noconfirm`]
+    case "apt":
+      return [`sudo sh -c "apt-get update -qq; DEBIAN_FRONTEND=noninteractive apt-get upgrade -y"`]
+    case "dnf":
+      return ["sudo dnf upgrade -y"]
+    case "zypper":
+      return ["sudo zypper --non-interactive update"]
+    case "flatpak":
+      return ["flatpak update --user -y --noninteractive", "sudo flatpak update --system -y --noninteractive"]
+    case "snap":
+      return ["sudo snap refresh"]
+    case "brew":
+      return ["brew upgrade"]
+    default:
+      return []
+  }
+}
+
+/** The pending update for a catalogue app, matched through its install options. */
+export function updateForSoftware(software: SoftwareEntry, updates: PackageUpdate[]): PackageUpdate | undefined {
+  if (updates.length === 0) return undefined
+  for (const opt of software.install) {
+    const parsed = parseOption(opt)
+    if (!parsed.automatable) continue
+    for (const pkg of parsed.pkgs) {
+      const hit = updates.find(
+        (u) => managerMatches(parsed.method, u.manager) && (parsed.method === "flatpak" ? u.id === pkg : u.name === pkg)
+      )
+      if (hit) return hit
+    }
+  }
+  return undefined
+}
+
 /** Update / remove for a package that is only known from the system scan. */
 export function buildSystemPackageCommands(
   action: Exclude<BatchAction, "install">,
@@ -270,19 +350,23 @@ export function optionInstalled(opt: InstallOption, systemPackages: SystemPackag
   if (!parsed.automatable) return false
   return parsed.pkgs.some((pkg) =>
     systemPackages.some((p) => {
-      const mgr = p.manager
-      const matchesManager =
-        mgr === parsed.method ||
-        (parsed.method === "aur" && (mgr === "aur" || mgr === "pacman")) ||
-        (parsed.method === "paru" && (mgr === "aur" || mgr === "pacman")) ||
-        (parsed.method === "yay" && (mgr === "aur" || mgr === "pacman")) ||
-        (parsed.method === "dnf" && (mgr === "dnf" || mgr === "zypper")) ||
-        (parsed.method === "zypper" && (mgr === "dnf" || mgr === "zypper"))
-      if (!matchesManager) return false
+      if (!managerMatches(parsed.method, p.manager)) return false
       if (parsed.method === "flatpak") return p.description === pkg
       return p.name === pkg
     })
   )
+}
+
+/**
+ * Whether a package the host reports under `mgr` could have come from this
+ * install method. The AUR helpers report through pacman, and an rpm belongs to
+ * dnf or zypper depending on the distro.
+ */
+function managerMatches(method: InstallMethod, mgr: string): boolean {
+  if (mgr === method) return true
+  if (method === "aur" || method === "paru" || method === "yay") return mgr === "aur" || mgr === "pacman"
+  if (method === "dnf" || method === "zypper") return mgr === "dnf" || mgr === "zypper"
+  return false
 }
 
 /**

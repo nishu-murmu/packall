@@ -18,7 +18,8 @@ import { useAppState, useNavigableSoftware } from "./app-state"
  *   s       — Toggle sidebar
  *   i/u/x   — Install / update / remove everything in the queue
  *   a       — Select / deselect everything visible
- *   1/3/4   — Navigate to views
+ *   1–5     — Navigate to views
+ *   U       — Update every outdated package (asks first)
  */
 
 /** Used only when the layout cannot be measured (tests, hidden window). */
@@ -90,12 +91,15 @@ export function useKeybindings() {
     systemNavIds,
     selectAllVisible,
     requestBatch,
+    updates,
+    setUpgradeAllConfirmOpen,
   } = state
 
-  // The list the cursor moves over: catalogue cards, or rows in System Packages.
+  // The list the cursor moves over: catalogue cards, or rows in a list view.
+  const listView = view.kind === "system" || view.kind === "repos" || view.kind === "updates"
   const filtered = React.useMemo(
-    () => (view.kind === "system" ? systemNavIds.map((id) => ({ id })) : catalogue),
-    [view.kind, systemNavIds, catalogue]
+    () => (listView ? systemNavIds.map((id) => ({ id })) : catalogue),
+    [listView, systemNavIds, catalogue]
   )
 
   const keyBuffer = React.useRef<string>("")
@@ -146,7 +150,8 @@ export function useKeybindings() {
       // Don't handle keys when typing in other inputs
       if (isInput) return
 
-      const key = e.key
+      // Shift+u is U, whatever the keyboard reports for the shifted key.
+      const key = e.key === "u" && e.shiftKey ? "U" : e.key
 
       // Buffer management for multi-key sequences (like gg)
       if (bufferTimeout.current) {
@@ -155,7 +160,7 @@ export function useKeybindings() {
       bufferTimeout.current = setTimeout(flushBuffer, 600)
 
       // Handle number prefix for repeated motions
-      if (/^[0-9]$/.test(key) && key !== "1" && key !== "3" && key !== "4") {
+      if (/^[0-9]$/.test(key) && !["1", "2", "3", "4", "5"].includes(key)) {
         keyBuffer.current += key
         e.preventDefault()
         return
@@ -251,7 +256,7 @@ export function useKeybindings() {
         case "Enter":
           e.preventDefault()
           if (filtered[selectedIndex]) {
-            if (view.kind === "system") toggleQueueItem(filtered[selectedIndex].id)
+            if (listView) toggleQueueItem(filtered[selectedIndex].id)
             else setInspectSoftwareId(filtered[selectedIndex].id)
           }
           flushBuffer()
@@ -299,9 +304,27 @@ export function useKeybindings() {
           flushBuffer()
           break
 
+        case "2":
+          e.preventDefault()
+          setView({ kind: "repos" })
+          flushBuffer()
+          break
+
         case "3":
           e.preventDefault()
           setView({ kind: "installed" })
+          flushBuffer()
+          break
+
+        case "5":
+          e.preventDefault()
+          setView({ kind: "updates" })
+          flushBuffer()
+          break
+
+        case "U":
+          e.preventDefault()
+          if (updates.length > 0) setUpgradeAllConfirmOpen(true)
           flushBuffer()
           break
 
@@ -320,7 +343,10 @@ export function useKeybindings() {
       searchFocused,
       helpOpen,
       view,
+      listView,
       filtered,
+      updates,
+      setUpgradeAllConfirmOpen,
       selectedIndex,
       inspectSoftwareId,
       state.sidebarOpen,

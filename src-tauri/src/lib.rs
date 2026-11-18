@@ -4,13 +4,16 @@ pub mod data;
 pub mod jobs;
 pub mod plan;
 pub mod self_update;
+pub mod repos;
 pub mod system;
+pub mod updates;
 
 use commands::{
     detect_package_managers, execute_multi_step_action, execute_package_action,
     cancel_batch_job, forget_privileges, get_all_categories, get_catalogue_software, get_distro_info, get_system_packages,
     open_external_url, resolve_app_icon, start_batch, sudo_state, unlock_privileges,
     check_app_update, apply_app_update,
+    check_package_updates, repo_index_info, search_aur_packages, search_repositories,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -42,6 +45,10 @@ pub fn run() {
             forget_privileges,
             check_app_update,
             apply_app_update,
+            check_package_updates,
+            repo_index_info,
+            search_repositories,
+            search_aur_packages,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
