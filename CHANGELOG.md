@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1
+
+### Changed
+
+- **New app icon** — the desktop app's icon (window, taskbar, app menu and
+  the .deb, .rpm and AppImage) and its favicon now use the ▚ logo from the
+  website header, replacing the old download-arrow icon.
+
 ## 0.4.0
 
 ### Added
